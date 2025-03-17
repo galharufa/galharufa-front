@@ -15,8 +15,7 @@ const ContactInfo = () => {
       icon: <FaPhone className="h-6 w-6" />,
       title: 'Telefone',
       details: [
-        '(11) 3456-7890',
-        '(11) 98765-4321'
+        '(11) 98709-0824'
       ]
     },
     {
@@ -24,16 +23,6 @@ const ContactInfo = () => {
       title: 'E-mail',
       details: [
         'contato@galharufa.com.br',
-        'casting@galharufa.com.br'
-      ]
-    },
-    {
-      icon: <FaMapMarkerAlt className="h-6 w-6" />,
-      title: 'Endereço',
-      details: [
-        'Av. Paulista, 1000',
-        'Bela Vista, São Paulo - SP',
-        'CEP: 01310-100'
       ]
     },
     {
@@ -101,7 +90,7 @@ const ContactInfo = () => {
           variants={containerVariants}
           initial="hidden"
           animate={isInView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16"
         >
           {contactItems.map((item, index) => (
             <motion.div 
@@ -109,7 +98,7 @@ const ContactInfo = () => {
               variants={itemVariants}
               className="bg-gray-50 dark:bg-gray-900 p-6 rounded-lg shadow-sm hover:shadow-md transition-all duration-300"
             >
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white mb-4 mx-auto">
+              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-gray-400 to-gray-600 text-white mb-4 mx-auto">
                 {item.icon}
               </div>
               <h3 className="text-xl font-semibold text-black dark:text-white text-center mb-4">{item.title}</h3>
@@ -165,7 +154,7 @@ const ContactInfo = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <a 
-                href="https://wa.me/5511987654321" 
+                href="https://wa.me/5511987090824?text=Oie!%20Vim%20pelo%20site%20da%20Ag%C3%AAncia!" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="contact-hover-link px-6 py-3 bg-green-500 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-green-600 transition-all duration-300"
@@ -175,7 +164,7 @@ const ContactInfo = () => {
               </a>
               <a 
                 href="mailto:contato@galharufa.com.br" 
-                className="contact-hover-link px-6 py-3 bg-purple-600 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-purple-700 transition-all duration-300"
+                className="contact-hover-link px-6 py-3 bg-gray-500 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300"
               >
                 <FaEnvelope className="h-5 w-5" />
                 Enviar E-mail

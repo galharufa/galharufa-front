@@ -10,7 +10,7 @@ interface MetadataBase {
 }
 
 export const metadata: MetadataBase = {
-  title: 'Contato | Galharufa',
+  title: 'Contato | Agência Galharufa',
   description: 'Entre em contato com a Agência Galharufa. Estamos sempre prontos para lhe atender e tirar suas dúvidas.',
 };
 
@@ -19,7 +19,7 @@ export default function ContactPage() {
     <>
       <ContactHero />
       <ContactInfo />
-      <ContactMap />
+      {/* <ContactMap /> */}
     </>
   );
 }

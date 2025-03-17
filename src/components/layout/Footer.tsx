@@ -29,7 +29,7 @@ const Footer = () => {
           {/* Logo e Descrição */}
           <div className="col-span-1">
             <Link href="/">
-              <h2 className="text-2xl font-bold mb-4">GALHARUFA</h2>
+              <h2 className="text-2xl font-bold mb-4 uppercase">Agência Galharufa</h2>
             </Link>
             <p className="text-gray-400 mb-6">
               Agência de talentos especializada em conectar artistas excepcionais com oportunidades transformadoras.
@@ -79,25 +79,11 @@ const Footer = () => {
         </div>
 
         {/* Linha divisória */}
-        <div className="border-t border-gray-800 pt-8">
+        <div className="border-t border-gray-800 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm">
-              &copy; {currentYear} Galharufa. Todos os direitos reservados.
+              &copy; {currentYear} Agência Galharufa. Todos os direitos reservados.
             </p>
-            <div className="mt-4 md:mt-0">
-              <ul className="flex space-x-6 text-sm text-gray-500">
-                <li>
-                  <Link href="/politica-de-privacidade" className="hover-link hover-link-light">
-                    Política de Privacidade
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/termos-de-uso" className="hover-link hover-link-light">
-                    Termos de Uso
-                  </Link>
-                </li>
-              </ul>
-            </div>
           </div>
         </div>
       </div>
