@@ -16,10 +16,9 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <FaInstagram />, href: 'https://instagram.com/galharufa', label: 'Instagram' },
-    { icon: <FaFacebook />, href: 'https://facebook.com/galharufa', label: 'Facebook' },
-    { icon: <FaTwitter />, href: 'https://twitter.com/galharufa', label: 'Twitter' },
-    { icon: <FaLinkedin />, href: 'https://linkedin.com/company/galharufa', label: 'LinkedIn' },
+    { icon: <FaInstagram />, href: 'https://www.instagram.com/aggalharufa/', label: 'Instagram' },
+    { icon: <FaFacebook />, href: 'https://www.facebook.com/galharufa', label: 'Facebook' },
+    { icon: <FaLinkedin />, href: 'https://www.linkedin.com/company/agencia-galharufa/', label: 'LinkedIn' },
   ];
 
   return (
@@ -54,7 +53,7 @@ const Footer = () => {
 
           {/* Links Úteis */}
           <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4 text-gray-200">Links Úteis</h3>
+            <h3 className="text-lg font-semibold mb-4 text-gray-200">Acesso Rápido</h3>
             <ul className="space-y-3">
               {footerLinks.map((link, index) => (
                 <li key={index}>
@@ -72,7 +71,7 @@ const Footer = () => {
             <ul className="space-y-3 text-gray-400">
               <li>Av. Paulista, 1000</li>
               <li>São Paulo, SP</li>
-              <li>contato@galharufa.com.br</li>
+              <li><a href="mailto:atendimento@agenciagalharufa.com.br">atendimento@agenciagalharufa.com.br</a></li>
               <li>(11) 3456-7890</li>
             </ul>
           </div>

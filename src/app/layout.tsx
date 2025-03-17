@@ -22,15 +22,15 @@ const montserrat = Montserrat({
 
 export const metadata: MetadataBase = {
   title: {
-    template: "%s | Galharufa",
-    default: "Galharufa - Agência de Elenco e Casting",
+    template: "%s | Agência Galharufa",
+    default: "Agência Galharufa",
   },
   description: "Agência de elenco e casting especializada em fornecer os melhores talentos para seu projeto audiovisual.",
   icons: {
     icon: "/favicon.ico",
   },
   metadataBase: {
-    url: "https://www.galharufa.com.br",
+    url: "https://www.agenciagalharufa.com.br",
   },
 };
 

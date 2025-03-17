@@ -14,7 +14,7 @@ interface MetadataBase {
 }
 
 export const metadata: MetadataBase = {
-  title: 'Serviços | Galharufa',
+  title: 'Serviços',
   description: 'Conheça os serviços oferecidos pela Galharufa, desde agenciamento de talentos até produção de conteúdo e consultoria para projetos audiovisuais.',
 };
 

@@ -1,7 +1,6 @@
 import React from 'react';
 import ContactHero from '@/components/contact/ContactHero';
 import ContactInfo from '@/components/contact/ContactInfo';
-import ContactMap from '@/components/contact/ContactMap';
 
 // Define um tipo básico para o metadata
 interface MetadataBase {
@@ -10,7 +9,7 @@ interface MetadataBase {
 }
 
 export const metadata: MetadataBase = {
-  title: 'Contato | Agência Galharufa',
+  title: 'Contato',
   description: 'Entre em contato com a Agência Galharufa. Estamos sempre prontos para lhe atender e tirar suas dúvidas.',
 };
 
@@ -19,7 +18,6 @@ export default function ContactPage() {
     <>
       <ContactHero />
       <ContactInfo />
-      {/* <ContactMap /> */}
     </>
   );
 }

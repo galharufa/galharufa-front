@@ -13,7 +13,7 @@ interface MetadataBase {
 }
 
 export const metadata: MetadataBase = {
-  title: 'Sobre Nós | Galharufa',
+  title: 'Sobre Nós',
   description: 'Conheça a história, valores e equipe por trás da Galharufa, uma agência de talentos comprometida com a excelência e o desenvolvimento de artistas.',
 };
 

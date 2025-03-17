@@ -22,24 +22,22 @@ const ContactInfo = () => {
       icon: <FaEnvelope className="h-6 w-6" />,
       title: 'E-mail',
       details: [
-        'contato@galharufa.com.br',
+        'atendimento@agenciagalharufa.com.br',
       ]
     },
     {
       icon: <FaClock className="h-6 w-6" />,
       title: 'Horário de Funcionamento',
       details: [
-        'Segunda a Sexta: 9h às 18h',
-        'Sábado: 9h às 13h'
+        'Segunda a Sexta: 10h às 19h',
       ]
     }
   ];
 
   const socialLinks = [
-    { icon: <FaInstagram className="h-6 w-6" />, href: 'https://instagram.com/galharufa', label: 'Instagram' },
-    { icon: <FaFacebook className="h-6 w-6" />, href: 'https://facebook.com/galharufa', label: 'Facebook' },
-    { icon: <FaTwitter className="h-6 w-6" />, href: 'https://twitter.com/galharufa', label: 'Twitter' },
-    { icon: <FaLinkedin className="h-6 w-6" />, href: 'https://linkedin.com/company/galharufa', label: 'LinkedIn' },
+    { icon: <FaInstagram className="h-6 w-6" />, href: 'https://www.instagram.com/aggalharufa/', label: 'Instagram' },
+    { icon: <FaFacebook className="h-6 w-6" />, href: 'https://www.facebook.com/galharufa', label: 'Facebook' },
+    { icon: <FaLinkedin className="h-6 w-6" />, href: 'https://www.linkedin.com/company/agencia-galharufa/', label: 'LinkedIn' },
     { icon: <FaWhatsapp className="h-6 w-6" />, href: 'https://wa.me/5511987654321', label: 'WhatsApp' },
   ];
 
