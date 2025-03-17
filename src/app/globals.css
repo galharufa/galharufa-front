@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 255, 255, 255;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-start-rgb));
+}
+
+/* Estilos personalizados da Galharufa */
+@layer components {
+  .container-section {
+    @apply container mx-auto px-4;
+  }
+  
+  /* Media queries para responsividade */
+  @screen sm {
+    .container-section {
+      @apply px-6;
+    }
+  }
+  
+  @screen lg {
+    .container-section {
+      @apply px-8;
+    }
+  }
+
+  .heading-primary {
+    @apply text-4xl md:text-5xl lg:text-6xl font-bold leading-tight;
+  }
+
+  .heading-secondary {
+    @apply text-3xl md:text-4xl font-bold leading-tight mb-4;
+  }
+
+  .heading-tertiary {
+    @apply text-2xl md:text-3xl font-semibold leading-tight mb-3;
+  }
+
+  .btn-primary {
+    @apply inline-block bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg font-medium transition-colors hover:bg-gray-800 dark:hover:bg-gray-200;
+  }
+
+  .btn-secondary {
+    @apply inline-block bg-transparent border-2 border-black dark:border-white text-black dark:text-white px-6 py-3 rounded-lg font-medium transition-colors hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black;
+  }
+
+  /* Efeito de hover nos links */
+  .hover-link {
+    @apply relative inline-block cursor-pointer transition-transform duration-300 ease-out;
+  }
+
+  .hover-link::after {
+    @apply content-[''] absolute left-0 bottom-0 w-0 h-[2px] bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 transition-all duration-300 ease-out;
+  }
+
+  .hover-link:hover {
+    @apply -translate-y-1;
+  }
+
+  .hover-link:hover::after {
+    @apply w-full;
+  }
+
+  /* Variação para links com fundo escuro */
+  .hover-link-light::after {
+    @apply bg-gradient-to-r from-white to-gray-300;
+  }
+
+  /* Animações */
+  .fade-in {
+    @apply opacity-0 animate-[fadeIn_1s_ease-in-out_forwards];
+  }
+
+  .slide-up {
+    @apply opacity-0 translate-y-10 animate-[slideUp_0.8s_ease-out_forwards];
+  }
+
+  .slide-in-right {
+    @apply opacity-0 translate-x-10 animate-[slideInRight_0.8s_ease-out_forwards];
+  }
+
+  .slide-in-left {
+    @apply opacity-0 -translate-x-10 animate-[slideInLeft_0.8s_ease-out_forwards];
+  }
+}
+
+/* Animações keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

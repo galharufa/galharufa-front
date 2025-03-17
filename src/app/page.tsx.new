@@ -1,0 +1,19 @@
+import Hero from '@/components/home/Hero';
+import AboutSection from '@/components/home/AboutSection';
+import ServicesSection from '@/components/home/ServicesSection';
+import CastingPreview from '@/components/home/CastingPreview';
+import TestimonialsSection from '@/components/home/TestimonialsSection';
+import ContactSection from '@/components/home/ContactSection';
+
+export default function Home() {
+  return (
+    <>
+      <Hero />
+      <AboutSection />
+      <ServicesSection />
+      <CastingPreview />
+      <TestimonialsSection />
+      <ContactSection />
+    </>
+  );
+}

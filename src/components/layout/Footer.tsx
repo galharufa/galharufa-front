@@ -1,0 +1,108 @@
+'use client';
+
+import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { FaInstagram, FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
+  
+  const footerLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/sobre', label: 'Sobre Nós' },
+    { href: '/servicos', label: 'Serviços' },
+    { href: '/casting', label: 'Casting' },
+    { href: '/contato', label: 'Contato' },
+  ];
+
+  const socialLinks = [
+    { icon: <FaInstagram />, href: 'https://instagram.com/galharufa', label: 'Instagram' },
+    { icon: <FaFacebook />, href: 'https://facebook.com/galharufa', label: 'Facebook' },
+    { icon: <FaTwitter />, href: 'https://twitter.com/galharufa', label: 'Twitter' },
+    { icon: <FaLinkedin />, href: 'https://linkedin.com/company/galharufa', label: 'LinkedIn' },
+  ];
+
+  return (
+    <footer className="bg-black text-white pt-16 pb-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+          {/* Logo e Descrição */}
+          <div className="col-span-1">
+            <Link href="/">
+              <h2 className="text-2xl font-bold mb-4">GALHARUFA</h2>
+            </Link>
+            <p className="text-gray-400 mb-6">
+              Agência de talentos especializada em conectar artistas excepcionais com oportunidades transformadoras.
+            </p>
+            <div className="flex space-x-4">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.label}
+                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.3 }}
+                  className="text-gray-400 hover:text-white text-xl"
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
+            </div>
+          </div>
+
+          {/* Links Úteis */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4 text-gray-200">Links Úteis</h3>
+            <ul className="space-y-3">
+              {footerLinks.map((link, index) => (
+                <li key={index}>
+                  <Link href={link.href} className="hover-link hover-link-light text-gray-400 hover:text-white">
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Contato */}
+          <div className="col-span-1">
+            <h3 className="text-lg font-semibold mb-4 text-gray-200">Contato</h3>
+            <ul className="space-y-3 text-gray-400">
+              <li>Av. Paulista, 1000</li>
+              <li>São Paulo, SP</li>
+              <li>contato@galharufa.com.br</li>
+              <li>(11) 3456-7890</li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Linha divisória */}
+        <div className="border-t border-gray-800 pt-8">
+          <div className="flex flex-col md:flex-row justify-between items-center">
+            <p className="text-gray-500 text-sm">
+              &copy; {currentYear} Galharufa. Todos os direitos reservados.
+            </p>
+            <div className="mt-4 md:mt-0">
+              <ul className="flex space-x-6 text-sm text-gray-500">
+                <li>
+                  <Link href="/politica-de-privacidade" className="hover-link hover-link-light">
+                    Política de Privacidade
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/termos-de-uso" className="hover-link hover-link-light">
+                    Termos de Uso
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+};
+
+export default Footer;

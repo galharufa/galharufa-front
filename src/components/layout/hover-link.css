@@ -1,0 +1,27 @@
+.hover-link {
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.hover-link:hover {
+  transform: translateY(-2px);
+}
+
+.hover-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #3a86ff, #8338ec);
+  transition: width 0.3s ease;
+}
+
+.hover-link:hover::after {
+  width: 100%;
+}
+
+.hover-link-light::after {
+  background: linear-gradient(90deg, #ffffff, #f0f0f0);
+}

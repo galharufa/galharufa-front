@@ -1,0 +1,28 @@
+/* Estilo de hover para links na página de contato */
+.contact-hover-link {
+  position: relative;
+  transition: transform 0.3s ease, color 0.3s ease;
+  overflow: hidden;
+}
+
+.contact-hover-link::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(to right, #9333ea, #4f46e5);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s ease;
+}
+
+.contact-hover-link:hover {
+  transform: translateY(-3px);
+}
+
+.contact-hover-link:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
