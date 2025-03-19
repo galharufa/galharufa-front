@@ -190,12 +190,12 @@ const ContactInfo = () => {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.5, delay: 0.4 }}        
-            className='text-gray-600 dark:text-gray-300 text-center'   
+            className='text-gray-600 dark:text-gray-300 flex flex-col items-center'   
           >
-            <p className='mb-4'>
+            <p className='mb-4 text-center'>
               Estamos muito felizes com seu interesse em integrar nosso casting, para que possamos lhe conhecer melhor, por gentileza, encaminhar para análise seu material contendo:
             </p>
-            <ul className="list-disc mb-4">
+            <ul className="list-disc list-outside mb-4 ms-8 text-left ">
               <li>4 fotos produzidas ou fotos caseiras</li>
               <li>DRT (caso possua)</li>  
               <li>Link de trabalho ou monólogo</li>
@@ -203,11 +203,18 @@ const ContactInfo = () => {
               <li>Link de Instagram</li> 
             </ul>
 
-            <p className='mb-4'>
+            <p className='mb-4 text-center'>
               Entraremos em contato, caso seu perfil seja aprovado.
               <br/>
               Muito obrigada!
             </p>
+            <a 
+                href="mailto:atendimento@galharufa.com.br" 
+                className="contact-hover-link px-6 py-3 bg-gray-500 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300"
+              >
+                <FaEnvelope className="h-5 w-5" />
+                Enviar Material
+              </a>
           </motion.div>
 
         </div>
