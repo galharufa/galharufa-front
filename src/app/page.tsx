@@ -26,10 +26,10 @@ const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlig
   ssr: false
 });
 
-const Testimonials = dynamic(() => import('@/components/home/Testimonials'), {
-  loading: () => <Loading message="Carregando depoimentos..." />,
-  ssr: false
-});
+// const Testimonials = dynamic(() => import('@/components/home/Testimonials'), {
+//   loading: () => <Loading message="Carregando depoimentos..." />,
+//   ssr: false
+// });
 
 const Partners = dynamic(() => import('@/components/home/Partners'), {
   loading: () => <Loading message="Carregando parceiros..." />,

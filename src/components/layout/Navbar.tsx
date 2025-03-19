@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX, FiLogIn } from 'react-icons/fi';
+import { FiMenu, FiX } from 'react-icons/fi';
 import Image from 'next/image';
 import ThemeToggle from '@/components/theme/ThemeToggle';
 import { useTheme } from 'next-themes';
