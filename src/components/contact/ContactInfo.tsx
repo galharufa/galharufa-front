@@ -161,7 +161,7 @@ const ContactInfo = () => {
                 Falar pelo WhatsApp
               </a>
               <a 
-                href="mailto:contato@galharufa.com.br" 
+                href="mailto:atendimento@galharufa.com.br" 
                 className="contact-hover-link px-6 py-3 bg-gray-500 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300"
               >
                 <FaEnvelope className="h-5 w-5" />
