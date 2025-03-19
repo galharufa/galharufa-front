@@ -60,7 +60,7 @@ const CastingHighlights = () => {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section ref={ref} className="py-20 bg-gray-100 dark:bg-gray-900">
+    <section ref={ref} className="py-20 bg-white dark:bg-black">
       <div className="container-section">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -69,9 +69,9 @@ const CastingHighlights = () => {
           className="text-center mb-12"
         >
           <h2 className="heading-secondary text-black dark:text-white">Talentos em Destaque</h2>
-          <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+          {/* <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
             Conheça alguns dos talentos excepcionais representados pela Galharufa, cada um com habilidades únicas e experiências diversificadas.
-          </p>
+          </p> */}
         </motion.div>
 
         <motion.div

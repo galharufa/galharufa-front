@@ -25,11 +25,11 @@ export default function AboutPage() {
       <OurValues />
       <OurTeam />
       <CtaBanner 
-        title="Faça Parte do Nosso Casting"
-        description="Está procurando uma agência que valorize seu talento e abra portas para oportunidades incríveis? Entre em contato conosco hoje mesmo."
-        buttonText="Entre em Contato"
+        title="Seletiva para Agenciamento Artístico"
+        description="Estamos muito felizes com seu interesse em integrar nosso casting. Para que possamos lhe conhecer melhor, por gentileza, encaminhar para análise seu material no link abaixo."
+        buttonText="Envio de Material"
         buttonLink="/contato"
-        bgColor="black"
+        bgColor="white"
       />
     </>
   );

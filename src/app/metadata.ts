@@ -23,12 +23,12 @@ interface MetadataBase {
 
 // Definição estática de metadados para evitar erros durante o build
 export const metadata: MetadataBase = {
-  title: 'Agência Galharufa | Agência de Talentos',
-  description: 'Agência de elenco e casting para TV, cinema, teatro e publicidade. Representamos atores, atrizes, modelos e apresentadores para seu projeto.',
-  keywords: ['agência de talentos', 'casting', 'elenco', 'atores', 'modelos', 'apresentadores', 'Galharufa'],
+  title: 'Agência Galharufa | Agenciamento Artístico',
+  description: 'Escritório de agenciamento artístico',
+  keywords: ['agência de atores', 'casting', 'elenco', 'talentos', 'influencer', 'criativos', 'apresentadores', 'Galharufa'],
   openGraph: {
-    title: 'Agência Galharufa | Agência de Talentos',
-    description: 'Agência de elenco e casting para TV, cinema, teatro e publicidade.',
+    title: 'Agência Galharufa | Agenciamento Artístico',
+    description: 'Escritório de agenciamento artístico de atores, talentos, influencers, comunicadores e criativos.',
     url: 'https://www.galharufa.com.br',
     siteName: 'Agência Galharufa',
     images: [

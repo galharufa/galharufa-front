@@ -80,12 +80,13 @@ const AboutSection = () => {
 
             <motion.div variants={itemVariants} className="pt-4">
               <Link href="/sobre">
-                <button className="btn-outline dark:border-white dark:text-white">
+                <button className="btn-primary dark:bg-white dark:text-black dark:hover:bg-gray-200">
                   Conheça Nossa História
                 </button>
               </Link>
             </motion.div>
           </motion.div>
+
         </div>
       </div>
     </section>

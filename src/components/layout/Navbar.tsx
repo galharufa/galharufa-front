@@ -116,12 +116,12 @@ const Navbar = () => {
           {/* Área direita com botão de tema e menu mobile */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
-            <Link href="/admin/login" className={`hover-link ${getTextColor()}`}>
-              <div className="flex items-center gap-1 text-sm font-medium">
-                <FiLogIn className="h-4 w-4" />
-                <span className="hidden md:inline">Admin</span>
-              </div>
-            </Link>
+              {/* <Link href="/admin/login" className={`hover-link ${getTextColor()}`}>
+                <div className="flex items-center gap-1 text-sm font-medium">
+                  <FiLogIn className="h-4 w-4" />
+                  <span className="hidden md:inline">Admin</span>
+                </div>
+              </Link> */}
             {/* Botão do menu mobile */}
             <button
               className="md:hidden relative z-10 p-2"
@@ -161,13 +161,13 @@ const Navbar = () => {
                     {link.label}
                   </Link>
                 ))}
-                <Link 
+                {/* <Link 
                   href="/admin/login"
                   className="text-xl hover-link text-black dark:text-white flex items-center"
                 >
                   <FiLogIn className="mr-2" />
                   Login
-                </Link>
+                </Link> */}
               </nav>
             </div>
           </motion.div>

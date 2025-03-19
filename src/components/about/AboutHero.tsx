@@ -25,14 +25,14 @@ const AboutHero = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative h-[70vh] flex items-center justify-center overflow-hidden bg-black text-white"
+      className="relative h-[60vh] flex items-center justify-center overflow-hidden bg-black text-white"
     >
       {/* Overlay de gradiente */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-10"></div>
       
       {/* Background */}
       <div className="absolute inset-0 z-0">
-        <div className="w-full h-full bg-[url('/images/about-hero.jpg')] bg-cover bg-center"></div>
+        <div className="w-full h-full bg-[url('/images/camera-2400-1600.jpg')] bg-cover bg-center"></div>
       </div>
       
       {/* Conteúdo */}
@@ -55,7 +55,7 @@ const AboutHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}
         >
-          Conheça a trajetória da Galharufa e nossa paixão por conectar talentos extraordinários com oportunidades transformadoras.
+          Conheça a trajetória da Galharufa e nossa paixão em conectar talentos extraordinários com oportunidades transformadoras.
         </motion.p>
       </div>
     </div>

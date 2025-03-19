@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { FaPhone, FaEnvelope, FaClock, FaInstagram, FaFacebook, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
+import { FaPhone, FaEnvelope, FaClock, FaFileUpload, FaInstagram, FaFacebook, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
 import Link from 'next/link';
 import './contact-hover.css';
 
@@ -31,7 +31,14 @@ const ContactInfo = () => {
       details: [
         'Segunda a Sexta: 10h às 19h',
       ]
-    }
+    },
+    // {
+    //   icon: <FaFileUpload className="h-6 w-6" />,
+    //   title: 'Envio de Material',
+    //   details: [
+    //     'Listinha com itens, atualizar',
+    //   ]
+    // }
   ];
 
   const socialLinks = [
@@ -116,7 +123,7 @@ const ContactInfo = () => {
             transition={{ duration: 0.5, delay: 0.4 }}
             className="text-2xl font-semibold text-black dark:text-white text-center mb-8"
           >
-            Conecte-se Conosco
+            Junte-se a Nós!
           </motion.h3>
           
           <motion.div 
@@ -145,7 +152,7 @@ const ContactInfo = () => {
             initial={{ opacity: 0 }}
             animate={isInView ? { opacity: 1 } : { opacity: 0 }}
             transition={{ duration: 0.5, delay: 0.8 }}
-            className="text-center mt-10 max-w-2xl mx-auto"
+            className="text-center mt-10 mb-10 max-w-2xl mx-auto"
           >
             <p className="text-gray-600 dark:text-gray-300 mb-6">
               Prefere uma resposta rápida? Entre em contato diretamente pelo WhatsApp ou envie um e-mail para nossa equipe.
@@ -169,6 +176,40 @@ const ContactInfo = () => {
               </a>
             </div>
           </motion.div>
+          <hr />
+          <motion.h3 
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+            className="text-2xl font-semibold text-black dark:text-white text-center mt-8 mb-4"
+          >
+            Envio de Material
+          </motion.h3>
+
+          <motion.div  
+            initial={{ opacity: 0 }}
+            animate={isInView ? { opacity: 1 } : { opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}        
+            className='text-gray-600 dark:text-gray-300 text-center'   
+          >
+            <p className='mb-4'>
+              Estamos muito felizes com seu interesse em integrar nosso casting, para que possamos lhe conhecer melhor, por gentileza, encaminhar para análise seu material contendo:
+            </p>
+            <ul className="list-disc mb-4">
+              <li>4 fotos produzidas ou fotos caseiras</li>
+              <li>DRT (caso possua)</li>  
+              <li>Link de trabalho ou monólogo</li>
+              <li>Vídeo de apresentação</li>
+              <li>Link de Instagram</li> 
+            </ul>
+
+            <p className='mb-4'>
+              Entraremos em contato, caso seu perfil seja aprovado.
+              <br/>
+              Muito obrigada!
+            </p>
+          </motion.div>
+
         </div>
       </div>
     </section>

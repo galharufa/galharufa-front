@@ -50,7 +50,7 @@ export default function Home() {
         <AboutSection />
         <ServicesSection />
         <CastingHighlights />
-        <Testimonials />
+        {/* <Testimonials /> */}
         <Partners />
         <ContactSection />
       </Suspense>

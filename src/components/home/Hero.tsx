@@ -50,16 +50,7 @@ const Hero = () => {
           <span className="block">Descubra Talentos</span>
           <span className="block mt-2">Extraordinários</span>
         </motion.h1>
-        
-        <motion.p 
-          className="gsap-hero-text text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-300"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          A Galharufa é uma agência de talentos premium que conecta artistas excepcionais com oportunidades transformadoras.
-        </motion.p>
-        
+              
         <motion.div 
           className="gsap-hero-text flex flex-col sm:flex-row justify-center gap-4"
           initial={{ opacity: 0, y: 20 }}
