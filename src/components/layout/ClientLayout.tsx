@@ -17,8 +17,8 @@ export default function ClientLayout({
   const pathname = usePathname();
   
   // Verificar se a rota atual é uma rota de admin (exceto login)
-  const isAdminRoute = pathname?.startsWith('/admin') && 
-    !pathname?.includes('/admin/login');
+  const isAdminRoute = pathname?.startsWith('/admin');
+  //&& !pathname?.includes('/admin/login')
 
   return (
     <AuthProvider>
