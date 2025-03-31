@@ -69,10 +69,8 @@ const Footer = () => {
           <div className="col-span-1">
             <h3 className="text-lg font-semibold mb-4 text-gray-200">Contato</h3>
             <ul className="space-y-3 text-gray-400">
-              <li>Av. Paulista, 1000</li>
-              <li>São Paulo, SP</li>
               <li><a href="mailto:atendimento@agenciagalharufa.com.br">atendimento@agenciagalharufa.com.br</a></li>
-              <li>(11) 3456-7890</li>
+              <li>São Paulo, SP</li>
             </ul>
           </div>
         </div>

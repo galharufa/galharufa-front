@@ -52,12 +52,12 @@ const OurStory = () => {
             {/* Item 1 */}
             <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-5 order-2 md:order-1">
-                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">2010: O Início</h3>
+                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">A Galharufa</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
-                  A Galharufa nasceu do sonho de dois amigos apaixonados pelo mundo artístico, Ricardo Galha e Rúbia Rufa. Com experiência no mercado de entretenimento, eles identificaram a necessidade de uma agência que realmente valorizasse os talentos e construísse carreiras sólidas.
+                A Galharufa é um Bureau de Arte que emergiu do desejo em conectar artistas do palco à cena do audiovisual.A Galharufa é um Bureau de Arte que emergiu do desejo em conectar artistas do palco à cena do audiovisual.                  
                 </p>
                 <p className="text-gray-700 dark:text-gray-300">
-                  Começando com apenas cinco talentos e um pequeno escritório no centro de São Paulo, a agência rapidamente se destacou pela abordagem personalizada e pelo compromisso com a excelência.
+                Somos multi, pois a arte é a ponte para a transmutação humana e reunimos em nossa comunidade as diversas potências criativas que fazem pulsar o audiovisual dentro e fora das telas.
                 </p>
               </div>
               <div className="md:col-span-7 order-1 md:order-2 relative h-[300px] overflow-hidden rounded-lg">
@@ -83,12 +83,12 @@ const OurStory = () => {
                 />
               </div>
               <div className="md:col-span-5 order-2">
-                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">2015: Expansão</h3>
+                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">A Expansão</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
-                  Após cinco anos de crescimento constante, a Galharufa expandiu suas operações, mudando-se para um escritório maior na Avenida Paulista e ampliando sua equipe para atender a demanda crescente.
+                Surgimos do chão do Teatro Paulistano, no início dos anos 2000, com o desejo de evidenciar a brasilidade de rostos potentes, com talentos únicos, pois acreditamos que cada artista carrega consigo a singularidade de sua trajetória e potência criativa.
                 </p>
                 <p className="text-gray-700 dark:text-gray-300">
-                  Neste período, a agência começou a representar talentos internacionalmente, estabelecendo parcerias estratégicas com agências na Europa e nos Estados Unidos, abrindo novas portas para seus artistas.
+                Camaleonicamente inovamos, para abranger as demandas do mercado e sempre atentos às inovações.
                 </p>
               </div>
             </motion.div>
@@ -96,12 +96,9 @@ const OurStory = () => {
             {/* Item 3 */}
             <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-5 order-2 md:order-1">
-                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">2018: Inovação</h3>
+                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">Hoje: Referência no Mercado</h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
-                  Sempre atenta às tendências do mercado, a Galharufa foi pioneira na criação de um departamento dedicado exclusivamente a influenciadores digitais, reconhecendo o potencial das novas mídias.
-                </p>
-                <p className="text-gray-700 dark:text-gray-300">
-                  A agência também investiu em tecnologia, desenvolvendo um sistema próprio de gestão de talentos e oportunidades, otimizando processos e melhorando a experiência tanto para os artistas quanto para os clientes.
+                Agenciar para transformar e conectar, através de um gerenciamento de carreira assertivo, explorando  que os torna especiais, com o olhar sensível  e os unindo as oportunidades, é o nosso ofício e missão.      
                 </p>
               </div>
               <div className="md:col-span-7 order-1 md:order-2 relative h-[300px] overflow-hidden rounded-lg">
@@ -115,7 +112,7 @@ const OurStory = () => {
               </div>
             </motion.div>
 
-            {/* Item 4 */}
+            {/* Item 4
             <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
               <div className="md:col-span-7 order-1 relative h-[300px] overflow-hidden rounded-lg">
                 <Image
@@ -135,7 +132,7 @@ const OurStory = () => {
                   Mantendo sua essência e valores originais, a agência continua a crescer e inovar, sempre com o objetivo de proporcionar as melhores oportunidades para seus talentos e os melhores resultados para seus clientes.
                 </p>
               </div>
-            </motion.div>
+            </motion.div> */}
           </div>
         </motion.div>
       </div>
