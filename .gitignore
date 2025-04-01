@@ -25,7 +25,7 @@ node_modules/
 .cache/
 .eslintcache
 .prettiercache
-.turbo/
+.turbo/ 
 
 # Editor e IDE
 .idea/
