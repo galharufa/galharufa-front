@@ -1,27 +1,11 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import gsap from 'gsap';
 
 const ContactHero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(heroRef, { once: true });
-
-  useEffect(() => {
-    if (heroRef.current && textRef.current) {
-      const tl = gsap.timeline();
-      
-      tl.from(textRef.current.querySelectorAll('.gsap-contact-text'), {
-        y: 50,
-        opacity: 0,
-        stagger: 0.2,
-        duration: 1,
-        ease: 'power3.out',
-      });
-    }
-  }, []);
 
   return (
     <div 
@@ -38,11 +22,10 @@ const ContactHero = () => {
       
       {/* Conteúdo */}
       <div 
-        ref={textRef}
         className="container-section relative z-20 text-center"
       >
         <motion.h1 
-          className="gsap-contact-text heading-primary text-white"
+          className="heading-primary text-white"
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.8, delay: 0.2 }}
