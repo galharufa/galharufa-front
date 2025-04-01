@@ -1,26 +1,10 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import gsap from 'gsap';
 
 const ServicesHero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (heroRef.current && textRef.current) {
-      const tl = gsap.timeline();
-      
-      tl.from(textRef.current.querySelectorAll('.gsap-services-text'), {
-        y: 50,
-        opacity: 0,
-        stagger: 0.2,
-        duration: 1,
-        ease: 'power3.out',
-      });
-    }
-  }, []);
 
   return (
     <div 
@@ -37,11 +21,10 @@ const ServicesHero = () => {
       
       {/* Conteúdo */}
       <div 
-        ref={textRef}
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center"
       >
         <motion.h1 
-          className="gsap-services-text text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
+          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
@@ -50,7 +33,7 @@ const ServicesHero = () => {
         </motion.h1>
         
         <motion.p 
-          className="gsap-services-text text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-300"
+          className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-300"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.4 }}

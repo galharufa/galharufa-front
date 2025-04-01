@@ -21,6 +21,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
+import ThemeToggle from '@/components/theme/ThemeToggle';
 
 export default function Login() {
   const { login } = useAuth();
@@ -78,6 +79,18 @@ export default function Login() {
   return (
     <>
       <ToastContainer />
+      {/* Botão de troca de tema no canto superior direito */}
+      <Box 
+        sx={{ 
+          position: 'absolute', 
+          top: '20px', 
+          right: '20px', 
+          zIndex: 1000 
+        }}
+      >
+        <ThemeToggle />
+      </Box>
+      
       <Grid w="100%" h="100vh" m={0} sx={{ overflow: 'hidden' }}>
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
           <Grid.Col span={6} h="100%" p={0} sx={{ position: 'relative' }}>

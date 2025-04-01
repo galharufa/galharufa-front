@@ -17,16 +17,19 @@ export default function ClientLayout({
   const pathname = usePathname();
   
   // Verificar se a rota atual é uma rota de admin (exceto login)
-  const isAdminRoute = pathname?.startsWith('/admin');
-  //&& !pathname?.includes('/admin/login')
+  const isAdminRoute = pathname?.startsWith('/admin') && 
+    !pathname?.includes('/admin/login');
+    
+  // Verificar se é a página de login do admin
+  const isAdminLoginPage = pathname === '/admin/login';
 
   return (
     <AuthProvider>
       <ThemeProvider attribute="class" defaultTheme="light">
         <MantineProvider withGlobalStyles withNormalizeCSS>
-          {!isAdminRoute && <Navbar />}
+          {!isAdminRoute && !isAdminLoginPage && <Navbar />}
           <main className="min-h-screen">{children}</main>
-          {!isAdminRoute && <Footer />}
+          {!isAdminRoute && !isAdminLoginPage && <Footer />}
           <ToastContainer position="bottom-right" />
         </MantineProvider>
       </ThemeProvider>

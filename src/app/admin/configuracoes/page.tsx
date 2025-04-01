@@ -73,7 +73,8 @@ export default function ConfiguracoesAdmin() {
     if (isAuthenticated) {
       carregarConfiguracoes();
     }
-  }, [isAuthenticated, authLoading, form]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAuthenticated, authLoading]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
