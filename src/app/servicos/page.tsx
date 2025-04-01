@@ -5,6 +5,7 @@ import ServicesFaq from '@/components/services/ServicesFaq';
 import CtaBanner from '@/components/shared/CtaBanner';
 import Link from 'next/link';
 import { FiArrowRight } from 'react-icons/fi';
+import Script from 'next/script';
 
 // Define um tipo básico para o metadata
 interface MetadataBase {
@@ -20,7 +21,21 @@ export const metadata: MetadataBase = {
 
 export default function ServicesPage() {
   return (
-    <>
+    <div className="bg-white dark:bg-gray-900">
+       {/* Script para otimizar carregamento de CSS */}
+       <Script id="optimize-css" strategy="afterInteractive">
+         {`
+           document.addEventListener('DOMContentLoaded', function() {
+             const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
+             preloadLinks.forEach(link => {
+               if (link instanceof HTMLLinkElement) {
+                 link.setAttribute('rel', 'stylesheet');
+                 link.removeAttribute('as');
+               }
+             });
+           });
+         `}
+       </Script>
       <ServicesHero />
       <ServicesList />
       <ServicesFaq />
@@ -42,6 +57,6 @@ export default function ServicesPage() {
         buttonLink="/contato"
         bgColor="gray"
       />
-    </>
+    </div>
   );
 }

@@ -8,6 +8,10 @@ const nextConfig = {
   experimental: {
     appDocumentPreloading: false,
   },
+  // Otimização para evitar warnings de preload de CSS
+  compiler: {
+    styledComponents: true,
+  },
 }
 
 export default nextConfig;

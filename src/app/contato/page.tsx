@@ -1,6 +1,7 @@
 import React from 'react';
 import ContactHero from '@/components/contact/ContactHero';
 import ContactInfo from '@/components/contact/ContactInfo';
+import Script from 'next/script';
 
 // Define um tipo básico para o metadata
 interface MetadataBase {
@@ -15,9 +16,23 @@ export const metadata: MetadataBase = {
 
 export default function ContactPage() {
   return (
-    <>
+    <div className="bg-white dark:bg-gray-900">
+       {/* Script para otimizar carregamento de CSS */}
+       <Script id="optimize-css" strategy="afterInteractive">
+         {`
+           document.addEventListener('DOMContentLoaded', function() {
+             const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
+             preloadLinks.forEach(link => {
+               if (link instanceof HTMLLinkElement) {
+                 link.setAttribute('rel', 'stylesheet');
+                 link.removeAttribute('as');
+               }
+             });
+           });
+         `}
+       </Script>
       <ContactHero />
       <ContactInfo />
-    </>
+    </div>
   );
 }

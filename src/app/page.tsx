@@ -4,6 +4,9 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import Loading from '@/components/shared/Loading';
+import Script from 'next/script';
+
+
 
 // Carregamento dinâmico dos componentes (apenas do lado do cliente)
 const Hero = dynamic(() => import('@/components/home/Hero'), {
@@ -45,6 +48,21 @@ const ContactSection = dynamic(() => import('@/components/home/ContactSection'),
 export default function Home() {
   return (
     <>
+
+       {/* Script para otimizar carregamento de CSS */}
+       <Script id="optimize-css" strategy="afterInteractive">
+         {`
+           document.addEventListener('DOMContentLoaded', function() {
+             const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
+             preloadLinks.forEach(link => {
+               if (link instanceof HTMLLinkElement) {
+                 link.setAttribute('rel', 'stylesheet');
+                 link.removeAttribute('as');
+               }
+             });
+           });
+         `}
+       </Script>
       <Suspense fallback={<Loading message="Carregando página inicial..." />}>
         <Hero />
         <AboutSection />
