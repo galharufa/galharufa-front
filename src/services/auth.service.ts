@@ -27,7 +27,8 @@ interface LoginResponse {
 export const AuthService = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000';
+// const API_URL = isServer ? 'https://api.agenciagalharufa.com.br/admin/' : (process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/admin/');
+      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/admin/';
       const baseURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
       
       const loginData = {

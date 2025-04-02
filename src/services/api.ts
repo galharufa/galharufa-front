@@ -5,7 +5,8 @@ import { errorToast } from '@/utils';
 const isServer = typeof window === 'undefined';
 
 // Verificando a URL base da API
-const API_URL = isServer ? 'http://localhost:8000' : (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000');
+// const API_URL = isServer ? 'http://localhost:8000' : (process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000');
+const API_URL = isServer ? 'https://api.agenciagalharufa.com.br/admin/' : (process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/admin/');
 
 console.log('API_URL configurada:', API_URL);
 
