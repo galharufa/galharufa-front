@@ -21,7 +21,7 @@ const Hero = () => {
       </div>
       
       {/* Conteúdo */}
-      <div 
+      {/* <div 
         className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center"
       >
         <motion.h1 
@@ -51,7 +51,7 @@ const Hero = () => {
             </button>
           </Link>
         </motion.div>
-      </div>
+      </div> */}
       
       {/* Scroll indicator */}
       <motion.div 

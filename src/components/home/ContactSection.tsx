@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { FaMapMarkerAlt, FaEnvelope, FaPhone } from 'react-icons/fa';
+import { FaMapMarkerAlt, FaEnvelope, FaPhone, FaClock } from 'react-icons/fa';
 
 const ContactSection = () => {
   const ref = useRef(null);
@@ -26,7 +26,7 @@ const ContactSection = () => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {/* Endereço */}
+          {/* Telefone */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -34,15 +34,11 @@ const ContactSection = () => {
             className="bg-white dark:bg-black p-8 rounded-lg shadow-md text-center"
           >
             <div className="flex justify-center mb-4">
-              <FaMapMarkerAlt className="text-3xl text-black dark:text-white" />
+              <FaPhone className="text-3xl text-black dark:text-white" />
             </div>
-            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Endereço</h3>
+            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Telefone</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Av. Paulista, 1000
-              <br />
-              São Paulo, SP
-              <br />
-              CEP: 01310-100
+              (11) 98709-0824
             </p>
           </motion.div>
 
@@ -58,13 +54,13 @@ const ContactSection = () => {
             </div>
             <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Email</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              contato@galharufa.com.br
-              <br />
-              casting@galharufa.com.br
+              <a href="mailto:atendimento@agenciagalharufa.com.br">
+                atendimento@agenciagalharufa.com.br
+              </a>
             </p>
           </motion.div>
 
-          {/* Telefone */}
+          {/* Horário de Atendimento */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
@@ -72,13 +68,11 @@ const ContactSection = () => {
             className="bg-white dark:bg-black p-8 rounded-lg shadow-md text-center"
           >
             <div className="flex justify-center mb-4">
-              <FaPhone className="text-3xl text-black dark:text-white" />
+              <FaClock className="text-3xl text-black dark:text-white" />
             </div>
-            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Telefone</h3>
+            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Horário de Funcionamento</h3>
             <p className="text-gray-600 dark:text-gray-400">
-              (11) 3456-7890
-              <br />
-              (11) 98765-4321
+            Segunda a Sexta: 10h às 19h
             </p>
           </motion.div>
         </div>

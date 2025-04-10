@@ -38,9 +38,9 @@ export default function ServicesPage() {
        </Script>
       <ServicesHero />
       <ServicesList />
-      <ServicesFaq />
+      {/* <ServicesFaq /> */}
       
-      <div className="container-section py-8 text-center">
+      {/* <div className="container-section py-8 text-center">
         <Link 
           href="/servicos/faq" 
           className="hover-link inline-flex items-center text-black dark:text-white font-medium"
@@ -48,7 +48,7 @@ export default function ServicesPage() {
           Ver todas as perguntas frequentes
           <FiArrowRight className="ml-2" />
         </Link>
-      </div>
+      </div> */}
       
       <CtaBanner 
         title="Precisa de Talentos para seu Projeto?"

@@ -32,13 +32,6 @@ const ContactInfo = () => {
         'Segunda a Sexta: 10h às 19h',
       ]
     },
-    // {
-    //   icon: <FaFileUpload className="h-6 w-6" />,
-    //   title: 'Envio de Material',
-    //   details: [
-    //     'Listinha com itens, atualizar',
-    //   ]
-    // }
   ];
 
   const socialLinks = [

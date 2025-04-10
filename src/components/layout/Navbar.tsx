@@ -61,10 +61,10 @@ const Navbar = () => {
     <header 
       className={`fixed w-full z-50 transition-all duration-300 ${
         scrolled 
-          ? 'bg-white/90 dark:bg-black/90 backdrop-blur-md shadow-md' 
+          ? 'bg-white dark:bg-black/90 backdrop-blur-md shadow-md' 
           : pathname === '/' 
             ? 'bg-transparent' 
-            : 'bg-white/90 dark:bg-black/90 backdrop-blur-md'
+            : 'bg-white dark:bg-black/90 backdrop-blur-md'
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">

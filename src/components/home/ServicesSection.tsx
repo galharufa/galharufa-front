@@ -3,18 +3,18 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { FaUserTie, FaCamera, FaFilm, FaAd, FaTheaterMasks, FaGlobe } from 'react-icons/fa';
+import { FaUserTie, FaCamera, FaFilm, FaAd, FaGlobe } from 'react-icons/fa';
 
 const services = [
   {
     icon: <FaUserTie className="text-4xl mb-4" />,
-    title: 'Agenciamento',
-    description: 'Representação completa para atores, modelos e influenciadores, conectando-os com as melhores oportunidades do mercado.',
+    title: 'Agenciamento Artístico',
+    description: 'Representação de atores, criativos e influenciadores.',
   },
   {
     icon: <FaCamera className="text-4xl mb-4" />,
     title: 'Produção Fotográfica',
-    description: 'Sessões fotográficas profissionais para compor e atualizar o material de divulgação dos nossos talentos.',
+    description: 'Produção de material de divulgação estratégico para nossos talentos.',
   },
   {
     icon: <FaFilm className="text-4xl mb-4" />,
@@ -23,19 +23,19 @@ const services = [
   },
   {
     icon: <FaAd className="text-4xl mb-4" />,
-    title: 'Campanhas Publicitárias',
+    title: 'Marketing de Influência',
     description: 'Conexão entre marcas e talentos para campanhas publicitárias impactantes e autênticas.',
   },
   {
-    icon: <FaTheaterMasks className="text-4xl mb-4" />,
-    title: 'Produção de Eventos',
-    description: 'Organização e produção de eventos corporativos, desfiles e apresentações artísticas.',
+    icon: <FaGlobe className="text-4xl mb-4" />,
+    title: 'Casting On Screen',
+    description: 'Fornecimento  de talentos para produções audiovisuais.',
   },
   {
     icon: <FaGlobe className="text-4xl mb-4" />,
-    title: 'Carreira Internacional',
-    description: 'Suporte para desenvolvimento de carreira internacional, com parcerias em diversos países.',
-  },
+    title: 'Casting Off Screen',
+    description: 'Fornecimento  de talentos para produções audiovisuais.',
+  }
 ];
 
 const ServicesSection = () => {
