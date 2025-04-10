@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
-import { FaUserTie, FaCamera, FaFilm, FaAd, FaTheaterMasks, FaGlobe, FaGraduationCap, FaHandshake } from 'react-icons/fa';
+import { FaUserTie, FaCamera, FaFilm} from 'react-icons/fa';
 
 // Dados detalhados dos serviços
 const services = [

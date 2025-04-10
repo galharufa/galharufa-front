@@ -2,7 +2,7 @@
 
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
-import Link from 'next/link';
+// import Link from 'next/link';
 
 const Hero = () => {
   const heroRef = useRef<HTMLDivElement>(null);

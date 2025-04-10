@@ -1,10 +1,10 @@
 import React from 'react';
 import ServicesHero from '@/components/services/ServicesHero';
 import ServicesList from '@/components/services/ServicesList';
-import ServicesFaq from '@/components/services/ServicesFaq';
+// import ServicesFaq from '@/components/services/ServicesFaq';
 import CtaBanner from '@/components/shared/CtaBanner';
-import Link from 'next/link';
-import { FiArrowRight } from 'react-icons/fi';
+// import Link from 'next/link';
+// import { FiArrowRight } from 'react-icons/fi';
 import Script from 'next/script';
 
 // Define um tipo básico para o metadata

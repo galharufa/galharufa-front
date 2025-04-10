@@ -6,7 +6,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useInView } from 'framer-motion';
 
-
 import { CastingService, TalentoResumido } from '@/services/casting.service';
 
 interface CastingGridProps {

@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { FaMapMarkerAlt, FaEnvelope, FaPhone, FaClock } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaClock } from 'react-icons/fa';
 
 const ContactSection = () => {
   const ref = useRef(null);
