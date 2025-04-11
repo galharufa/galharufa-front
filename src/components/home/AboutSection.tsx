@@ -67,15 +67,7 @@ const AboutSection = () => {
             </motion.div>
 
             <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300 text-lg">
-              Fundada em 2010, a Galharufa nasceu da paixão por conectar talentos extraordinários com oportunidades transformadoras no mundo artístico.
-            </motion.p>
-
-            <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300">
-              Nossa missão é descobrir, desenvolver e promover artistas autênticos, oferecendo representação de alta qualidade e orientação personalizada para cada talento.
-            </motion.p>
-
-            <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300">
-              Com uma equipe de profissionais experientes e apaixonados, a Galharufa se destaca por seu compromisso com a excelência e pela construção de relacionamentos duradouros com clientes e talentos.
+            A Galharufa é um Bureau de Arte que emergiu do desejo em conectar artistas do palco à cena do audiovisual.                 
             </motion.p>
 
             <motion.div variants={itemVariants} className="pt-4">
