@@ -122,7 +122,7 @@ const CastingPreview = () => {
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center mt-8"
         >
-          <Link href="/casting">
+          <Link href="/cast">
             <button className="btn-outline dark:border-white dark:text-white">
               Ver Todos os Talentos
             </button>

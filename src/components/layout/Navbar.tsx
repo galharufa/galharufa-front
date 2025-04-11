@@ -40,7 +40,7 @@ const Navbar = () => {
     { href: '/', label: 'Home' },
     { href: '/sobre', label: 'Sobre Nós' },
     { href: '/servicos', label: 'Serviços' },
-    { href: '/casting', label: 'Casting' },
+    { href: '/cast', label: 'Casting' },
     { href: '/contato', label: 'Contato' },
   ];
 
@@ -161,13 +161,6 @@ const Navbar = () => {
                     {link.label}
                   </Link>
                 ))}
-                {/* <Link 
-                  href="/admin/login"
-                  className="text-xl hover-link text-black dark:text-white flex items-center"
-                >
-                  <FiLogIn className="mr-2" />
-                  Login
-                </Link> */}
               </nav>
             </div>
           </motion.div>

@@ -112,7 +112,7 @@ const CastingHighlights = () => {
                     <h3 className="text-xl font-semibold text-black dark:text-white mt-1 mb-2">{talent.name}</h3>
                     <p className="text-gray-700 dark:text-gray-300 mb-4">{talent.description}</p>
                     <Link 
-                      href={`/casting/${talent.id}`} 
+                      href={`/cast/${talent.id}`} 
                       className="hover-link text-black dark:text-white font-medium"
                     >
                       Ver perfil completo
@@ -131,7 +131,7 @@ const CastingHighlights = () => {
           className="text-center mt-8"
         >
           <Link 
-            href="/casting" 
+            href="/cast" 
             className="btn-primary"
           >
             Ver Todos os Talentos

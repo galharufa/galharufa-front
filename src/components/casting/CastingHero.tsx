@@ -9,7 +9,7 @@ const CastingHero = () => {
   return (
     <div 
       ref={heroRef}
-      className="relative h-[70vh] flex items-center justify-center overflow-hidden bg-black text-white"
+      className="relative h-[50vh] flex items-center justify-center overflow-hidden bg-black text-white"
     >
       {/* Overlay de gradiente */}
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/50 to-black/80 z-10"></div>
@@ -32,14 +32,6 @@ const CastingHero = () => {
           Nosso Casting
         </motion.h1>
         
-        <motion.p 
-          className="text-xl md:text-2xl mb-8 max-w-3xl mx-auto text-gray-300"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-        >
-          Conheça os talentos excepcionais da Galharufa, uma seleção diversa e qualificada para os mais variados projetos.
-        </motion.p>
       </div>
     </div>
   );

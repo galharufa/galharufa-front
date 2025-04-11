@@ -101,7 +101,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
               layoutId={`talent-${talento.id}`}
               className="group cursor-pointer"
             >
-              <Link href={`/casting/${talento.id}`} passHref>
+              <Link href={`/cast/${talento.id}`} passHref>
                 <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                   <Image
                     src={talento.foto_principal || '/images/placeholder-talent.jpg'}

@@ -21,37 +21,6 @@ const Hero = () => {
       </div>
       
       {/* Conteúdo */}
-      {/* <div 
-        className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center"
-      >
-        <motion.h1 
-          className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <span className="block">Descubra Talentos</span>
-          <span className="block mt-2">Extraordinários</span>
-        </motion.h1>
-              
-        <motion.div 
-          className="flex flex-col sm:flex-row justify-center gap-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
-        >
-          <Link href="/casting">
-            <button className="px-8 py-3 bg-white text-black font-medium rounded-md hover:bg-gray-200 transition-all duration-300">
-              Nosso Casting
-            </button>
-          </Link>
-          <Link href="/contato">
-            <button className="px-8 py-3 border border-white text-white font-medium rounded-md hover:bg-white/10 transition-all duration-300">
-              Entre em Contato
-            </button>
-          </Link>
-        </motion.div>
-      </div> */}
       
       {/* Scroll indicator */}
       <motion.div 
