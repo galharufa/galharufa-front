@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { FaUserTie, FaCamera, FaFilm, FaAd, FaGlobe } from 'react-icons/fa';
+import { FaUserTie, FaCamera, FaAd, FaGraduationCap } from 'react-icons/fa';
 
 const services = [
   {
@@ -13,13 +13,8 @@ const services = [
   },
   {
     icon: <FaCamera className="text-4xl mb-4" />,
-    title: 'Produção Fotográfica',
+    title: 'Material para atores',
     description: 'Produção de material de divulgação estratégico para nossos talentos.',
-  },
-  {
-    icon: <FaFilm className="text-4xl mb-4" />,
-    title: 'Casting para Cinema e TV',
-    description: 'Seleção de talentos para produções audiovisuais, desde comerciais até longas-metragens e séries.',
   },
   {
     icon: <FaAd className="text-4xl mb-4" />,
@@ -27,14 +22,9 @@ const services = [
     description: 'Conexão entre marcas e talentos para campanhas publicitárias impactantes e autênticas.',
   },
   {
-    icon: <FaGlobe className="text-4xl mb-4" />,
-    title: 'Casting On Screen',
-    description: 'Fornecimento  de talentos para produções audiovisuais.',
-  },
-  {
-    icon: <FaGlobe className="text-4xl mb-4" />,
-    title: 'Casting Off Screen',
-    description: 'Fornecimento  de talentos para produções audiovisuais.',
+    icon: <FaGraduationCap className="text-4xl mb-4" />,
+    title: 'Workshops e Treinamentos',
+    description: 'Capacitação contínua para nossos talentos através de workshops, cursos e treinamentos especializados.',
   }
 ];
 
@@ -58,7 +48,7 @@ const ServicesSection = () => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
           {services.map((service, index) => (
             <motion.div
               key={index}
