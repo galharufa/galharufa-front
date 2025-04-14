@@ -41,13 +41,13 @@ const AboutSection = () => {
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="relative h-[500px] w-full overflow-hidden rounded-lg"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/50 to-transparent z-10 rounded-lg"></div>
+            <div className="absolute inset-0  z-10 rounded-lg"></div>
             <Image
-              src="/images/about-image.jpg"
-              alt="Galharufa Agência"
+              src="/images/Iniciais_Transparente_LetrasPretas.png"
+              alt="Agência Galharufa"
               fill
               className="object-cover object-center"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 350px) 80vw, 25vw"
               priority
             />
           </motion.div>
