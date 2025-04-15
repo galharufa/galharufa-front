@@ -51,8 +51,14 @@ export interface PaginatedResponse<T> {
 export const CastingService = {
   // Categorias
   async getCategorias(params?: { search?: string; ordering?: string }): Promise<PaginatedResponse<Categoria>> {
-    const response = await api.get<PaginatedResponse<Categoria>>('/api/casting/categorias/', { params });
-    return response.data;
+    try {
+      const response = await api.get<PaginatedResponse<Categoria>>('/api/casting/categorias/', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao obter categorias:', error);
+      // Retornar uma estrutura padrão vazia para evitar erros
+      return { count: 0, next: null, previous: null, results: [] };
+    }
   },
   
   async getCategoria(id: number): Promise<Categoria> {
@@ -83,8 +89,14 @@ export const CastingService = {
     page?: number;
     page_size?: number;
   }): Promise<PaginatedResponse<CastingResumido>> {
-    const response = await api.get<PaginatedResponse<CastingResumido>>('/api/casting/castings/', { params });
-    return response.data;
+    try {
+      const response = await api.get<PaginatedResponse<CastingResumido>>('/api/casting/castings/', { params });
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao obter castings:', error);
+      // Retornar uma estrutura padrão vazia para evitar erros
+      return { count: 0, next: null, previous: null, results: [] };
+    }
   },
   
   async getCasting(id: number): Promise<CastingDetalhado> {
