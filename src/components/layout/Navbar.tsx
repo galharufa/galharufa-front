@@ -116,12 +116,6 @@ const Navbar = () => {
           {/* Área direita com botão de tema e menu mobile */}
           <div className="flex items-center gap-4">
             <ThemeToggle />
-              {/* <Link href="/admin/login" className={`hover-link ${getTextColor()}`}>
-                <div className="flex items-center gap-1 text-sm font-medium">
-                  <FiLogIn className="h-4 w-4" />
-                  <span className="hidden md:inline">Admin</span>
-                </div>
-              </Link> */}
             {/* Botão do menu mobile */}
             <button
               className="md:hidden relative z-10 p-2"

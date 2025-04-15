@@ -6,8 +6,6 @@ import { Suspense } from 'react';
 import Loading from '@/components/shared/Loading';
 import Script from 'next/script';
 
-
-
 // Carregamento dinâmico dos componentes (apenas do lado do cliente)
 const Hero = dynamic(() => import('@/components/home/Hero'), {
   loading: () => <Loading message="Carregando seção de destaque..." />,
@@ -28,11 +26,6 @@ const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlig
   loading: () => <Loading message="Carregando seção de casting..." />,
   ssr: false
 });
-
-// const Testimonials = dynamic(() => import('@/components/home/Testimonials'), {
-//   loading: () => <Loading message="Carregando depoimentos..." />,
-//   ssr: false
-// });
 
 const Partners = dynamic(() => import('@/components/home/Partners'), {
   loading: () => <Loading message="Carregando parceiros..." />,
@@ -68,7 +61,6 @@ export default function Home() {
         <AboutSection />
         <ServicesSection />
         <CastingHighlights />
-        {/* <Testimonials /> */}
         <Partners />
         <ContactSection />
       </Suspense>

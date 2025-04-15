@@ -5,26 +5,32 @@ import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { FaLinkedin, FaInstagram, FaEnvelope } from 'react-icons/fa';
 
+const getInitials = (name: string) => {
+  return name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
+};
+
 // Dados simulados da equipe
 const teamMembers = [
   {
     id: 1,
-    name: 'Ricardo Galha',
-    role: 'Diretor Executivo & Co-Fundador',
-    image: '/images/team-1.jpg',
-    bio: 'Com mais de 20 anos de experiência no mercado artístico, Ricardo é responsável pela visão estratégica da Galharufa.',
+    name: 'Juliana Azevedo',
+    role: 'Diretora Executivo & Co-Fundador',
+    image: '',
     social: {
       linkedin: 'https://linkedin.com/in/ricardogalha',
       instagram: 'https://instagram.com/ricardogalha',
-      email: 'ricardo@galharufa.com.br',
+      email: 'juliana@agenciagalharufa.com.br',
     },
   },
   {
     id: 2,
-    name: 'Rúbia Rufa',
-    role: 'Diretora Criativa & Co-Fundadora',
-    image: '/images/team-2.jpg',
-    bio: 'Ex-modelo e produtora, Rúbia traz sua experiência para identificar e desenvolver novos talentos com um olhar único.',
+    name: 'Alexandre Sean',
+    role: 'Diretor Artístico & Co-Fundador',
+    image: '',
     social: {
       linkedin: 'https://linkedin.com/in/rubiarufa',
       instagram: 'https://instagram.com/rubiarufa',
@@ -33,16 +39,82 @@ const teamMembers = [
   },
   {
     id: 3,
-    name: 'Marcelo Santos',
-    role: 'Diretor de Casting',
-    image: '/images/team-3.jpg',
-    bio: 'Especialista em casting para cinema e TV, Marcelo tem um talento natural para encontrar o artista perfeito para cada projeto.',
+    name: 'Elen Coutinho',
+    role: 'Assistente de Booker',
+    image: '',
     social: {
-      linkedin: 'https://linkedin.com/in/marcelosantos',
-      instagram: 'https://instagram.com/marcelosantos',
-      email: 'marcelo@galharufa.com.br',
+      linkedin: '',
+      instagram: '',
+      email: 'elen@galharufa.com.br',
     },
-  }
+  },
+  {
+    id: 4,
+    name: 'Fabio Brum',
+    role: 'Jurídico',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'fabio@galharufa.com.br',
+    },
+  },
+  {
+    id: 5,
+    name: 'Isabel Bertolino',
+    role: 'Contabilidade',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'isabel@galharufa.com.br',
+    },
+  },
+  {
+    id: 6,
+    name: 'Gislaine Marconato',
+    role: 'Assistente comercial departamento infantil',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'gislaine@galharufa.com.br',
+    },
+  },
+  {
+    id: 7,
+    name: 'Pamella Gaiguer',
+    role: 'Tech Lead',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'pamella@galharufa.com.br',
+    },
+  },
+  {
+    id: 8,
+    name: 'Tom Gomes',
+    role: 'Fiscal de Set',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'tom@galharufa.com.br',
+    },
+  },
+  {
+    id: 9,
+    name: 'Leo Zaccur',
+    role: 'Diretor de Arte',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'leo@galharufa.com.br',
+    },
+  },
+
 ];
 
 const OurTeam = () => {
@@ -76,19 +148,25 @@ const OurTeam = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
             >
-              <div className="relative h-80 overflow-hidden">
-                <Image
-                  src={member.image}
-                  alt={member.name}
-                  fill
-                  className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                />
+          <div className="relative h-80 flex items-center justify-center bg-gray-200 dark:bg-gray-800">
+            {member.image ? (
+              <Image
+                src={member.image}
+                alt={member.name}
+                fill
+                className="object-cover object-center transition-transform duration-500 hover:scale-105"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              />
+            ) : (
+              <div className="w-24 h-24 rounded-full bg-gray-400 dark:bg-gray-700 flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                {getInitials(member.name)}
               </div>
+            )}
+          </div>
+
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-1 text-black dark:text-white">{member.name}</h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">{member.role}</p>
-                <p className="text-gray-700 dark:text-gray-300 mb-4">{member.bio}</p>
                 <div className="flex space-x-4">
                   <a
                     href={member.social.linkedin}
