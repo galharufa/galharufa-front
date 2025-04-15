@@ -1,6 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { errorToast } from '@/utils';
-import { usePathname } from 'next/navigation';
+// import { usePathname } from 'next/navigation';
 
 // Verificar se estamos em ambiente de build do servidor
 const isServer = typeof window === 'undefined';
