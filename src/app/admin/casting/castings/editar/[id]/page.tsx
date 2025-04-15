@@ -7,12 +7,12 @@ import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../../components/AdminNavbar';
-import { CastingService, type CategoriasCasting, type TalentoDetalhado, type Foto, type Video } from '@/services';
+import { CastingService, type CategoriasCasting, type CastingDetalhado, type Foto, type Video } from '@/services';
 import { errorToast, successToast } from '@/utils';
 import { IconUpload, IconPlus, IconTrash } from '@tabler/icons-react';
 import Image from 'next/image';
 
-export default function EditarTalento() {
+export default function EditarCasting() {
   const params = useParams();
   const id = params?.id as string;
   
@@ -23,7 +23,7 @@ export default function EditarTalento() {
   
   const [isLoading, setIsLoading] = useState(false);
   const [categorias, setCategorias] = useState<CategoriasCasting[]>([]);
-  const [talento, setTalento] = useState<TalentoDetalhado | null>(null);
+  const [casting, setCasting] = useState<CastingDetalhado | null>(null);
   const [fotosExistentes, setFotosExistentes] = useState<Foto[]>([]);
   const [fotosParaExcluir, setFotosParaExcluir] = useState<number[]>([]);
   const [fotosAdicionais, setFotosAdicionais] = useState<File[]>([]);
@@ -60,34 +60,34 @@ export default function EditarTalento() {
         setIsLoading(true);
         dadosCarregados.current = true;
         
-        // Carregar categorias e talento em paralelo
-        const [categoriasResponse, talentoResponse] = await Promise.all([
+        // Carregar categorias e casting em paralelo
+        const [categoriasResponse, castingResponse] = await Promise.all([
           CastingService.getCategorias({ ordering: 'nome' }),
-          CastingService.getTalento(parseInt(id))
+          CastingService.getCasting(parseInt(id))
         ]);
         
         setCategorias(categoriasResponse.results);
-        setTalento(talentoResponse);
-        setFotosExistentes(talentoResponse.fotos);
-        setVideosExistentes(talentoResponse.videos);
+        setCasting(castingResponse);
+        setFotosExistentes(castingResponse.fotos);
+        setVideosExistentes(castingResponse.videos);
         
-        // Preencher o formulário com os dados do talento
-        const dataNascimento = talentoResponse.data_nascimento ? new Date(talentoResponse.data_nascimento) : null;
+        // Preencher o formulário com os dados do casting
+        const dataNascimento = castingResponse.data_nascimento ? new Date(castingResponse.data_nascimento) : null;
         
         form.setValues({
-          nome: talentoResponse.nome,
-          categoria: talentoResponse.categoria.toString(),
-          biografia: talentoResponse.biografia || '',
-          experiencia: talentoResponse.experiencia || '',
+          nome: castingResponse.nome,
+          categoria: castingResponse.categoria.toString(),
+          biografia: castingResponse.biografia || '',
+          experiencia: castingResponse.experiencia || '',
           data_nascimento: dataNascimento,
-          altura: talentoResponse.altura || '',
-          peso: talentoResponse.peso || '',
+          altura: castingResponse.altura || '',
+          peso: castingResponse.peso || '',
           foto_principal: null,
-          ativo: talentoResponse.ativo,
+          ativo: castingResponse.ativo,
         });
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
-        errorToast('Erro ao carregar dados do talento');
+        errorToast('Erro ao carregar dados do casting');
         router.push('/admin/casting');
       } finally {
         setIsLoading(false);
@@ -167,7 +167,7 @@ export default function EditarTalento() {
 
   // Função para salvar as alterações
   const handleSubmit = async (values: typeof form.values) => {
-    if (!talento) return;
+    if (!casting) return;
     
     try {
       setIsLoading(true);
@@ -196,12 +196,12 @@ export default function EditarTalento() {
         formData.append('foto_principal', values.foto_principal);
       }
       
-      // Atualizar o talento
-      await CastingService.atualizarTalento(talento.id, formData);
+      // Atualizar o casting
+      await CastingService.atualizarCasting(casting.id, formData);
       
       // Excluir fotos marcadas para exclusão
       const excluirFotosPromises = fotosParaExcluir.map(id => 
-        CastingService.excluirFoto(talento.id, id)
+        CastingService.excluirFoto(casting.id, id)
       );
       
       await Promise.all(excluirFotosPromises);
@@ -215,14 +215,14 @@ export default function EditarTalento() {
         fotoFormData.append('legenda', legendasFotos[index] || '');
         fotoFormData.append('ordem', (fotosExistentes.length + index).toString());
         
-        return CastingService.adicionarFoto(talento.id, fotoFormData);
+        return CastingService.adicionarFoto(casting.id, fotoFormData);
       });
       
       await Promise.all(uploadFotosPromises.filter(Boolean));
       
       // Excluir vídeos marcados para exclusão
       const excluirVideosPromises = videosParaExcluir.map(id => 
-        CastingService.excluirVideo(talento.id, id)
+        CastingService.excluirVideo(casting.id, id)
       );
       
       await Promise.all(excluirVideosPromises);
@@ -231,7 +231,7 @@ export default function EditarTalento() {
       const uploadVideosPromises = videosNovos.map(async (video, index) => {
         if (!video.titulo || !video.url) return null;
         
-        return CastingService.adicionarVideo(talento.id, {
+        return CastingService.adicionarVideo(casting.id, {
           titulo: video.titulo,
           url: video.url,
           ordem: videosExistentes.length + index
@@ -240,11 +240,11 @@ export default function EditarTalento() {
       
       await Promise.all(uploadVideosPromises.filter(Boolean));
       
-      successToast('Talento atualizado com sucesso');
+      successToast('Casting atualizado com sucesso');
       router.push('/admin/casting');
     } catch (error) {
-      console.error('Erro ao atualizar talento:', error);
-      errorToast('Erro ao atualizar talento');
+      console.error('Erro ao atualizar casting:', error);
+      errorToast('Erro ao atualizar casting');
     } finally {
       setIsLoading(false);
     }
@@ -258,7 +258,7 @@ export default function EditarTalento() {
     );
   }
 
-  if (!isAuthenticated || !talento) {
+  if (!isAuthenticated || !casting) {
     return null;
   }
 
@@ -267,7 +267,7 @@ export default function EditarTalento() {
       <AdminNavbar />
       <Container size="lg" py="xl">
         <Group position="apart" mb="xl">
-          <Title order={2}>Editar Talento</Title>
+          <Title order={2}>Editar Casting</Title>
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -276,7 +276,7 @@ export default function EditarTalento() {
             
             <TextInput
               label="Nome"
-              placeholder="Nome do talento"
+              placeholder="Nome do casting"
               required
               {...form.getInputProps('nome')}
               mb="md"
@@ -302,13 +302,13 @@ export default function EditarTalento() {
                 />
               </div>
               
-              {talento.foto_principal && (
+              {casting.foto_principal && (
                 <div>
                   <Text size="sm" weight={500} mb={5}>Foto Atual</Text>
                   <div style={{ width: 100, height: 100, position: 'relative', overflow: 'hidden', borderRadius: '4px' }}>
                     <Image 
-                      src={talento.foto_principal} 
-                      alt={talento.nome}
+                      src={casting.foto_principal} 
+                      alt={casting.nome}
                       style={{ objectFit: 'cover' }}
                       fill
                       sizes="100px"
@@ -356,7 +356,7 @@ export default function EditarTalento() {
             
             <Textarea
               label="Biografia"
-              placeholder="Biografia do talento"
+              placeholder="Biografia do casting"
               minRows={4}
               {...form.getInputProps('biografia')}
               mb="md"
@@ -364,7 +364,7 @@ export default function EditarTalento() {
             
             <Textarea
               label="Experiência"
-              placeholder="Experiência profissional do talento"
+              placeholder="Experiência profissional do casting"
               minRows={4}
               {...form.getInputProps('experiencia')}
               mb="md"
@@ -400,7 +400,7 @@ export default function EditarTalento() {
                         <div style={{ width: '100%', height: 150, position: 'relative', overflow: 'hidden', borderRadius: '4px', marginBottom: 10 }}>
                           <Image 
                             src={foto.imagem} 
-                            alt={foto.legenda || 'Foto do talento'}
+                            alt={foto.legenda || 'Foto do casting'}
                             style={{ objectFit: 'cover' }}
                             fill
                             sizes="200px"
@@ -559,7 +559,7 @@ export default function EditarTalento() {
                 }
               }}
             >
-              Atualizar Talento
+              Atualizar Casting
             </Button>
           </Group>
         </form>

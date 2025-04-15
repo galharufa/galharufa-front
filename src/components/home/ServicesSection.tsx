@@ -21,6 +21,11 @@ const services = [
     title: 'Marketing de Influência',
     description: 'Conexão entre marcas e talentos para campanhas publicitárias impactantes e autênticas.',
   },
+  // {
+  //   icon: <FaGlobe className="text-4xl mb-4" />,
+  //   title: 'Casting On e Off Screen',
+  //   description: 'Fornecimento  de talentos para produções audiovisuais.',
+  // },
   {
     icon: <FaGraduationCap className="text-4xl mb-4" />,
     title: 'Workshops e Treinamentos',

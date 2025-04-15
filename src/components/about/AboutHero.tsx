@@ -9,6 +9,7 @@ const AboutHero = () => {
   return (
     <div 
       ref={heroRef}
+
       className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-black text-white"
       style={{ paddingTop: '0', paddingBottom: '0' }}
     >
@@ -32,6 +33,7 @@ const AboutHero = () => {
         >
           Nossa História
         </motion.h1>
+
       </div>
     </div>
   );

@@ -27,9 +27,7 @@ interface LoginResponse {
 export const AuthService = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-// const API_URL = isServer ? 'https://api.agenciagalharufa.com.br/admin/' : (process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/admin/');
       const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/';
-      // const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/admin/';
       const baseURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
       
       const loginData = {
@@ -64,7 +62,7 @@ export const AuthService = {
   
   async logout(): Promise<void> {
     try {
-      await api.post('/api/accounts/logout/', {
+      await api.post('${baseURL}/api/accounts/logout/', {
         withCredentials: true // Permitir envio de cookies e credenciais
       });
     } catch (error) {
@@ -81,7 +79,7 @@ export const AuthService = {
   
   async getUserInfo(): Promise<User> {
     try {
-      const response = await api.get<User>('/api/accounts/me/', {
+      const response = await api.get<User>('${baseURL}/api/accounts/me/', {
         withCredentials: true // Permitir envio de cookies e credenciais
       });
       return response.data;

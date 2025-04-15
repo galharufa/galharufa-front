@@ -27,13 +27,41 @@ const api = axios.create({
   withCredentials: !isBuild,
 });
 
+// Definir endpoints públicos que não requerem autenticação
+const PUBLIC_ENDPOINTS = [
+  '/api/casting/castings', // Inclui '/api/casting/castings/' e '/api/casting/castings/1/'
+  '/api/casting/categorias', // Inclui '/api/casting/categorias/' e '/api/casting/categorias/1/'
+  '/api/servicos',
+  '/api/blog',
+  '/api/contato',
+];
+
+// Função para verificar se uma URL é de um endpoint público
+const isPublicEndpoint = (url: string | undefined): boolean => {
+  if (!url) return false;
+  
+  // Verificando endpoints públicos
+  return PUBLIC_ENDPOINTS.some(endpoint => {
+    // Verificar se a URL começa com o endpoint
+    return url.startsWith(endpoint);
+  });
+};
+
+// Verificar se estamos em uma página pública
+const isPublicPage = (): boolean => {
+  // Verificar se estamos no lado do cliente
+  if (typeof window === 'undefined') return false;
+  
+  const path = window.location.pathname;
+  return path === '/cast' || path.startsWith('/cast/') || path === '/' || path.startsWith('/servicos') || path.startsWith('/blog') || path.startsWith('/contato');
+};
+
 // Interceptor para adicionar token apenas se não estivermos em ambiente de build
 if (!isBuild) {
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
-      const token = localStorage.getItem('accessToken');
-      
-      console.log('Enviando requisição para:', `${config.baseURL}${config.url}`);
+      const url = config.url || '';
+      console.log('Enviando requisição para:', `${config.baseURL}${url}`);
       console.log('Método:', config.method?.toUpperCase());
       
       // Não logar dados sensíveis como senhas
@@ -46,14 +74,38 @@ if (!isBuild) {
       }
       
       console.log('Parâmetros:', config.params);
+
+      // URL completa para verificação
+      const fullUrl = `${config.baseURL}${url}`;
+      console.log('URL completa para verificação:', fullUrl);
+
+      // Verificar se o endpoint é público
+      const isPublic = isPublicEndpoint(url);
+      console.log('Endpoint público:', isPublic);
+
+      // Verificar se estamos em uma página pública
+      const isPublicPg = isPublicPage();
+      console.log('Página pública:', isPublicPg);
+
+      // Endpoints administrativos específicos que SEMPRE precisam de autenticação
+      const isAdminEndpoint = url.includes('/admin/') || 
+                             url.includes('/create') || 
+                             url.includes('/update') || 
+                             url.includes('/delete');
+
+      // Adicionar token para páginas administrativas ou quando disponível para endpoints públicos
+      const token = localStorage.getItem('accessToken');
       
-      // Adicione o token à requisição apenas se ele existir
       if (token) {
+        // Se temos um token, sempre o adicionamos às requisições
         config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
         console.log('Token adicionado ao cabeçalho (Bearer)');
+      } else if (isAdminEndpoint) {
+        // Se é um endpoint administrativo e não temos token, podemos alertar no console
+        console.log('Sem token para endpoint administrativo:', url);
       } else {
-        console.log('Sem token de autenticação');
+        console.log('Sem token de autenticação - Requisição pública');
       }
       
       // Não logar o valor real do cabeçalho de autorização
@@ -70,6 +122,8 @@ if (!isBuild) {
   );
 }
 
+
+
 // Interceptor para tratar respostas apenas se não estivermos em ambiente de build
 if (!isBuild) {
   api.interceptors.response.use(
@@ -85,6 +139,19 @@ if (!isBuild) {
       console.error('Dados do erro:', error.response?.data);
       
       const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+      const url = originalRequest.url;
+      
+      // Se for um endpoint público ou estamos em uma página pública, não redirecione para login
+      if (isPublicEndpoint(url) || isPublicPage()) {
+        console.log('Endpoint público ou página pública - Não redirecionando para login');
+        return Promise.reject(error);
+      }
+      
+      // Se o erro for 401 em uma página administrativa, verificar sessão
+      if (error.response?.status === 401 && window.location.pathname.includes('/admin/')) {
+        console.warn('Erro 401 em página administrativa - Verificando sessão');
+        // Aqui poderia ter uma lógica adicional para verificar a sessão
+      }
       
       // Tentar renovar o token apenas se o erro for 401 (Unauthorized)
       if (error.response?.status === 401 && !originalRequest._retry) {
@@ -97,7 +164,7 @@ if (!isBuild) {
           
           if (!refreshToken) {
             console.log('Sem refresh token - Redirecionando para login');
-            // Se não tiver refresh token, redirecionar para login
+            // Se não tiver refresh token e não for um endpoint público, redirecionar para login
             window.location.href = '/admin/login';
             return Promise.reject(error);
           }

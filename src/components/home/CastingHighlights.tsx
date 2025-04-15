@@ -9,7 +9,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-// Dados fictícios de talentos em destaque
+// Dados fictícios de castings em destaque
 const highlightedTalents = [
   {
     id: '1',
@@ -68,9 +68,9 @@ const CastingHighlights = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Talentos em Destaque</h2>
+          <h2 className="heading-secondary text-black dark:text-white">Castings em Destaque</h2>
           {/* <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Conheça alguns dos talentos excepcionais representados pela Galharufa, cada um com habilidades únicas e experiências diversificadas.
+            Conheça alguns dos castings excepcionais representados pela Galharufa, cada um com habilidades únicas e experiências diversificadas.
           </p> */}
         </motion.div>
 
@@ -112,7 +112,7 @@ const CastingHighlights = () => {
                     <h3 className="text-xl font-semibold text-black dark:text-white mt-1 mb-2">{talent.name}</h3>
                     <p className="text-gray-700 dark:text-gray-300 mb-4">{talent.description}</p>
                     <Link 
-                      href={`/casting/${talent.id}`} 
+                      href={`/cast/${talent.id}`} 
                       className="hover-link text-black dark:text-white font-medium"
                     >
                       Ver perfil completo
@@ -131,10 +131,10 @@ const CastingHighlights = () => {
           className="text-center mt-8"
         >
           <Link 
-            href="/casting" 
+            href="/cast" 
             className="btn-primary"
           >
-            Ver Todos os Talentos
+            Ver Todos os Castings
           </Link>
         </motion.div>
       </div>

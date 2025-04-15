@@ -25,10 +25,10 @@ interface MetadataBase {
 export const metadata: MetadataBase = {
   title: 'Agência Galharufa | Agenciamento Artístico',
   description: 'Escritório de agenciamento artístico',
-  keywords: ['agência de atores', 'casting', 'elenco', 'talentos', 'influencer', 'criativos', 'apresentadores', 'Galharufa'],
+  keywords: ['agência de atores', 'casting', 'elenco', 'castings', 'influencer', 'criativos', 'apresentadores', 'Galharufa'],
   openGraph: {
     title: 'Agência Galharufa | Agenciamento Artístico',
-    description: 'Escritório de agenciamento artístico de atores, talentos, influencers, comunicadores e criativos.',
+    description: 'Escritório de agenciamento artístico de atores, castings, influencers, comunicadores e criativos.',
     url: 'https://www.galharufa.com.br',
     siteName: 'Agência Galharufa',
     images: [
@@ -36,7 +36,7 @@ export const metadata: MetadataBase = {
         url: '/images/og-image.jpg',
         width: 1200,
         height: 630,
-        alt: 'Galharufa - Agência de Talentos',
+        alt: 'Galharufa - Agência de Castings',
       },
     ],
     type: 'website',
