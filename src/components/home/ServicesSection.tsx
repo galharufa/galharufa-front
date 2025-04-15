@@ -13,14 +13,9 @@ const services = [
   },
   {
     icon: <FaCamera className="text-4xl mb-4" />,
-    title: 'Material para Atores',
+    title: 'Material para atores',
     description: 'Produção de material de divulgação estratégico para nossos talentos.',
   },
-  // {
-  //   icon: <FaFilm className="text-4xl mb-4" />,
-  //   title: 'Casting para Cinema e TV',
-  //   description: 'Seleção de talentos para produções audiovisuais, desde comerciais até longas-metragens e séries.',
-  // },
   {
     icon: <FaAd className="text-4xl mb-4" />,
     title: 'Marketing de Influência',

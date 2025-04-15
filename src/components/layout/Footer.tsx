@@ -53,7 +53,7 @@ const Footer = () => {
 
           {/* Links Úteis */}
           <div className="col-span-1">
-            <h3 className="text-lg font-semibold mb-4 text-gray-200">Acesso Rápido</h3>
+            {/* <h3 className="text-lg font-semibold mb-4 text-gray-200">Acesso Rápido</h3> */}
             <ul className="space-y-3">
               {footerLinks.map((link, index) => (
                 <li key={index}>

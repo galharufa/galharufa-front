@@ -41,13 +41,13 @@ const AboutSection = () => {
             transition={{ duration: 0.8, ease: 'easeOut' }}
             className="relative h-[500px] w-full overflow-hidden rounded-lg"
           >
-            <div className="absolute inset-0 bg-gradient-to-tr from-black/50 to-transparent z-10 rounded-lg"></div>
+            <div className="absolute inset-0  z-10 rounded-lg"></div>
             <Image
-              src="/images/about-image.jpg"
-              alt="Galharufa Agência"
+              src="/images/Iniciais_Transparente_LetrasPretas.png"
+              alt="Agência Galharufa"
               fill
               className="object-cover object-center"
-              sizes="(max-width: 768px) 100vw, 50vw"
+              sizes="(max-width: 350px) 80vw, 25vw"
               priority
             />
           </motion.div>
@@ -67,15 +67,7 @@ const AboutSection = () => {
             </motion.div>
 
             <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300 text-lg">
-              Fundada em 2010, a Galharufa nasceu da paixão por conectar talentos extraordinários com oportunidades transformadoras no mundo artístico.
-            </motion.p>
-
-            <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300">
-              Nossa missão é descobrir, desenvolver e promover artistas autênticos, oferecendo representação de alta qualidade e orientação personalizada para cada talento.
-            </motion.p>
-
-            <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300">
-              Com uma equipe de profissionais experientes e apaixonados, a Galharufa se destaca por seu compromisso com a excelência e pela construção de relacionamentos duradouros com clientes e talentos.
+            A Galharufa é um Bureau de Arte que emergiu do desejo em conectar artistas do palco à cena do audiovisual.                 
             </motion.p>
 
             <motion.div variants={itemVariants} className="pt-4">
