@@ -32,6 +32,8 @@ const CastingFilters = ({ activeFilter, setActiveFilter }: FilterProps) => {
         ]);
       } catch (error) {
         console.error('Erro ao carregar categorias:', error);
+        // Manter apenas a opção 'Todos' quando a API estiver indisponível
+        setCategories([{ id: 'todos', label: 'Todos' }]);
       }
     };
 

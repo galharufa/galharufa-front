@@ -16,6 +16,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
   const [castings, setCastings] = useState<CastingResumido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [displayCount, setDisplayCount] = useState(8);
+  const [apiError, setApiError] = useState(false);
   const loadMoreRef = useRef(null);
   const isInView = useInView(loadMoreRef);
 
@@ -23,6 +24,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
     const fetchCastings = async () => {
       try {
         setIsLoading(true);
+        setApiError(false);
         const params: { ordering: string; ativo: boolean; categoria?: number } = {
           ordering: 'nome',
           ativo: true
@@ -40,6 +42,8 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
         setCastings(response.results);
       } catch (error) {
         console.error('Erro ao carregar castings:', error);
+        setCastings([]);
+        setApiError(true);
       } finally {
         setIsLoading(false);
       }
@@ -86,11 +90,32 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
   }
 
 
+  // Componente de mensagem quando a API está indisponível
+  const ErrorMessage = () => (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
+    >
+      <div className="p-8 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+        <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+          Ainda não temos Castings selecionados
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          No momento, nosso catálogo de castings está indisponível. Por favor, tente novamente mais tarde ou entre em contato conosco para mais informações.  
+        </p>
+      </div>
+    </motion.div>
+  );
+
   return (
     <div className="container-section py-16">
       <AnimatePresence>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {castings.slice(0, displayCount).map((casting, index) => (
+        {apiError ? (
+          <ErrorMessage />
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            {castings.length > 0 ? castings.slice(0, displayCount).map((casting, index) => (
             <motion.div
               key={casting.id}
               custom={index}
@@ -118,19 +143,28 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
                 </div>
               </Link>
             </motion.div>
-          ))}
-        </div>
+            )) : !isLoading && (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
+              >
+                <p className="text-gray-600 dark:text-gray-400">
+                  Nenhum casting encontrado para os filtros selecionados.
+                </p>
+              </motion.div>
+            )}
+          </div>
+        )}
       </AnimatePresence>
 
-      {displayCount < castings.length && (
-        <div ref={loadMoreRef} className="flex justify-center mt-12">
-          <button
-            onClick={() => setDisplayCount(prev => Math.min(prev + 4, castings.length))}
-            className="px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full 
-                        font-medium transition-all duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
-          >
-            Carregar Mais
-          </button>
+      {!apiError && castings.length > displayCount && (
+        <div ref={loadMoreRef} className="w-full h-20 flex items-center justify-center">
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="w-10 h-10 border-2 border-primary border-t-transparent rounded-full animate-spin"
+          />
         </div>
       )}
     </div>
