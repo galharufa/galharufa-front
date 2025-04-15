@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Container, Title, Text, Card, Button, Group, SimpleGrid, useMantineColorScheme, Loader, Modal, TextInput, Textarea, Tabs, Table, ActionIcon } from '@mantine/core';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
-import { CastingService, type CategoriasCasting, type TalentoResumido } from '@/services';
+import { CastingService, type CategoriasCasting, type CastingResumido } from '@/services';
 import { errorToast, successToast } from '@/utils';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -19,7 +19,7 @@ export default function CastingAdmin() {
   const isDark = colorScheme === 'dark';
   
   const [categorias, setCategorias] = useState<CategoriasCasting[]>([]);
-  const [talentos, setTalentos] = useState<TalentoResumido[]>([]);
+  const [castings, setCastings] = useState<CastingResumido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string | null>('categorias');
   
@@ -49,13 +49,13 @@ export default function CastingAdmin() {
       
       try {
         setIsLoading(true);
-        const [categoriasResponse, talentosResponse] = await Promise.all([
+        const [categoriasResponse, castingsResponse] = await Promise.all([
           CastingService.getCategorias({ ordering: 'nome' }),
-          CastingService.getTalentos({ ordering: 'nome' })
+          CastingService.getCastings({ ordering: 'nome' })
         ]);
         
         setCategorias(categoriasResponse.results);
-        setTalentos(talentosResponse.results);
+        setCastings(castingsResponse.results);
       } catch (error) {
         console.error('Erro ao carregar dados de casting:', error);
         errorToast('Erro ao carregar dados de casting');
@@ -122,7 +122,7 @@ export default function CastingAdmin() {
       successToast('Categoria excluída com sucesso');
     } catch (error) {
       console.error('Erro ao excluir categoria:', error);
-      errorToast('Erro ao excluir categoria. Verifique se não existem talentos associados a ela.');
+      errorToast('Erro ao excluir categoria. Verifique se não existem castings associados a ela.');
     } finally {
       setIsLoading(false);
       setDeleteModalCategoriaOpen(false);
@@ -163,41 +163,41 @@ export default function CastingAdmin() {
     }
   };
 
-  // Navegação para criar novo talento
-  const handleCriarTalento = () => {
-    router.push('/admin/casting/talentos/novo');
+  // Navegação para criar novo casting
+  const handleCriarCasting = () => {
+    router.push('/admin/casting/castings/novo');
   };
 
-  // Navegação para editar talento
-  const handleEditarTalento = (id: number) => {
-    router.push(`/admin/casting/talentos/editar/${id}`);
+  // Navegação para editar casting
+  const handleEditarCasting = (id: number) => {
+    router.push(`/admin/casting/castings/editar/${id}`);
   };
 
-  // Função para excluir talento
-  const handleExcluirTalento = async (id: number) => {
-    if (!confirm('Tem certeza que deseja excluir este talento? Esta ação não pode ser desfeita.')) {
+  // Função para excluir casting
+  const handleExcluirCasting = async (id: number) => {
+    if (!confirm('Tem certeza que deseja excluir este casting? Esta ação não pode ser desfeita.')) {
       return;
     }
     
     try {
       setIsLoading(true);
-      await CastingService.excluirTalento(id);
+      await CastingService.excluirCasting(id);
       
-      // Atualizar a lista de talentos
-      setTalentos(talentos.filter(talento => talento.id !== id));
+      // Atualizar a lista de castings
+      setCastings(castings.filter(casting => casting.id !== id));
       
-      successToast('Talento excluído com sucesso');
+      successToast('Casting excluído com sucesso');
     } catch (error) {
       console.error('Erro ao excluir talento:', error);
-      errorToast('Erro ao excluir talento');
+      errorToast('Erro ao excluir casting');
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Contagem de talentos por categoria
-  const getTalentosCountByCategoria = (categoriaId: number) => {
-    return talentos.filter(talento => talento.categoria === categoriaId).length;
+  // Contagem de castings por categoria
+  const getCastingsCountByCategoria = (categoriaId: number) => {
+    return castings.filter(casting => casting.categoria === categoriaId).length;
   };
 
   if (authLoading) {
@@ -234,7 +234,7 @@ export default function CastingAdmin() {
               Nova Categoria
             </Button>
             <Button 
-              onClick={handleCriarTalento}
+              onClick={handleCriarCasting}
               styles={{
                 root: {
                   backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
@@ -245,7 +245,7 @@ export default function CastingAdmin() {
                 }
               }}
             >
-              Novo Talento
+              Novo Casting
             </Button>
           </Group>
         </Group>
@@ -258,7 +258,7 @@ export default function CastingAdmin() {
           <Tabs value={activeTab} onTabChange={setActiveTab}>
             <Tabs.List mb="xl">
               <Tabs.Tab value="categorias">Categorias</Tabs.Tab>
-              <Tabs.Tab value="talentos">Talentos</Tabs.Tab>
+              <Tabs.Tab value="castings">Castings</Tabs.Tab>
             </Tabs.List>
 
             <Tabs.Panel value="categorias">
@@ -272,7 +272,7 @@ export default function CastingAdmin() {
                   { maxWidth: 'xs', cols: 1 },
                 ]} mb="xl">
                   {categorias.map((categoria) => {
-                    const count = getTalentosCountByCategoria(categoria.id);
+                    const count = getCastingsCountByCategoria(categoria.id);
                     return (
                       <Card key={categoria.id} p="lg" radius="md" withBorder>
                         <Group position="apart">
@@ -296,7 +296,7 @@ export default function CastingAdmin() {
                           {count}
                         </Text>
                         <Text size="sm" color="dimmed">
-                          talentos cadastrados
+                          castings cadastrados
                         </Text>
                         <Text mt="md" color="dimmed" size="sm">
                           {categoria.descricao}
@@ -308,10 +308,10 @@ export default function CastingAdmin() {
               )}
             </Tabs.Panel>
 
-            <Tabs.Panel value="talentos">
-              {talentos.length === 0 ? (
+            <Tabs.Panel value="castings">
+              {castings.length === 0 ? (
                 <Card withBorder p="xl" radius="md">
-                  <Text align="center" size="lg">Nenhum talento cadastrado.</Text>
+                  <Text align="center" size="lg">Nenhum casting cadastrado.</Text>
                 </Card>
               ) : (
                 <Card withBorder p={0} radius="md">
@@ -326,14 +326,14 @@ export default function CastingAdmin() {
                       </tr>
                     </thead>
                     <tbody>
-                      {talentos.map((talento) => (
-                        <tr key={talento.id}>
+                      {castings.map((casting) => (
+                        <tr key={casting.id}>
                           <td style={{ width: 60 }}>
-                            {talento.foto_principal ? (
+                            {casting.foto_principal ? (
                               <div style={{ width: 50, height: 50, position: 'relative', overflow: 'hidden', borderRadius: '4px' }}>
                                 <Image 
-                                  src={talento.foto_principal} 
-                                  alt={talento.nome}
+                                  src={casting.foto_principal} 
+                                  alt={casting.nome}
                                   fill
                                   style={{ objectFit: 'cover' }}
                                 />
@@ -344,10 +344,10 @@ export default function CastingAdmin() {
                               </div>
                             )}
                           </td>
-                          <td>{talento.nome}</td>
-                          <td>{talento.categoria_nome}</td>
+                          <td>{casting.nome}</td>
+                          <td>{casting.categoria_nome}</td>
                           <td>
-                            {talento.ativo ? (
+                            {casting.ativo ? (
                               <Text color="green">Ativo</Text>
                             ) : (
                               <Text color="gray">Inativo</Text>
@@ -357,13 +357,13 @@ export default function CastingAdmin() {
                             <Group spacing={8}>
                               <ActionIcon 
                                 color="blue" 
-                                onClick={() => handleEditarTalento(talento.id)}
+                                onClick={() => handleEditarCasting(casting.id)}
                               >
                                 <IconEdit size={18} />
                               </ActionIcon>
                               <ActionIcon 
                                 color="red" 
-                                onClick={() => handleExcluirTalento(talento.id)}
+                                onClick={() => handleExcluirCasting(casting.id)}
                               >
                                 <IconTrash size={18} />
                               </ActionIcon>

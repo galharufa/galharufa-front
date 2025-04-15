@@ -6,21 +6,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useInView } from 'framer-motion';
 
-import { CastingService, TalentoResumido } from '@/services/casting.service';
+import { CastingService, CastingResumido } from '@/services/casting.service';
 
 interface CastingGridProps {
   filter: string;
 }
 
 const CastingGrid = ({ filter }: CastingGridProps) => {
-  const [talentos, setTalentos] = useState<TalentoResumido[]>([]);
+  const [castings, setCastings] = useState<CastingResumido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [displayCount, setDisplayCount] = useState(8);
   const loadMoreRef = useRef(null);
   const isInView = useInView(loadMoreRef);
 
   useEffect(() => {
-    const fetchTalentos = async () => {
+    const fetchCastings = async () => {
       try {
         setIsLoading(true);
         const params: { ordering: string; ativo: boolean; categoria?: number } = {
@@ -36,24 +36,24 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
           }
         }
 
-        const response = await CastingService.getTalentos(params);
-        setTalentos(response.results);
+        const response = await CastingService.getCastings(params);
+        setCastings(response.results);
       } catch (error) {
-        console.error('Erro ao carregar talentos:', error);
+        console.error('Erro ao carregar castings:', error);
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchTalentos();
+    fetchCastings();
   }, [filter]);
 
-  // Incrementar o número de talentos exibidos quando o elemento de referência estiver visível
+  // Incrementar o número de castings exibidos quando o elemento de referência estiver visível
   useEffect(() => {
-    if (isInView && displayCount < talentos.length) {
-      setDisplayCount(prev => Math.min(prev + 4, talentos.length));
+    if (isInView && displayCount < castings.length) {
+      setDisplayCount(prev => Math.min(prev + 4, castings.length));
     }
-  }, [isInView, talentos.length, displayCount]);
+  }, [isInView, castings.length, displayCount]);
 
   // Animação para card
   const cardVariants = {
@@ -90,30 +90,30 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
     <div className="container-section py-16">
       <AnimatePresence>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {talentos.slice(0, displayCount).map((talento, index) => (
+          {castings.slice(0, displayCount).map((casting, index) => (
             <motion.div
-              key={talento.id}
+              key={casting.id}
               custom={index}
               variants={cardVariants}
               initial="hidden"
               animate="visible"
               exit="exit"
-              layoutId={`talent-${talento.id}`}
+              layoutId={`casting-${casting.id}`}
               className="group cursor-pointer"
             >
-              <Link href={`/cast/${talento.id}`} passHref>
+              <Link href={`/cast/${casting.id}`} passHref>
                 <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                   <Image
-                    src={talento.foto_principal || '/images/placeholder-talent.jpg'}
-                    alt={talento.nome}
+                    src={casting.foto_principal || '/images/placeholder-talent.jpg'}
+                    alt={casting.nome}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                     className="object-cover transition-transform duration-500 group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                   <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-white text-xl font-semibold">{talento.nome}</h3>
-                    <p className="text-gray-300 text-sm">{talento.categoria_nome}</p>
+                    <h3 className="text-white text-xl font-semibold">{casting.nome}</h3>
+                    <p className="text-gray-300 text-sm">{casting.categoria_nome}</p>
                   </div>
                 </div>
               </Link>
@@ -122,10 +122,10 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
         </div>
       </AnimatePresence>
 
-      {displayCount < talentos.length && (
+      {displayCount < castings.length && (
         <div ref={loadMoreRef} className="flex justify-center mt-12">
           <button
-            onClick={() => setDisplayCount(prev => Math.min(prev + 4, talentos.length))}
+            onClick={() => setDisplayCount(prev => Math.min(prev + 4, castings.length))}
             className="px-8 py-3 bg-black dark:bg-white text-white dark:text-black rounded-full 
                         font-medium transition-all duration-300 hover:bg-gray-800 dark:hover:bg-gray-200"
           >

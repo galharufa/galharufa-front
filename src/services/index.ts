@@ -11,7 +11,7 @@ import type { Categoria as CategoriasCasting } from './casting.service';
 import type { Categoria as CategoriasBlog, Tag, PostResumido, Post, PostFiltros } from './blog.service';
 import type { Configuracoes } from './configuracoes.service';
 import type { Servico, ServicoResumido } from './servicos.service';
-import type { TalentoResumido, TalentoDetalhado, Foto, Video } from './casting.service';
+import type { CastingResumido, CastingDetalhado, Foto, Video } from './casting.service';
 
 export {
   AuthService,
@@ -34,8 +34,8 @@ export type {
   Configuracoes,
   Servico,
   ServicoResumido,
-  TalentoResumido, 
-  TalentoDetalhado, 
+  CastingResumido, 
+  CastingDetalhado, 
   Foto, 
   Video
 };

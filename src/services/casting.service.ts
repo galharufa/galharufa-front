@@ -6,7 +6,7 @@ export interface Categoria {
   descricao: string;
 }
 
-export interface TalentoResumido {
+export interface CastingResumido {
   id: number;
   nome: string;
   categoria: number;
@@ -29,7 +29,7 @@ export interface Video {
   ordem: number;
 }
 
-export interface TalentoDetalhado extends TalentoResumido {
+export interface CastingDetalhado extends CastingResumido {
   data_nascimento: string;
   altura: string;
   peso: string;
@@ -74,26 +74,26 @@ export const CastingService = {
     await api.delete(`/api/casting/categorias/${id}/`);
   },
   
-  // Talentos
-  async getTalentos(params?: { 
+  // Castings
+  async getCastings(params?: { 
     categoria?: number; 
     ativo?: boolean; 
     search?: string; 
     ordering?: string;
     page?: number;
     page_size?: number;
-  }): Promise<PaginatedResponse<TalentoResumido>> {
-    const response = await api.get<PaginatedResponse<TalentoResumido>>('/api/casting/talentos/', { params });
+  }): Promise<PaginatedResponse<CastingResumido>> {
+    const response = await api.get<PaginatedResponse<CastingResumido>>('/api/casting/castings/', { params });
     return response.data;
   },
   
-  async getTalento(id: number): Promise<TalentoDetalhado> {
-    const response = await api.get<TalentoDetalhado>(`/api/casting/talentos/${id}/`);
+  async getCasting(id: number): Promise<CastingDetalhado> {
+    const response = await api.get<CastingDetalhado>(`/api/casting/castings/${id}/`);
     return response.data;
   },
   
-  async criarTalento(formData: FormData): Promise<TalentoDetalhado> {
-    const response = await api.post<TalentoDetalhado>('/api/casting/talentos/', formData, {
+  async criarCasting(formData: FormData): Promise<CastingDetalhado> {
+    const response = await api.post<CastingDetalhado>('/api/casting/castings/', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -101,8 +101,8 @@ export const CastingService = {
     return response.data;
   },
   
-  async atualizarTalento(id: number, formData: FormData): Promise<TalentoDetalhado> {
-    const response = await api.patch<TalentoDetalhado>(`/api/casting/talentos/${id}/`, formData, {
+  async atualizarCasting(id: number, formData: FormData): Promise<CastingDetalhado> {
+    const response = await api.patch<CastingDetalhado>(`/api/casting/castings/${id}/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -110,13 +110,13 @@ export const CastingService = {
     return response.data;
   },
   
-  async excluirTalento(id: number): Promise<void> {
-    await api.delete(`/api/casting/talentos/${id}/`);
+  async excluirCasting(id: number): Promise<void> {
+    await api.delete(`/api/casting/castings/${id}/`);
   },
   
   // Fotos
-  async adicionarFoto(talentoId: number, formData: FormData): Promise<Foto> {
-    const response = await api.post<Foto>(`/api/casting/talentos/${talentoId}/add_foto/`, formData, {
+  async adicionarFoto(castingId: number, formData: FormData): Promise<Foto> {
+    const response = await api.post<Foto>(`/api/casting/castings/${castingId}/add_foto/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -124,17 +124,17 @@ export const CastingService = {
     return response.data;
   },
   
-  async excluirFoto(talentoId: number, fotoId: number): Promise<void> {
-    await api.delete(`/api/casting/talentos/${talentoId}/fotos/${fotoId}/`);
+  async excluirFoto(castingId: number, fotoId: number): Promise<void> {
+    await api.delete(`/api/casting/castings/${castingId}/fotos/${fotoId}/`);
   },
   
   // Vídeos
-  async adicionarVideo(talentoId: number, video: Omit<Video, 'id'>): Promise<Video> {
-    const response = await api.post<Video>(`/api/casting/talentos/${talentoId}/videos/`, video);
+  async adicionarVideo(castingId: number, video: Omit<Video, 'id'>): Promise<Video> {
+    const response = await api.post<Video>(`/api/casting/castings/${castingId}/videos/`, video);
     return response.data;
   },
   
-  async excluirVideo(talentoId: number, videoId: number): Promise<void> {
-    await api.delete(`/api/casting/talentos/${talentoId}/videos/${videoId}/`);
+  async excluirVideo(castingId: number, videoId: number): Promise<void> {
+    await api.delete(`/api/casting/castings/${castingId}/videos/${videoId}/`);
   }
 };

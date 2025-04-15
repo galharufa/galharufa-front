@@ -10,8 +10,8 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-// Dados simulados de talentos
-const talents = [
+// Dados simulados de castings
+const castings = [
   {
     id: 1,
     name: 'Sofia Mendes',
@@ -63,10 +63,10 @@ const CastingPreview = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Nossos Talentos</h2>
+          <h2 className="heading-secondary text-black dark:text-white">Nossos Castings</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Conheça alguns dos talentos excepcionais representados pela Galharufa, prontos para brilhar em seu próximo projeto.
+            Conheça alguns dos castings excepcionais representados pela Galharufa, prontos para brilhar em seu próximo projeto.
           </p>
         </motion.div>
 
@@ -92,21 +92,21 @@ const CastingPreview = () => {
             }}
             className="casting-swiper"
           >
-            {talents.map((talent) => (
-              <SwiperSlide key={talent.id}>
+            {castings.map((casting) => (
+              <SwiperSlide key={casting.id}>
                 <div className="group relative overflow-hidden rounded-lg h-[450px] mb-10">
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-10"></div>
                   <Image
-                    src={talent.image}
-                    alt={talent.name}
+                    src={casting.image}
+                    alt={casting.name}
                     fill
                     className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                   />
                   <div className="absolute bottom-0 left-0 right-0 p-6 z-20 transform transition-transform duration-300 group-hover:translate-y-[-10px]">
-                    <h3 className="text-xl font-semibold text-white">{talent.name}</h3>
-                    <p className="text-gray-300 mb-4">{talent.category}</p>
-                    <Link href={`/casting/${talent.id}`}>
+                    <h3 className="text-xl font-semibold text-white">{casting.name}</h3>
+                    <p className="text-gray-300 mb-4">{casting.category}</p>
+                    <Link href={`/casting/${casting.id}`}>
                       <span className="nav-link text-white">Ver Perfil</span>
                     </Link>
                   </div>
@@ -124,7 +124,7 @@ const CastingPreview = () => {
         >
           <Link href="/cast">
             <button className="btn-outline dark:border-white dark:text-white">
-              Ver Todos os Talentos
+              Ver Todos os Castings
             </button>
           </Link>
         </motion.div>

@@ -30,7 +30,7 @@ export default function Dashboard() {
   const isDark = colorScheme === 'dark';
 
   const [isLoading, setIsLoading] = useState(true);
-  const [totalTalentos, setTotalTalentos] = useState(0);
+  const [totalCastings, setTotalCastings] = useState(0);
   const [totalServicos, setTotalServicos] = useState(0);
   const [totalPosts, setTotalPosts] = useState(0);
   const [dadosCategorias, setDadosCategorias] = useState<DataCategoria[]>([]);
@@ -49,40 +49,40 @@ export default function Dashboard() {
       setIsLoading(true);
       try {
         // Carregar dados em paralelo para melhor performance
-        const [talentos, servicos, posts, categorias] = await Promise.all([
-          CastingService.getTalentos({ page_size: 1 }),
+        const [castings, servicos, posts, categorias] = await Promise.all([
+          CastingService.getCastings({ page_size: 1 }),
           ServicosService.getServicos({ page_size: 1 }),
           BlogService.getPosts({ page_size: 100 }),
           CastingService.getCategorias()
         ]);
 
-        setTotalTalentos(talentos.count);
+        setTotalCastings(castings.count);
         setTotalServicos(servicos.count);
         setTotalPosts(posts.count);
 
-        // Obter talentos por categoria
+        // Obter castings por categoria
         const categoriasMap = new Map<number, Categoria>();
         categorias.results.forEach(cat => categoriasMap.set(cat.id, cat));
 
-        const talentosPorCategoria: Map<number, number> = new Map();
+        const castingsPorCategoria: Map<number, number> = new Map();
         
         // Inicializar todas as categorias com zero
-        categorias.results.forEach(cat => talentosPorCategoria.set(cat.id, 0));
+        categorias.results.forEach(cat => castingsPorCategoria.set(cat.id, 0));
         
-        // Fazer chamada adicional para obter todos os talentos
-        const todosTalentos = await CastingService.getTalentos({ page_size: 100 });
+        // Fazer chamada adicional para obter todos os castings
+        const todosCastings = await CastingService.getCastings({ page_size: 100 });
         
-        // Contar talentos por categoria
-        todosTalentos.results.forEach(talento => {
-          const categoriaId = talento.categoria;
-          talentosPorCategoria.set(
+        // Contar castings por categoria
+        todosCastings.results.forEach(casting => {
+          const categoriaId = casting.categoria;
+          castingsPorCategoria.set(
             categoriaId, 
-            (talentosPorCategoria.get(categoriaId) || 0) + 1
+            (castingsPorCategoria.get(categoriaId) || 0) + 1
           );
         });
         
         // Formatar dados para o gráfico
-        const dadosGraficoCat = Array.from(talentosPorCategoria.entries())
+        const dadosGraficoCat = Array.from(castingsPorCategoria.entries())
           .map(([categoriaId, quantidade]) => ({
             nome: categoriasMap.get(categoriaId)?.nome || 'Sem categoria',
             quantidade
@@ -152,8 +152,8 @@ export default function Dashboard() {
     {
       title: 'Casting',
       icon: <IconUsers size={32} stroke={1.5} color={isDark ? '#FFFFFF' : '#000000'} />,
-      value: isLoading ? <Loader size="sm" /> : `${totalTalentos}`,
-      description: 'Talentos cadastrados',
+      value: isLoading ? <Loader size="sm" /> : `${totalCastings}`,
+      description: 'Castings cadastrados',
     },
     {
       title: 'Serviços',
@@ -217,7 +217,7 @@ export default function Dashboard() {
         <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'md', cols: 1 }]} spacing="lg" mb="xl">
           {/* Gráfico de Talentos por Categoria */}
           <Card withBorder p="lg" radius="md">
-            <Title order={3} mb="lg">Talentos por Categoria</Title>
+            <Title order={3} mb="lg">Castings por Categoria</Title>
             {isLoading ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
                 <Loader size="lg" />
