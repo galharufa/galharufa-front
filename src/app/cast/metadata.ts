@@ -6,5 +6,6 @@ interface MetadataBase {
 
 export const metadata: MetadataBase = {
   title: 'Casting',
-  description: 'Explore nosso casting diversificado de talentos para seu próximo projeto. Atores, modelos, apresentadores e muito mais.',
+  description:
+    'Explore nosso casting diversificado de talentos para seu próximo projeto. Atores, modelos, apresentadores e muito mais.',
 };

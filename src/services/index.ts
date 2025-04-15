@@ -8,7 +8,13 @@ import api from './api';
 // Exportar tipos
 import type { PaginatedResponse } from './casting.service';
 import type { Categoria as CategoriasCasting } from './casting.service';
-import type { Categoria as CategoriasBlog, Tag, PostResumido, Post, PostFiltros } from './blog.service';
+import type {
+  Categoria as CategoriasBlog,
+  Tag,
+  PostResumido,
+  Post,
+  PostFiltros,
+} from './blog.service';
 import type { Configuracoes } from './configuracoes.service';
 import type { Servico, ServicoResumido } from './servicos.service';
 import type { CastingResumido, CastingDetalhado, Foto, Video } from './casting.service';
@@ -19,13 +25,13 @@ export {
   ServicosService,
   BlogService,
   ConfiguracoesService,
-  api
+  api,
 };
 
 // Exportar tipos
-export type { 
-  PaginatedResponse, 
-  CategoriasCasting, 
+export type {
+  PaginatedResponse,
+  CategoriasCasting,
   CategoriasBlog,
   Tag,
   PostResumido,
@@ -34,8 +40,8 @@ export type {
   Configuracoes,
   Servico,
   ServicoResumido,
-  CastingResumido, 
-  CastingDetalhado, 
-  Foto, 
-  Video
+  CastingResumido,
+  CastingDetalhado,
+  Foto,
+  Video,
 };

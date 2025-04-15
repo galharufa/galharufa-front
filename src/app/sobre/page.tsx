@@ -15,15 +15,16 @@ interface MetadataBase {
 
 export const metadata: MetadataBase = {
   title: 'Sobre Nós',
-  description: 'Conheça a história, valores e equipe por trás da Galharufa, uma agência de talentos comprometida com a excelência e o desenvolvimento de artistas.',
+  description:
+    'Conheça a história, valores e equipe por trás da Galharufa, uma agência de talentos comprometida com a excelência e o desenvolvimento de artistas.',
 };
 
 export default function AboutPage() {
   return (
     <div className="bg-white dark:bg-gray-900">
-       {/* Script para otimizar carregamento de CSS */}
-       <Script id="optimize-css" strategy="afterInteractive">
-         {`
+      {/* Script para otimizar carregamento de CSS */}
+      <Script id="optimize-css" strategy="afterInteractive">
+        {`
            document.addEventListener('DOMContentLoaded', function() {
              const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
              preloadLinks.forEach(link => {
@@ -34,18 +35,18 @@ export default function AboutPage() {
              });
            });
          `}
-       </Script>
+      </Script>
       <AboutHero />
       <OurStory />
       <OurValues />
       <OurTeam />
-      <CtaBanner 
+      <CtaBanner
         title="Seletiva para Agenciamento Artístico"
         description="Estamos muito felizes com seu interesse em integrar nosso casting. Para que possamos lhe conhecer melhor, por gentileza, encaminhar para análise seu material no link abaixo."
         buttonText="Envio de Material"
         buttonLink="/contato"
         bgColor="white"
       />
-    </div> 
+    </div>
   );
 }

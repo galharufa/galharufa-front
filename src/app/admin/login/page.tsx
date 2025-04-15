@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use client';
 
 import {
@@ -80,17 +81,17 @@ export default function Login() {
     <>
       <ToastContainer />
       {/* Botão de troca de tema no canto superior direito */}
-      <Box 
-        sx={{ 
-          position: 'absolute', 
-          top: '20px', 
-          right: '20px', 
-          zIndex: 1000 
+      <Box
+        sx={{
+          position: 'absolute',
+          top: '20px',
+          right: '20px',
+          zIndex: 1000,
         }}
       >
         <ThemeToggle />
       </Box>
-      
+
       <Grid w="100%" h="100vh" m={0} sx={{ overflow: 'hidden' }}>
         <MediaQuery smallerThan="lg" styles={{ display: 'none' }}>
           <Grid.Col span={6} h="100%" p={0} sx={{ position: 'relative' }}>
@@ -110,20 +111,30 @@ export default function Login() {
         </MediaQuery>
 
         <Grid.Col md={12} lg={6} h="100%" p={0}>
-          <Center h="100%" sx={{
-            backgroundColor: isDark ? '#1A1B1E' : '#FFFFFF',
-            color: isDark ? '#FFFFFF' : '#000000'
-          }}>
+          <Center
+            h="100%"
+            sx={{
+              backgroundColor: isDark ? '#1A1B1E' : '#FFFFFF',
+              color: isDark ? '#FFFFFF' : '#000000',
+            }}
+          >
             <Stack w="100%" mx="auto" maw={500} px="lg">
-              <Box mx="auto" sx={{
-                '@media (max-width: 768px)': {
-                  '& img': {
-                    maxHeight: '50px',
-                  }
-                }
-              }}>
+              <Box
+                mx="auto"
+                sx={{
+                  '@media (max-width: 768px)': {
+                    '& img': {
+                      maxHeight: '50px',
+                    },
+                  },
+                }}
+              >
                 <Image
-                  src={isDark ? "/images/logo_horizontal_black.jpg" : "/images/logo_horizontal_white.jpg"}
+                  src={
+                    isDark
+                      ? '/images/logo_horizontal_black.jpg'
+                      : '/images/logo_horizontal_white.jpg'
+                  }
                   alt="Galharufa Logo"
                   width={300}
                   height={80}
@@ -132,7 +143,7 @@ export default function Login() {
                     height: 'auto',
                     maxHeight: '80px',
                     maxWidth: '100%',
-                    objectFit: 'contain'
+                    objectFit: 'contain',
                   }}
                 />
               </Box>
@@ -145,7 +156,7 @@ export default function Login() {
                 sx={(theme) => ({
                   fontFamily: `Greycliff CF, ${theme.fontFamily}`,
                   fontWeight: 700,
-                  color: isDark ? '#FFFFFF' : '#000000'
+                  color: isDark ? '#FFFFFF' : '#000000',
                 })}
               >
                 Login
@@ -167,7 +178,7 @@ export default function Login() {
                       },
                       label: {
                         color: isDark ? '#C1C2C5' : '#212529',
-                      }
+                      },
                     }}
                   />
 
@@ -185,7 +196,7 @@ export default function Login() {
                       },
                       label: {
                         color: isDark ? '#C1C2C5' : '#212529',
-                      }
+                      },
                     }}
                   />
 
@@ -195,7 +206,7 @@ export default function Login() {
                     styles={{
                       label: {
                         color: isDark ? '#C1C2C5' : '#212529',
-                      }
+                      },
                     }}
                   />
                 </Stack>
@@ -209,12 +220,16 @@ export default function Login() {
                   loading={isLoading}
                   styles={{
                     root: {
-                      backgroundColor: isDark ? '#000000 !important' : '#666666 !important',
+                      backgroundColor: isDark
+                        ? '#000000 !important'
+                        : '#666666 !important',
                       color: '#FFFFFF !important',
                       '&:hover': {
-                        backgroundColor: isDark ? '#333333 !important' : '#000000 !important',
-                      }
-                    }
+                        backgroundColor: isDark
+                          ? '#333333 !important'
+                          : '#000000 !important',
+                      },
+                    },
                   }}
                 >
                   Login

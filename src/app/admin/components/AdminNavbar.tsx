@@ -83,7 +83,11 @@ export default function AdminNavbar() {
           <Center my={24}>
             <Anchor component={Link} href="/" passHref>
               <Image
-                src={dark ? "/images/logo_horizontal_black.jpg" : "/images/logo_horizontal_white.jpg"}
+                src={
+                  dark
+                    ? '/images/logo_horizontal_black.jpg'
+                    : '/images/logo_horizontal_white.jpg'
+                }
                 width={150}
                 height={80}
                 alt="Logo"
@@ -125,8 +129,10 @@ export default function AdminNavbar() {
                   color: dark ? '#FFFFFF !important' : '#000000 !important',
                   borderColor: dark ? '#FFFFFF !important' : '#000000 !important',
                   '&:hover': {
-                    backgroundColor: dark ? 'rgba(255, 255, 255, 0.1) !important' : 'rgba(0, 0, 0, 0.1) !important',
-                  }
+                    backgroundColor: dark
+                      ? 'rgba(255, 255, 255, 0.1) !important'
+                      : 'rgba(0, 0, 0, 0.1) !important',
+                  },
                 }}
               >
                 {dark ? <IconSun size={18} /> : <IconMoon size={18} />}
@@ -155,19 +161,8 @@ export default function AdminNavbar() {
           Tem certeza que deseja sair?
         </Title>
 
-        <Flex
-          mt={36}
-          align="center"
-          justify="center"
-          gap="xl"
-          direction="row"
-        >
-          <Button
-            type="button"
-            color="gray"
-            w={200}
-            onClick={logoutModal.close}
-          >
+        <Flex mt={36} align="center" justify="center" gap="xl" direction="row">
+          <Button type="button" color="gray" w={200} onClick={logoutModal.close}>
             Cancelar
           </Button>
 

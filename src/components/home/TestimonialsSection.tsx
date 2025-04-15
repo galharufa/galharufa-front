@@ -16,7 +16,8 @@ const testimonials = [
     role: 'Diretora de Marketing',
     company: 'Empresa XYZ',
     image: '/images/testimonial-1.jpg',
-    quote: 'A Galharufa superou todas as nossas expectativas. Os talentos selecionados para nossa campanha foram perfeitos e o processo foi extremamente profissional do início ao fim.',
+    quote:
+      'A Galharufa superou todas as nossas expectativas. Os talentos selecionados para nossa campanha foram perfeitos e o processo foi extremamente profissional do início ao fim.',
   },
   {
     id: 2,
@@ -24,7 +25,8 @@ const testimonials = [
     role: 'Ator',
     company: 'Talento Agenciado',
     image: '/images/testimonial-2.jpg',
-    quote: 'Fazer parte da Galharufa transformou minha carreira. A equipe está sempre atenta às melhores oportunidades e o suporte que recebo é incomparável.',
+    quote:
+      'Fazer parte da Galharufa transformou minha carreira. A equipe está sempre atenta às melhores oportunidades e o suporte que recebo é incomparável.',
   },
   {
     id: 3,
@@ -32,7 +34,8 @@ const testimonials = [
     role: 'Produtora Executiva',
     company: 'Produtora de Cinema',
     image: '/images/testimonial-3.jpg',
-    quote: 'Trabalhar com a Galharufa é sempre uma experiência incrível. A agência entende perfeitamente nossas necessidades e sempre entrega os melhores talentos para nossos projetos.',
+    quote:
+      'Trabalhar com a Galharufa é sempre uma experiência incrível. A agência entende perfeitamente nossas necessidades e sempre entrega os melhores talentos para nossos projetos.',
   },
   {
     id: 4,
@@ -40,7 +43,8 @@ const testimonials = [
     role: 'Modelo',
     company: 'Talento Agenciado',
     image: '/images/testimonial-4.jpg',
-    quote: 'A Galharufa não é apenas uma agência, é uma família que realmente se importa com o desenvolvimento da minha carreira. Sou muito grato por fazer parte deste time.',
+    quote:
+      'A Galharufa não é apenas uma agência, é uma família que realmente se importa com o desenvolvimento da minha carreira. Sou muito grato por fazer parte deste time.',
   },
 ];
 

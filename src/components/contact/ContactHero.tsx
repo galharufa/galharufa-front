@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 const ContactHero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
   return (
-    <div 
+    <div
       ref={heroRef}
       className="relative min-h-[60vh] flex items-center justify-center overflow-hidden bg-black text-white"
       style={{ paddingTop: '0', paddingBottom: '0' }}
@@ -20,10 +20,8 @@ const ContactHero = () => {
       </div>
 
       {/* Conteúdo */}
-      <div 
-        className="relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8"
-      >
-        <motion.h1 
+      <div className="relative z-20 flex flex-col items-center justify-center text-center px-4 sm:px-6 lg:px-8">
+        <motion.h1
           className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-tight lg:mt-20"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -33,8 +31,6 @@ const ContactHero = () => {
         </motion.h1>
       </div>
     </div>
-
-
   );
 };
 

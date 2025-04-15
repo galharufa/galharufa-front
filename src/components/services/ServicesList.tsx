@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
-import { FaUserTie, FaCamera, FaFilm} from 'react-icons/fa';
+import { FaUserTie, FaCamera, FaFilm } from 'react-icons/fa';
 
 // Dados detalhados dos serviços
 const services = [
@@ -43,7 +43,7 @@ const services = [
       'Casting para campanhas publicitárias',
       'Testes e audições personalizados',
       'Banco de talentos categorizado e atualizado',
-      'Consultoria para diretores e produtores'
+      'Consultoria para diretores e produtores',
     ],
     image: '/images/service-3.jpg',
   },
@@ -137,7 +137,8 @@ const ServicesList = () => {
           </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Conheça nossa gama completa de serviços, desenvolvidos para atender às necessidades específicas de nossos talentos e clientes.
+            Conheça nossa gama completa de serviços, desenvolvidos para atender às
+            necessidades específicas de nossos talentos e clientes.
           </p>
         </motion.div>
 
@@ -168,7 +169,9 @@ const ServicesList = () => {
                   ))}
                 </ul>
               </div>
-              <div className={`relative h-[400px] rounded-lg overflow-hidden ${index % 2 !== 0 ? 'lg:order-1' : ''}`}>
+              <div
+                className={`relative h-[400px] rounded-lg overflow-hidden ${index % 2 !== 0 ? 'lg:order-1' : ''}`}
+              >
                 <Image
                   src={service.image}
                   alt={service.title}

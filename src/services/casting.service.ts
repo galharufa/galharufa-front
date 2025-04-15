@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import api from './api';
 
 export interface Categoria {
@@ -50,9 +51,15 @@ export interface PaginatedResponse<T> {
 
 export const CastingService = {
   // Categorias
-  async getCategorias(params?: { search?: string; ordering?: string }): Promise<PaginatedResponse<Categoria>> {
+  async getCategorias(params?: {
+    search?: string;
+    ordering?: string;
+  }): Promise<PaginatedResponse<Categoria>> {
     try {
-      const response = await api.get<PaginatedResponse<Categoria>>('/api/casting/categorias/', { params });
+      const response = await api.get<PaginatedResponse<Categoria>>(
+        '/api/casting/categorias/',
+        { params },
+      );
       return response.data;
     } catch (error) {
       console.error('Erro ao obter categorias:', error);
@@ -60,37 +67,46 @@ export const CastingService = {
       return { count: 0, next: null, previous: null, results: [] };
     }
   },
-  
+
   async getCategoria(id: number): Promise<Categoria> {
     const response = await api.get<Categoria>(`/api/casting/categorias/${id}/`);
     return response.data;
   },
-  
+
   async criarCategoria(categoria: Omit<Categoria, 'id'>): Promise<Categoria> {
     const response = await api.post<Categoria>('/api/casting/categorias/', categoria);
     return response.data;
   },
-  
-  async atualizarCategoria(id: number, categoria: Partial<Categoria>): Promise<Categoria> {
-    const response = await api.patch<Categoria>(`/api/casting/categorias/${id}/`, categoria);
+
+  async atualizarCategoria(
+    id: number,
+    categoria: Partial<Categoria>,
+  ): Promise<Categoria> {
+    const response = await api.patch<Categoria>(
+      `/api/casting/categorias/${id}/`,
+      categoria,
+    );
     return response.data;
   },
-  
+
   async excluirCategoria(id: number): Promise<void> {
     await api.delete(`/api/casting/categorias/${id}/`);
   },
-  
+
   // Castings
-  async getCastings(params?: { 
-    categoria?: number; 
-    ativo?: boolean; 
-    search?: string; 
+  async getCastings(params?: {
+    categoria?: number;
+    ativo?: boolean;
+    search?: string;
     ordering?: string;
     page?: number;
     page_size?: number;
   }): Promise<PaginatedResponse<CastingResumido>> {
     try {
-      const response = await api.get<PaginatedResponse<CastingResumido>>('/api/casting/castings/', { params });
+      const response = await api.get<PaginatedResponse<CastingResumido>>(
+        '/api/casting/castings/',
+        { params },
+      );
       return response.data;
     } catch (error) {
       console.error('Erro ao obter castings:', error);
@@ -98,55 +114,70 @@ export const CastingService = {
       return { count: 0, next: null, previous: null, results: [] };
     }
   },
-  
+
   async getCasting(id: number): Promise<CastingDetalhado> {
     const response = await api.get<CastingDetalhado>(`/api/casting/castings/${id}/`);
     return response.data;
   },
-  
+
   async criarCasting(formData: FormData): Promise<CastingDetalhado> {
-    const response = await api.post<CastingDetalhado>('/api/casting/castings/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await api.post<CastingDetalhado>(
+      '/api/casting/castings/',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
     return response.data;
   },
-  
+
   async atualizarCasting(id: number, formData: FormData): Promise<CastingDetalhado> {
-    const response = await api.patch<CastingDetalhado>(`/api/casting/castings/${id}/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await api.patch<CastingDetalhado>(
+      `/api/casting/castings/${id}/`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
     return response.data;
   },
-  
+
   async excluirCasting(id: number): Promise<void> {
     await api.delete(`/api/casting/castings/${id}/`);
   },
-  
+
   // Fotos
   async adicionarFoto(castingId: number, formData: FormData): Promise<Foto> {
-    const response = await api.post<Foto>(`/api/casting/castings/${castingId}/add_foto/`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
+    const response = await api.post<Foto>(
+      `/api/casting/castings/${castingId}/add_foto/`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       },
-    });
+    );
     return response.data;
   },
-  
+
   async excluirFoto(castingId: number, fotoId: number): Promise<void> {
     await api.delete(`/api/casting/castings/${castingId}/fotos/${fotoId}/`);
   },
-  
+
   // Vídeos
   async adicionarVideo(castingId: number, video: Omit<Video, 'id'>): Promise<Video> {
-    const response = await api.post<Video>(`/api/casting/castings/${castingId}/videos/`, video);
+    const response = await api.post<Video>(
+      `/api/casting/castings/${castingId}/videos/`,
+      video,
+    );
     return response.data;
   },
-  
+
   async excluirVideo(castingId: number, videoId: number): Promise<void> {
     await api.delete(`/api/casting/castings/${castingId}/videos/${videoId}/`);
-  }
+  },
 };

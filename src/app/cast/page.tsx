@@ -12,9 +12,9 @@ export default function CastingPage() {
 
   return (
     <div className="bg-white dark:bg-gray-900">
-       {/* Script para otimizar carregamento de CSS */}
-       <Script id="optimize-css" strategy="afterInteractive">
-         {`
+      {/* Script para otimizar carregamento de CSS */}
+      <Script id="optimize-css" strategy="afterInteractive">
+        {`
            document.addEventListener('DOMContentLoaded', function() {
              const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
              preloadLinks.forEach(link => {
@@ -25,11 +25,11 @@ export default function CastingPage() {
              });
            });
          `}
-       </Script>
+      </Script>
       <CastingHero />
       <CastingFilters activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
       <CastingGrid filter={activeFilter} />
-      <CtaBanner 
+      <CtaBanner
         title="Quer fazer parte do nosso casting?"
         description="Estamos sempre em busca de novos talentos. Se você tem interesse em fazer parte da nossa agência, entre em contato conosco."
         buttonText="Cadastre-se"

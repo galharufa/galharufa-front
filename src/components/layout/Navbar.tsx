@@ -49,21 +49,21 @@ const Navbar = () => {
     if (scrolled) {
       return 'text-black dark:text-white';
     }
-    
+
     if (pathname === '/') {
       return 'text-white';
     }
-    
+
     return isDark ? 'text-white' : 'text-black';
   };
 
   return (
-    <header 
+    <header
       className={`fixed w-full z-50 transition-all duration-300 ${
-        scrolled 
-          ? 'bg-white dark:bg-black/90 backdrop-blur-md shadow-md' 
-          : pathname === '/' 
-            ? 'bg-transparent' 
+        scrolled
+          ? 'bg-white dark:bg-black/90 backdrop-blur-md shadow-md'
+          : pathname === '/'
+            ? 'bg-transparent'
             : 'bg-white dark:bg-black/90 backdrop-blur-md'
       }`}
     >
@@ -74,9 +74,13 @@ const Navbar = () => {
             <div className="flex items-center">
               {scrolled || pathname !== '/' ? (
                 <div className="relative w-auto">
-                  <Image 
-                    src={isDark ? "/images/logo_horizontal_black.jpg" : "/images/logo_horizontal_white.jpg"} 
-                    alt="Galharufa Logo" 
+                  <Image
+                    src={
+                      isDark
+                        ? '/images/logo_horizontal_black.jpg'
+                        : '/images/logo_horizontal_white.jpg'
+                    }
+                    alt="Galharufa Logo"
                     width={140}
                     height={28}
                     className="object-contain w-auto"
@@ -84,9 +88,9 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="relative w-auto">
-                  <Image 
-                    src="/images/logo_horizontal_black.jpg" 
-                    alt="Galharufa Logo" 
+                  <Image
+                    src="/images/logo_horizontal_black.jpg"
+                    alt="Galharufa Logo"
                     width={140}
                     height={28}
                     className="object-contain w-auto"
@@ -99,14 +103,12 @@ const Navbar = () => {
           {/* Links de navegação para desktop */}
           <nav className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Link 
-                key={link.href} 
+              <Link
+                key={link.href}
                 href={link.href}
                 className={`hover-link ${getTextColor()} ${
                   pathname === link.href ? 'font-medium' : 'font-normal'
-                } ${
-                  !scrolled && pathname === '/' ? 'hover-link-light' : ''
-                }`}
+                } ${!scrolled && pathname === '/' ? 'hover-link-light' : ''}`}
               >
                 {link.label}
               </Link>
@@ -145,8 +147,8 @@ const Navbar = () => {
             <div className="container mx-auto px-4 py-8">
               <nav className="flex flex-col space-y-6">
                 {navLinks.map((link) => (
-                  <Link 
-                    key={link.href} 
+                  <Link
+                    key={link.href}
                     href={link.href}
                     className={`text-xl hover-link text-black dark:text-white ${
                       pathname === link.href ? 'font-medium' : 'font-normal'

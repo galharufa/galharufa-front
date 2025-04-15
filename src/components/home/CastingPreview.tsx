@@ -63,10 +63,13 @@ const CastingPreview = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Nossos Castings</h2>
+          <h2 className="heading-secondary text-black dark:text-white">
+            Nossos Castings
+          </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Conheça alguns dos castings excepcionais representados pela Galharufa, prontos para brilhar em seu próximo projeto.
+            Conheça alguns dos castings excepcionais representados pela Galharufa, prontos
+            para brilhar em seu próximo projeto.
           </p>
         </motion.div>
 

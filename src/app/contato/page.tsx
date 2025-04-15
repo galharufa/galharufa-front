@@ -11,15 +11,16 @@ interface MetadataBase {
 
 export const metadata: MetadataBase = {
   title: 'Contato',
-  description: 'Entre em contato com a Agência Galharufa. Estamos sempre prontos para lhe atender e tirar suas dúvidas.',
+  description:
+    'Entre em contato com a Agência Galharufa. Estamos sempre prontos para lhe atender e tirar suas dúvidas.',
 };
 
 export default function ContactPage() {
   return (
     <div className="bg-white dark:bg-gray-900">
-       {/* Script para otimizar carregamento de CSS */}
-       <Script id="optimize-css" strategy="afterInteractive">
-         {`
+      {/* Script para otimizar carregamento de CSS */}
+      <Script id="optimize-css" strategy="afterInteractive">
+        {`
            document.addEventListener('DOMContentLoaded', function() {
              const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
              preloadLinks.forEach(link => {
@@ -30,7 +31,7 @@ export default function ContactPage() {
              });
            });
          `}
-       </Script>
+      </Script>
       <ContactHero />
       <ContactInfo />
     </div>

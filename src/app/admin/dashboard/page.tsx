@@ -1,8 +1,20 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-console */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Container, Title, Text, Button, Group, Card, SimpleGrid, useMantineColorScheme, Loader } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Button,
+  Group,
+  Card,
+  SimpleGrid,
+  useMantineColorScheme,
+  Loader,
+} from '@mantine/core';
 import { IconUsers, IconNews, IconReceipt } from '@tabler/icons-react';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
@@ -10,7 +22,18 @@ import { CastingService, type Categoria } from '@/services/casting.service';
 import { ServicosService } from '@/services/servicos.service';
 import { BlogService } from '@/services/blog.service';
 import { errorToast } from '@/utils';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  LineChart,
+  Line,
+} from 'recharts';
 
 // Interfaces para os dados dos gráficos
 interface DataCategoria {
@@ -53,7 +76,7 @@ export default function Dashboard() {
           CastingService.getCastings({ page_size: 1 }),
           ServicosService.getServicos({ page_size: 1 }),
           BlogService.getPosts({ page_size: 100 }),
-          CastingService.getCategorias()
+          CastingService.getCategorias(),
         ]);
 
         setTotalCastings(castings.count);
@@ -62,63 +85,63 @@ export default function Dashboard() {
 
         // Obter castings por categoria
         const categoriasMap = new Map<number, Categoria>();
-        categorias.results.forEach(cat => categoriasMap.set(cat.id, cat));
+        categorias.results.forEach((cat) => categoriasMap.set(cat.id, cat));
 
         const castingsPorCategoria: Map<number, number> = new Map();
-        
+
         // Inicializar todas as categorias com zero
-        categorias.results.forEach(cat => castingsPorCategoria.set(cat.id, 0));
-        
+        categorias.results.forEach((cat) => castingsPorCategoria.set(cat.id, 0));
+
         // Fazer chamada adicional para obter todos os castings
         const todosCastings = await CastingService.getCastings({ page_size: 100 });
-        
+
         // Contar castings por categoria
-        todosCastings.results.forEach(casting => {
+        todosCastings.results.forEach((casting) => {
           const categoriaId = casting.categoria;
           castingsPorCategoria.set(
-            categoriaId, 
-            (castingsPorCategoria.get(categoriaId) || 0) + 1
+            categoriaId,
+            (castingsPorCategoria.get(categoriaId) || 0) + 1,
           );
         });
-        
+
         // Formatar dados para o gráfico
         const dadosGraficoCat = Array.from(castingsPorCategoria.entries())
           .map(([categoriaId, quantidade]) => ({
             nome: categoriasMap.get(categoriaId)?.nome || 'Sem categoria',
-            quantidade
+            quantidade,
           }))
           .sort((a, b) => b.quantidade - a.quantidade) // Ordenar do maior para o menor
           .slice(0, 5); // Pegar apenas os 5 maiores
-        
+
         setDadosCategorias(dadosGraficoCat);
 
         // Processar posts por mês
         const postsData = posts.results;
         const dataAtual = new Date();
         const ultimosMeses: DataMensal[] = [];
-        
+
         // Criar um array para os últimos 6 meses
         for (let i = 5; i >= 0; i--) {
           const data = new Date(dataAtual.getFullYear(), dataAtual.getMonth() - i, 1);
           const mesAno = `${data.toLocaleString('pt-BR', { month: 'short' })}/${data.getFullYear().toString().slice(2)}`;
-          
+
           ultimosMeses.push({
             mes: mesAno,
-            quantidade: 0
+            quantidade: 0,
           });
         }
-        
+
         // Contar posts por mês
-        postsData.forEach(post => {
+        postsData.forEach((post) => {
           const dataPost = new Date(post.data_publicacao);
           const mesAnoPost = `${dataPost.toLocaleString('pt-BR', { month: 'short' })}/${dataPost.getFullYear().toString().slice(2)}`;
-          
-          const index = ultimosMeses.findIndex(item => item.mes === mesAnoPost);
+
+          const index = ultimosMeses.findIndex((item) => item.mes === mesAnoPost);
           if (index >= 0) {
             ultimosMeses[index].quantidade += 1;
           }
         });
-        
+
         setDadosMensais(ultimosMeses);
       } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
@@ -135,7 +158,14 @@ export default function Dashboard() {
 
   if (authLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <Loader size="xl" />
       </div>
     );
@@ -177,7 +207,12 @@ export default function Dashboard() {
           Bem-vindo, {user?.name || 'Administrador'}!
         </Title>
 
-        <SimpleGrid cols={3} breakpoints={[{ maxWidth: 'sm', cols: 1 }]} spacing="lg" mb="xl">
+        <SimpleGrid
+          cols={3}
+          breakpoints={[{ maxWidth: 'sm', cols: 1 }]}
+          spacing="lg"
+          mb="xl"
+        >
           {stats.map((stat) => (
             <Card key={stat.title} p="lg" radius="md" withBorder>
               <Group position="apart">
@@ -200,9 +235,11 @@ export default function Dashboard() {
                     backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
                     color: '#FFFFFF !important',
                     '&:hover': {
-                      backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                    }
-                  }
+                      backgroundColor: isDark
+                        ? '#a855f7 !important'
+                        : '#6b21a8 !important',
+                    },
+                  },
                 }}
                 fullWidth
                 mt="md"
@@ -214,10 +251,17 @@ export default function Dashboard() {
           ))}
         </SimpleGrid>
 
-        <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'md', cols: 1 }]} spacing="lg" mb="xl">
+        <SimpleGrid
+          cols={2}
+          breakpoints={[{ maxWidth: 'md', cols: 1 }]}
+          spacing="lg"
+          mb="xl"
+        >
           {/* Gráfico de Talentos por Categoria */}
           <Card withBorder p="lg" radius="md">
-            <Title order={3} mb="lg">Castings por Categoria</Title>
+            <Title order={3} mb="lg">
+              Castings por Categoria
+            </Title>
             {isLoading ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
                 <Loader size="lg" />
@@ -229,19 +273,19 @@ export default function Dashboard() {
                   margin={{ top: 5, right: 30, left: 20, bottom: 60 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="nome" 
-                    angle={-45} 
-                    textAnchor="end" 
+                  <XAxis
+                    dataKey="nome"
+                    angle={-45}
+                    textAnchor="end"
                     height={70}
                     stroke={isDark ? '#adb5bd' : '#495057'}
                   />
                   <YAxis stroke={isDark ? '#adb5bd' : '#495057'} />
-                  <Tooltip 
-                    contentStyle={{ 
+                  <Tooltip
+                    contentStyle={{
                       backgroundColor: isDark ? '#2C2E33' : '#fff',
                       color: isDark ? '#fff' : '#000',
-                      border: `1px solid ${isDark ? '#444' : '#ddd'}`
+                      border: `1px solid ${isDark ? '#444' : '#ddd'}`,
                     }}
                   />
                   <Bar dataKey="quantidade" name="Quantidade" fill={corPrimaria} />
@@ -254,7 +298,9 @@ export default function Dashboard() {
 
           {/* Gráfico de Publicações por Mês */}
           <Card withBorder p="lg" radius="md">
-            <Title order={3} mb="lg">Publicações nos Últimos 6 Meses</Title>
+            <Title order={3} mb="lg">
+              Publicações nos Últimos 6 Meses
+            </Title>
             {isLoading ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>
                 <Loader size="lg" />
@@ -266,23 +312,20 @@ export default function Dashboard() {
                   margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis 
-                    dataKey="mes" 
-                    stroke={isDark ? '#adb5bd' : '#495057'}
-                  />
+                  <XAxis dataKey="mes" stroke={isDark ? '#adb5bd' : '#495057'} />
                   <YAxis stroke={isDark ? '#adb5bd' : '#495057'} />
-                  <Tooltip 
-                    contentStyle={{ 
+                  <Tooltip
+                    contentStyle={{
                       backgroundColor: isDark ? '#2C2E33' : '#fff',
                       color: isDark ? '#fff' : '#000',
-                      border: `1px solid ${isDark ? '#444' : '#ddd'}`
+                      border: `1px solid ${isDark ? '#444' : '#ddd'}`,
                     }}
                   />
                   <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="quantidade" 
-                    name="Publicações" 
+                  <Line
+                    type="monotone"
+                    dataKey="quantidade"
+                    name="Publicações"
                     stroke={corPrimaria}
                     strokeWidth={2}
                     activeDot={{ r: 8, fill: corSecundaria }}
@@ -300,10 +343,12 @@ export default function Dashboard() {
             Painel Administrativo Galharufa
           </Title>
           <Text mb="xl">
-            Este é o painel administrativo da Galharufa, onde você pode gerenciar o casting, serviços, blog e outras configurações do site.
+            Este é o painel administrativo da Galharufa, onde você pode gerenciar o
+            casting, serviços, blog e outras configurações do site.
           </Text>
           <Text size="sm" color="dimmed">
-            Utilize o menu lateral para navegar entre as diferentes seções do painel administrativo.
+            Utilize o menu lateral para navegar entre as diferentes seções do painel
+            administrativo.
           </Text>
         </Card>
       </Container>

@@ -1,12 +1,37 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-console */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Container, Title, Text, Card, Button, Group, SimpleGrid, Badge, useMantineColorScheme, Loader, Modal, TextInput, Textarea, Select, MultiSelect, Switch, FileInput } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Button,
+  Group,
+  SimpleGrid,
+  Badge,
+  useMantineColorScheme,
+  Loader,
+  Modal,
+  TextInput,
+  Textarea,
+  Select,
+  MultiSelect,
+  Switch,
+  FileInput,
+} from '@mantine/core';
 import { DatePickerInput } from '@mantine/dates';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
-import { BlogService, type PostResumido, type CategoriasBlog, type Tag } from '@/services';
+import {
+  BlogService,
+  type PostResumido,
+  type CategoriasBlog,
+  type Tag,
+} from '@/services';
 import { errorToast, successToast } from '@/utils';
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
@@ -17,7 +42,7 @@ export default function BlogAdmin() {
   const router = useRouter();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  
+
   const [posts, setPosts] = useState<PostResumido[]>([]);
   const [categorias, setCategorias] = useState<CategoriasBlog[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
@@ -40,11 +65,13 @@ export default function BlogAdmin() {
       data_publicacao: new Date(),
     },
     validate: {
-      titulo: (value) => value.trim().length === 0 ? 'O título é obrigatório' : null,
-      resumo: (value) => value.trim().length === 0 ? 'O resumo é obrigatório' : null,
-      conteudo: (value) => value.trim().length === 0 ? 'O conteúdo é obrigatório' : null,
-      categoria: (value) => value.trim().length === 0 ? 'A categoria é obrigatória' : null,
-      data_publicacao: (value) => !value ? 'A data de publicação é obrigatória' : null,
+      titulo: (value) => (value.trim().length === 0 ? 'O título é obrigatório' : null),
+      resumo: (value) => (value.trim().length === 0 ? 'O resumo é obrigatório' : null),
+      conteudo: (value) =>
+        value.trim().length === 0 ? 'O conteúdo é obrigatório' : null,
+      categoria: (value) =>
+        value.trim().length === 0 ? 'A categoria é obrigatória' : null,
+      data_publicacao: (value) => (!value ? 'A data de publicação é obrigatória' : null),
     },
   });
 
@@ -52,15 +79,15 @@ export default function BlogAdmin() {
   useEffect(() => {
     const carregarDados = async () => {
       if (!isAuthenticated && !authLoading) return;
-      
+
       try {
         setIsLoading(true);
         const [postsResponse, categoriasResponse, tagsResponse] = await Promise.all([
           BlogService.getPosts({ ordering: '-data_publicacao' }),
           BlogService.getCategorias(),
-          BlogService.getTags()
+          BlogService.getTags(),
         ]);
-        
+
         setPosts(postsResponse.results);
         setCategorias(categoriasResponse.results);
         setTags(tagsResponse.results);
@@ -94,18 +121,20 @@ export default function BlogAdmin() {
     try {
       setIsLoading(true);
       const post = await BlogService.getPost(id);
-      
+
       form.setValues({
         titulo: post.titulo,
         resumo: post.resumo,
         conteudo: post.conteudo,
         categoria: post.categoria.toString(),
-        tags: post.tags.map(tag => tag.id.toString()),
+        tags: post.tags.map((tag) => tag.id.toString()),
         publicado: post.publicado,
         imagem_destaque: null, // Não podemos carregar o arquivo, apenas a URL
-        data_publicacao: post.data_publicacao ? new Date(post.data_publicacao) : new Date(),
+        data_publicacao: post.data_publicacao
+          ? new Date(post.data_publicacao)
+          : new Date(),
       });
-      
+
       setModoEdicao(true);
       setPostAtual(id);
       abrirModal();
@@ -124,14 +153,14 @@ export default function BlogAdmin() {
 
   const confirmarExclusao = async () => {
     if (!postToDelete) return;
-    
+
     try {
       setIsLoading(true);
       await BlogService.excluirPost(postToDelete);
-      
+
       // Atualizar a lista de posts
-      setPosts(posts.filter(post => post.id !== postToDelete));
-      
+      setPosts(posts.filter((post) => post.id !== postToDelete));
+
       successToast('Post excluído com sucesso');
     } catch (error) {
       console.error('Erro ao excluir post:', error);
@@ -146,60 +175,65 @@ export default function BlogAdmin() {
   const handleSubmit = async (values: typeof form.values) => {
     try {
       setIsLoading(true);
-      
+
       const formData = new FormData();
       formData.append('titulo', values.titulo);
       formData.append('resumo', values.resumo);
       formData.append('conteudo', values.conteudo);
       formData.append('categoria', values.categoria);
       formData.append('publicado', values.publicado.toString());
-      
+
       // Formatar a data para o formato ISO
       if (values.data_publicacao) {
-        formData.append('data_publicacao', values.data_publicacao.toISOString().split('T')[0]);
+        formData.append(
+          'data_publicacao',
+          values.data_publicacao.toISOString().split('T')[0],
+        );
       }
-      
+
       // Adicionar tags
-      values.tags.forEach(tagId => {
+      values.tags.forEach((tagId) => {
         formData.append('tags', tagId);
       });
-      
+
       // Adicionar imagem se houver
       if (values.imagem_destaque) {
         formData.append('imagem_destaque', values.imagem_destaque);
       }
-      
+
       let response: PostResumido;
-      
+
       if (modoEdicao && postAtual) {
         response = await BlogService.atualizarPost(postAtual, formData);
-        
+
         // Atualizar o post na lista
-        setPosts(posts.map(post => 
-          post.id === postAtual 
-            ? { 
-                ...post, 
-                titulo: response.titulo,
-                resumo: response.resumo,
-                categoria: response.categoria,
-                categoria_nome: response.categoria_nome,
-                imagem_destaque: response.imagem_destaque,
-                publicado: response.publicado,
-                data_publicacao: response.data_publicacao
-              } 
-            : post
-        ));
-        
+        setPosts(
+          posts.map((post) =>
+            post.id === postAtual
+              ? {
+                  ...post,
+                  titulo: response.titulo,
+                  resumo: response.resumo,
+                  categoria: response.categoria,
+                  categoria_nome: response.categoria_nome,
+                  imagem_destaque: response.imagem_destaque,
+                  publicado: response.publicado,
+                  data_publicacao: response.data_publicacao,
+                }
+              : post,
+          ),
+        );
+
         successToast('Post atualizado com sucesso');
       } else {
         response = await BlogService.criarPost(formData);
-        
+
         // Adicionar o novo post à lista
         setPosts([response, ...posts]);
-        
+
         successToast('Post criado com sucesso');
       }
-      
+
       fecharModal();
     } catch (error) {
       console.error('Erro ao salvar post:', error);
@@ -211,7 +245,14 @@ export default function BlogAdmin() {
 
   if (authLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <Loader size="xl" />
       </div>
     );
@@ -227,7 +268,7 @@ export default function BlogAdmin() {
       <Container size="lg" py="xl">
         <Group position="apart" mb="xl">
           <Title order={2}>Gerenciamento do Blog</Title>
-          <Button 
+          <Button
             onClick={handleCriarPost}
             styles={{
               root: {
@@ -235,8 +276,8 @@ export default function BlogAdmin() {
                 color: '#FFFFFF !important',
                 '&:hover': {
                   backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                }
-              }
+                },
+              },
             }}
           >
             Criar Novo Post
@@ -249,12 +290,12 @@ export default function BlogAdmin() {
           </div>
         ) : posts.length === 0 ? (
           <Card withBorder p="xl" radius="md">
-            <Text align="center" size="lg">Nenhum post encontrado. Crie seu primeiro post!</Text>
+            <Text align="center" size="lg">
+              Nenhum post encontrado. Crie seu primeiro post!
+            </Text>
           </Card>
         ) : (
-          <SimpleGrid cols={2} breakpoints={[
-            { maxWidth: 'xs', cols: 1 },
-          ]} mb="xl">
+          <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]} mb="xl">
             {posts.map((post) => (
               <Card key={post.id} p="lg" radius="md" withBorder>
                 <Group position="apart" mb="xs">
@@ -268,21 +309,25 @@ export default function BlogAdmin() {
                   {post.resumo}
                 </Text>
                 <Group position="apart" mt="xl">
-                  <Button 
+                  <Button
                     onClick={() => handleEditarPost(post.id)}
                     styles={{
                       root: {
-                        backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        backgroundColor: isDark
+                          ? '#9333ea !important'
+                          : '#7e22ce !important',
                         color: '#FFFFFF !important',
                         '&:hover': {
-                          backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                        }
-                      }
+                          backgroundColor: isDark
+                            ? '#a855f7 !important'
+                            : '#6b21a8 !important',
+                        },
+                      },
                     }}
                   >
                     Editar
                   </Button>
-                  <Button 
+                  <Button
                     onClick={() => handleExcluirPost(post.id)}
                     styles={{
                       root: {
@@ -290,8 +335,8 @@ export default function BlogAdmin() {
                         color: '#FFFFFF !important',
                         '&:hover': {
                           backgroundColor: '#b91c1c !important',
-                        }
-                      }
+                        },
+                      },
                     }}
                   >
                     Excluir
@@ -307,7 +352,7 @@ export default function BlogAdmin() {
       <Modal
         opened={modalAberto}
         onClose={fecharModal}
-        title={modoEdicao ? "Editar Post" : "Criar Novo Post"}
+        title={modoEdicao ? 'Editar Post' : 'Criar Novo Post'}
         size="lg"
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -318,7 +363,7 @@ export default function BlogAdmin() {
             {...form.getInputProps('titulo')}
             mb="md"
           />
-          
+
           <Textarea
             label="Resumo"
             placeholder="Breve resumo do post"
@@ -327,7 +372,7 @@ export default function BlogAdmin() {
             {...form.getInputProps('resumo')}
             mb="md"
           />
-          
+
           <Textarea
             label="Conteúdo"
             placeholder="Conteúdo completo do post"
@@ -336,24 +381,27 @@ export default function BlogAdmin() {
             {...form.getInputProps('conteudo')}
             mb="md"
           />
-          
+
           <Select
             label="Categoria"
             placeholder="Selecione uma categoria"
             required
-            data={categorias.map(cat => ({ value: cat.id.toString(), label: cat.nome }))}
+            data={categorias.map((cat) => ({
+              value: cat.id.toString(),
+              label: cat.nome,
+            }))}
             {...form.getInputProps('categoria')}
             mb="md"
           />
-          
+
           <MultiSelect
             label="Tags"
             placeholder="Selecione as tags"
-            data={tags.map(tag => ({ value: tag.id.toString(), label: tag.nome }))}
+            data={tags.map((tag) => ({ value: tag.id.toString(), label: tag.nome }))}
             {...form.getInputProps('tags')}
             mb="md"
           />
-          
+
           <DatePickerInput
             label="Data de Publicação"
             required
@@ -361,7 +409,7 @@ export default function BlogAdmin() {
             mb="md"
             icon={<IconCalendar size={14} />}
           />
-          
+
           <FileInput
             label="Imagem de Destaque"
             description="Selecione uma imagem"
@@ -370,17 +418,19 @@ export default function BlogAdmin() {
             {...form.getInputProps('imagem_destaque')}
             mb="md"
           />
-          
+
           <Switch
             label="Publicado"
             {...form.getInputProps('publicado', { type: 'checkbox' })}
             mb="md"
           />
-          
+
           <Group position="right" mt="md">
-            <Button type="button" variant="outline" onClick={fecharModal}>Cancelar</Button>
-            <Button 
-              type="submit" 
+            <Button type="button" variant="outline" onClick={fecharModal}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
               loading={isLoading}
               styles={{
                 root: {
@@ -388,11 +438,11 @@ export default function BlogAdmin() {
                   color: '#FFFFFF !important',
                   '&:hover': {
                     backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                  }
-                }
+                  },
+                },
               }}
             >
-              {modoEdicao ? "Atualizar" : "Criar"}
+              {modoEdicao ? 'Atualizar' : 'Criar'}
             </Button>
           </Group>
         </form>
@@ -405,15 +455,15 @@ export default function BlogAdmin() {
         title="Confirmar Exclusão"
         size="sm"
       >
-        <Text mb="lg">Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.</Text>
-        
+        <Text mb="lg">
+          Tem certeza que deseja excluir este post? Esta ação não pode ser desfeita.
+        </Text>
+
         <Group position="right">
-          <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>Cancelar</Button>
-          <Button 
-            color="red" 
-            onClick={confirmarExclusao}
-            loading={isLoading}
-          >
+          <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
+            Cancelar
+          </Button>
+          <Button color="red" onClick={confirmarExclusao} loading={isLoading}>
             Excluir
           </Button>
         </Group>

@@ -6,7 +6,7 @@ import { FaInstagram, FaFacebook, FaLinkedin } from 'react-icons/fa';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
-  
+
   const footerLinks = [
     { href: '/', label: 'Home' },
     { href: '/sobre', label: 'Sobre Nós' },
@@ -16,9 +16,21 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: <FaInstagram />, href: 'https://www.instagram.com/aggalharufa/', label: 'Instagram' },
-    { icon: <FaFacebook />, href: 'https://www.facebook.com/galharufa', label: 'Facebook' },
-    { icon: <FaLinkedin />, href: 'https://www.linkedin.com/company/agencia-galharufa/', label: 'LinkedIn' },
+    {
+      icon: <FaInstagram />,
+      href: 'https://www.instagram.com/aggalharufa/',
+      label: 'Instagram',
+    },
+    {
+      icon: <FaFacebook />,
+      href: 'https://www.facebook.com/galharufa',
+      label: 'Facebook',
+    },
+    {
+      icon: <FaLinkedin />,
+      href: 'https://www.linkedin.com/company/agencia-galharufa/',
+      label: 'LinkedIn',
+    },
   ];
 
   return (
@@ -31,7 +43,8 @@ const Footer = () => {
               <h2 className="text-2xl font-bold mb-4 uppercase">Agência Galharufa</h2>
             </Link>
             <p className="text-gray-400 mb-6">
-              Agência de talentos especializada em conectar artistas excepcionais com oportunidades transformadoras.
+              Agência de talentos especializada em conectar artistas excepcionais com
+              oportunidades transformadoras.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social, index) => (
@@ -57,7 +70,10 @@ const Footer = () => {
             <ul className="space-y-3">
               {footerLinks.map((link, index) => (
                 <li key={index}>
-                  <Link href={link.href} className="hover-link hover-link-light text-gray-400 hover:text-white">
+                  <Link
+                    href={link.href}
+                    className="hover-link hover-link-light text-gray-400 hover:text-white"
+                  >
                     {link.label}
                   </Link>
                 </li>
@@ -69,7 +85,11 @@ const Footer = () => {
           <div className="col-span-1">
             <h3 className="text-lg font-semibold mb-4 text-gray-200">Contato</h3>
             <ul className="space-y-3 text-gray-400">
-              <li><a href="mailto:atendimento@agenciagalharufa.com.br">atendimento@agenciagalharufa.com.br</a></li>
+              <li>
+                <a href="mailto:atendimento@agenciagalharufa.com.br">
+                  atendimento@agenciagalharufa.com.br
+                </a>
+              </li>
               <li>São Paulo, SP</li>
             </ul>
           </div>

@@ -1,8 +1,24 @@
+/* eslint-disable no-console */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Container, Title, Text, Card, Button, Group, SimpleGrid, useMantineColorScheme, Loader, Modal, TextInput, Textarea, Switch, FileInput } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Button,
+  Group,
+  SimpleGrid,
+  useMantineColorScheme,
+  Loader,
+  Modal,
+  TextInput,
+  Textarea,
+  Switch,
+  FileInput,
+} from '@mantine/core';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
 import { ServicosService, type Servico, type ServicoResumido } from '@/services';
@@ -17,7 +33,7 @@ export default function ServicoAdmin() {
   const router = useRouter();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  
+
   const [servicos, setServicos] = useState<ServicoResumido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [modalAberto, { open: abrirModal, close: fecharModal }] = useDisclosure(false);
@@ -35,9 +51,10 @@ export default function ServicoAdmin() {
       imagem: null as File | null,
     },
     validate: {
-      nome: (value) => value.trim().length === 0 ? 'O nome é obrigatório' : null,
-      descricao: (value) => value.trim().length === 0 ? 'A descrição é obrigatória' : null,
-      preco: (value) => value.trim().length === 0 ? 'O preço é obrigatório' : null,
+      nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
+      descricao: (value) =>
+        value.trim().length === 0 ? 'A descrição é obrigatória' : null,
+      preco: (value) => (value.trim().length === 0 ? 'O preço é obrigatório' : null),
     },
   });
 
@@ -45,7 +62,7 @@ export default function ServicoAdmin() {
   useEffect(() => {
     const carregarServicos = async () => {
       if (!isAuthenticated && !authLoading) return;
-      
+
       try {
         setIsLoading(true);
         const response = await ServicosService.getServicos({ ordering: 'nome' });
@@ -80,7 +97,7 @@ export default function ServicoAdmin() {
     try {
       setIsLoading(true);
       const servico = await ServicosService.getServico(id);
-      
+
       form.setValues({
         nome: servico.nome,
         descricao: servico.descricao,
@@ -88,7 +105,7 @@ export default function ServicoAdmin() {
         ativo: servico.ativo,
         imagem: null, // Não podemos carregar o arquivo, apenas a URL
       });
-      
+
       setModoEdicao(true);
       setServicoAtual(id);
       abrirModal();
@@ -107,14 +124,14 @@ export default function ServicoAdmin() {
 
   const confirmarExclusao = async () => {
     if (!servicoToDelete) return;
-    
+
     try {
       setIsLoading(true);
       await ServicosService.excluirServico(servicoToDelete);
-      
+
       // Atualizar a lista de serviços
-      setServicos(servicos.filter(servico => servico.id !== servicoToDelete));
-      
+      setServicos(servicos.filter((servico) => servico.id !== servicoToDelete));
+
       successToast('Serviço excluído com sucesso');
     } catch (error) {
       console.error('Erro ao excluir serviço:', error);
@@ -129,46 +146,48 @@ export default function ServicoAdmin() {
   const handleSubmit = async (values: typeof form.values) => {
     try {
       setIsLoading(true);
-      
+
       const formData = new FormData();
       formData.append('nome', values.nome);
       formData.append('descricao', values.descricao);
       formData.append('preco', values.preco);
       formData.append('ativo', values.ativo.toString());
-      
+
       // Adicionar imagem se houver
       if (values.imagem) {
         formData.append('imagem', values.imagem);
       }
-      
+
       let response: Servico | ServicoResumido;
-      
+
       if (modoEdicao && servicoAtual) {
         response = await ServicosService.atualizarServico(servicoAtual, formData);
-        
+
         // Atualizar o serviço na lista
-        setServicos(servicos.map(servico => 
-          servico.id === servicoAtual 
-            ? { 
-                ...servico, 
-                nome: response.nome,
-                descricao: response.descricao,
-                imagem: response.imagem,
-                ativo: response.ativo
-              } 
-            : servico
-        ));
-        
+        setServicos(
+          servicos.map((servico) =>
+            servico.id === servicoAtual
+              ? {
+                  ...servico,
+                  nome: response.nome,
+                  descricao: response.descricao,
+                  imagem: response.imagem,
+                  ativo: response.ativo,
+                }
+              : servico,
+          ),
+        );
+
         successToast('Serviço atualizado com sucesso');
       } else {
         response = await ServicosService.criarServico(formData);
-        
+
         // Adicionar o novo serviço à lista
         setServicos([response as ServicoResumido, ...servicos]);
-        
+
         successToast('Serviço criado com sucesso');
       }
-      
+
       fecharModal();
     } catch (error) {
       console.error('Erro ao salvar serviço:', error);
@@ -180,7 +199,14 @@ export default function ServicoAdmin() {
 
   if (authLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <Loader size="xl" />
       </div>
     );
@@ -196,7 +222,7 @@ export default function ServicoAdmin() {
       <Container size="lg" py="xl">
         <Group position="apart" mb="xl">
           <Title order={2}>Gerenciamento de Serviços</Title>
-          <Button 
+          <Button
             onClick={handleCriarServico}
             styles={{
               root: {
@@ -204,8 +230,8 @@ export default function ServicoAdmin() {
                 color: '#FFFFFF !important',
                 '&:hover': {
                   backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                }
-              }
+                },
+              },
             }}
           >
             Adicionar Novo Serviço
@@ -220,12 +246,12 @@ export default function ServicoAdmin() {
           <>
             {servicos.length === 0 ? (
               <Card withBorder p="xl" radius="md">
-                <Text align="center" size="lg">Nenhum serviço cadastrado.</Text>
+                <Text align="center" size="lg">
+                  Nenhum serviço cadastrado.
+                </Text>
               </Card>
             ) : (
-              <SimpleGrid cols={2} breakpoints={[
-                { maxWidth: 'xs', cols: 1 },
-              ]} mb="xl">
+              <SimpleGrid cols={2} breakpoints={[{ maxWidth: 'xs', cols: 1 }]} mb="xl">
                 {servicos.map((servico) => (
                   <Card key={servico.id} p="lg" radius="md" withBorder>
                     <Group position="apart">
@@ -240,33 +266,44 @@ export default function ServicoAdmin() {
                       {servico.descricao}
                     </Text>
                     {servico.imagem && (
-                      <div style={{ marginTop: '1rem', textAlign: 'center', position: 'relative', height: '200px' }}>
-                        <Image 
-                          src={servico.imagem} 
-                          alt={servico.nome} 
+                      <div
+                        style={{
+                          marginTop: '1rem',
+                          textAlign: 'center',
+                          position: 'relative',
+                          height: '200px',
+                        }}
+                      >
+                        <Image
+                          src={servico.imagem}
+                          alt={servico.nome}
                           fill
-                          style={{ 
-                            objectFit: 'contain' 
-                          }} 
+                          style={{
+                            objectFit: 'contain',
+                          }}
                         />
                       </div>
                     )}
                     <Group position="apart" mt="xl">
-                      <Button 
+                      <Button
                         onClick={() => handleEditarServico(servico.id)}
                         styles={{
                           root: {
-                            backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                            backgroundColor: isDark
+                              ? '#9333ea !important'
+                              : '#7e22ce !important',
                             color: '#FFFFFF !important',
                             '&:hover': {
-                              backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                            }
-                          }
+                              backgroundColor: isDark
+                                ? '#a855f7 !important'
+                                : '#6b21a8 !important',
+                            },
+                          },
                         }}
                       >
                         Editar
                       </Button>
-                      <Button 
+                      <Button
                         onClick={() => handleExcluirServico(servico.id)}
                         styles={{
                           root: {
@@ -274,8 +311,8 @@ export default function ServicoAdmin() {
                             color: '#FFFFFF !important',
                             '&:hover': {
                               backgroundColor: '#b91c1c !important',
-                            }
-                          }
+                            },
+                          },
                         }}
                       >
                         Excluir
@@ -293,7 +330,7 @@ export default function ServicoAdmin() {
       <Modal
         opened={modalAberto}
         onClose={fecharModal}
-        title={modoEdicao ? "Editar Serviço" : "Novo Serviço"}
+        title={modoEdicao ? 'Editar Serviço' : 'Novo Serviço'}
         size="lg"
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -304,7 +341,7 @@ export default function ServicoAdmin() {
             {...form.getInputProps('nome')}
             mb="md"
           />
-          
+
           <Textarea
             label="Descrição"
             placeholder="Descrição detalhada do serviço"
@@ -313,7 +350,7 @@ export default function ServicoAdmin() {
             {...form.getInputProps('descricao')}
             mb="md"
           />
-          
+
           <TextInput
             label="Preço"
             placeholder="Ex: 1000.00"
@@ -321,7 +358,7 @@ export default function ServicoAdmin() {
             {...form.getInputProps('preco')}
             mb="md"
           />
-          
+
           <FileInput
             label="Imagem"
             description="Selecione uma imagem"
@@ -330,19 +367,19 @@ export default function ServicoAdmin() {
             {...form.getInputProps('imagem')}
             mb="md"
           />
-          
+
           <Switch
             label="Ativo"
             {...form.getInputProps('ativo', { type: 'checkbox' })}
             mb="xl"
           />
-          
+
           <Group position="right">
             <Button type="button" variant="outline" onClick={fecharModal}>
               Cancelar
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               loading={isLoading}
               styles={{
                 root: {
@@ -350,11 +387,11 @@ export default function ServicoAdmin() {
                   color: '#FFFFFF !important',
                   '&:hover': {
                     backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                  }
-                }
+                  },
+                },
               }}
             >
-              {modoEdicao ? "Atualizar" : "Salvar"}
+              {modoEdicao ? 'Atualizar' : 'Salvar'}
             </Button>
           </Group>
         </form>
@@ -367,16 +404,14 @@ export default function ServicoAdmin() {
         title="Confirmar Exclusão"
         size="sm"
       >
-        <Text mb="xl">Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita.</Text>
+        <Text mb="xl">
+          Tem certeza que deseja excluir este serviço? Esta ação não pode ser desfeita.
+        </Text>
         <Group position="right">
           <Button variant="outline" onClick={() => setDeleteModalOpen(false)}>
             Cancelar
           </Button>
-          <Button 
-            color="red" 
-            onClick={confirmarExclusao}
-            loading={isLoading}
-          >
+          <Button color="red" onClick={confirmarExclusao} loading={isLoading}>
             Excluir
           </Button>
         </Group>

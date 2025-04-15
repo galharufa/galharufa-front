@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-console */
 import api from './api';
 import axios from 'axios';
 
@@ -27,25 +29,30 @@ interface LoginResponse {
 export const AuthService = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/';
+      const API_URL =
+        process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/';
       const baseURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-      
+
       const loginData = {
         username: credentials.username,
         password: credentials.password,
-        remember_me: credentials.remember_me === true
+        remember_me: credentials.remember_me === true,
       };
-      
-      const response = await axios.post<LoginResponse>(`${baseURL}/api/accounts/login/`, loginData, {
-        headers: {
-          'Content-Type': 'application/json'
+
+      const response = await axios.post<LoginResponse>(
+        `${baseURL}/api/accounts/login/`,
+        loginData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
         },
-        withCredentials: true
-      });
-      
+      );
+
       // Salvar tokens e dados do usuário
       localStorage.setItem('accessToken', response.data.access);
-      
+
       if (credentials.remember_me) {
         localStorage.setItem('refreshToken', response.data.refresh);
         localStorage.setItem('userData', JSON.stringify(response.data.user));
@@ -53,17 +60,17 @@ export const AuthService = {
         sessionStorage.setItem('refreshToken', response.data.refresh);
         sessionStorage.setItem('userData', JSON.stringify(response.data.user));
       }
-      
+
       return response.data;
     } catch (error: Error | unknown) {
       throw error;
     }
   },
-  
+
   async logout(): Promise<void> {
     try {
       await api.post('${baseURL}/api/accounts/logout/', {
-        withCredentials: true // Permitir envio de cookies e credenciais
+        withCredentials: true, // Permitir envio de cookies e credenciais
       });
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
@@ -76,11 +83,11 @@ export const AuthService = {
       sessionStorage.removeItem('userData');
     }
   },
-  
+
   async getUserInfo(): Promise<User> {
     try {
       const response = await api.get<User>('${baseURL}/api/accounts/me/', {
-        withCredentials: true // Permitir envio de cookies e credenciais
+        withCredentials: true, // Permitir envio de cookies e credenciais
       });
       return response.data;
     } catch (error) {
@@ -88,13 +95,14 @@ export const AuthService = {
       throw error;
     }
   },
-  
+
   getStoredUser(): User | null {
-    const userData = localStorage.getItem('userData') || sessionStorage.getItem('userData');
+    const userData =
+      localStorage.getItem('userData') || sessionStorage.getItem('userData');
     return userData ? JSON.parse(userData) : null;
   },
-  
+
   isAuthenticated(): boolean {
     return !!localStorage.getItem('accessToken');
-  }
+  },
 };

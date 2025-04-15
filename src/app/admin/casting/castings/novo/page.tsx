@@ -1,12 +1,31 @@
+/* eslint-disable camelcase */
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
-
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { 
-  Container, Title, Button, Group, TextInput, Textarea, Switch, Select, 
-  Card, Text, ActionIcon, useMantineColorScheme, FileInput, Tabs, Loader,
-  NumberInput, MultiSelect, Divider, SimpleGrid
+import {
+  Container,
+  Title,
+  Button,
+  Group,
+  TextInput,
+  Textarea,
+  Switch,
+  Select,
+  Card,
+  Text,
+  ActionIcon,
+  useMantineColorScheme,
+  FileInput,
+  Tabs,
+  Loader,
+  NumberInput,
+  MultiSelect,
+  Divider,
+  SimpleGrid,
 } from '@mantine/core';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -15,11 +34,27 @@ import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService } from '@/services';
 import { notifications } from '@mantine/notifications';
 import { errorToast, successToast } from '@/utils';
-import { 
-  IconUpload, IconPlus, IconTrash, IconInfoCircle, IconBrandInstagram,
-  IconBrandYoutube, IconMovie, IconMail, IconPhone, IconCar,
-  IconId, IconCreditCard, IconAward, IconEdit, IconUser, IconEPassport,
-  IconBrandWhatsapp, IconBrandTiktok, IconWorld, IconMap
+import {
+  IconUpload,
+  IconPlus,
+  IconTrash,
+  IconInfoCircle,
+  IconBrandInstagram,
+  IconBrandYoutube,
+  IconMovie,
+  IconMail,
+  IconPhone,
+  IconCar,
+  IconId,
+  IconCreditCard,
+  IconAward,
+  IconEdit,
+  IconUser,
+  IconEPassport,
+  IconBrandWhatsapp,
+  IconBrandTiktok,
+  IconWorld,
+  IconMap,
 } from '@tabler/icons-react';
 
 export default function NovoCasting() {
@@ -27,7 +62,7 @@ export default function NovoCasting() {
   const router = useRouter();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  
+
   const [isLoading, setIsLoading] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
   const [funcoes, setFuncoes] = useState<any[]>([]);
@@ -37,13 +72,13 @@ export default function NovoCasting() {
   const [ritmosMusicais, setRitmosMusicais] = useState<any[]>([]);
   const [estilosDanca, setEstilosDanca] = useState<any[]>([]);
   const [plataformasBusca, setPlataformasBusca] = useState<any[]>([]);
-  
+
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const form = useForm({
     initialValues: {
       // Informações Básicas
@@ -59,7 +94,7 @@ export default function NovoCasting() {
       foto_principal: null as File | null,
       ativo: true,
       autoriza_imagem_site: true,
-      
+
       // Características Físicas
       data_nascimento: null as Date | null,
       ano: new Date().getFullYear() - 20,
@@ -74,7 +109,7 @@ export default function NovoCasting() {
       cor_cabelo: '',
       tem_tatuagens: false,
       locais_tatuagens: '',
-      
+
       // Documentos e Registros
       DRT: '',
       RG: '',
@@ -85,17 +120,17 @@ export default function NovoCasting() {
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
-      
+
       // Biografia e Experiência
       biografia: '',
       experiencia: '',
       curriculum_artistico: '',
-      
+
       // Mídia
       link_monologo: '',
       link_trabalho_1: '',
       link_trabalho_2: '',
-      
+
       // Contato
       email: '',
       telefone: '',
@@ -107,7 +142,7 @@ export default function NovoCasting() {
       website: '',
       emergencia_nome: '',
       emergencia_telefone: '',
-      
+
       // Endereço e Informações Financeiras
       CEP: '',
       rua: '',
@@ -122,20 +157,20 @@ export default function NovoCasting() {
       conta: '',
       tipo_conta: '',
       pix: '',
-      
+
       // Idiomas e Veículos
       idiomas: [] as string[],
       habilitacao_categorias: [] as string[],
       habilitacao_validade: null as Date | null,
     },
     validate: {
-      nome: (value) => value.trim().length === 0 ? 'O nome é obrigatório' : null,
-      categoria: (value) => !value ? 'A categoria é obrigatória' : null,
-      altura: (value) => !value ? 'A altura é obrigatória' : null,
-      peso: (value) => !value ? 'O peso é obrigatório' : null,
-      biografia: (value) => !value ? 'A biografia é obrigatória' : null,
-      experiencia: (value) => !value ? 'A experiência é obrigatória' : null,
-      foto_principal: (value) => !value ? 'A foto principal é obrigatória' : null,
+      nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
+      categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
+      altura: (value) => (!value ? 'A altura é obrigatória' : null),
+      peso: (value) => (!value ? 'O peso é obrigatório' : null),
+      biografia: (value) => (!value ? 'A biografia é obrigatória' : null),
+      experiencia: (value) => (!value ? 'A experiência é obrigatória' : null),
+      foto_principal: (value) => (!value ? 'A foto principal é obrigatória' : null),
     },
   });
 
@@ -145,11 +180,11 @@ export default function NovoCasting() {
       try {
         const categoriasData = await CastingService.getCategorias({ ordering: 'nome' });
         setCategorias(categoriasData.results || []);
-        
+
         // Quando tivermos o endpoint para obter funções, descomentar e usar abaixo:
         // const funcoesData = await CastingService.getFuncoes();
         // setFuncoes(funcoesData.results || []);
-        
+
         // Por enquanto, usamos dados mocados para funções
         setFuncoes([
           { id: '1', nome: 'Ator/Atriz' },
@@ -158,9 +193,9 @@ export default function NovoCasting() {
           { id: '4', nome: 'Comediante' },
           { id: '5', nome: 'Diretor(a)' },
           { id: '6', nome: 'Dançarino(a)' },
-          { id: '7', nome: 'Músico' }
+          { id: '7', nome: 'Músico' },
         ]);
-        
+
         setEsportes([
           { id: '1', nome: 'Futebol' },
           { id: '2', nome: 'Natação' },
@@ -169,17 +204,17 @@ export default function NovoCasting() {
           { id: '5', nome: 'Jiu-Jitsu' },
           { id: '6', nome: 'Capoeira' },
           { id: '7', nome: 'Boxe' },
-          { id: '8', nome: 'Tênis' }
+          { id: '8', nome: 'Tênis' },
         ]);
-        
+
         setModalidadesCircenses([
           { id: '1', nome: 'Acrobacia Aérea' },
           { id: '2', nome: 'Trapézio' },
           { id: '3', nome: 'Malabarismo' },
           { id: '4', nome: 'Contorcionismo' },
-          { id: '5', nome: 'Palhaçaria' }
+          { id: '5', nome: 'Palhaçaria' },
         ]);
-        
+
         setInstrumentos([
           { id: '1', nome: 'Violão' },
           { id: '2', nome: 'Piano' },
@@ -187,9 +222,9 @@ export default function NovoCasting() {
           { id: '4', nome: 'Guitarra' },
           { id: '5', nome: 'Baixo' },
           { id: '6', nome: 'Saxofone' },
-          { id: '7', nome: 'Flauta' }
+          { id: '7', nome: 'Flauta' },
         ]);
-        
+
         setRitmosMusicais([
           { id: '1', nome: 'MPB' },
           { id: '2', nome: 'Rock' },
@@ -198,9 +233,9 @@ export default function NovoCasting() {
           { id: '5', nome: 'Jazz' },
           { id: '6', nome: 'Bossa Nova' },
           { id: '7', nome: 'Funk' },
-          { id: '8', nome: 'Sertanejo' }
+          { id: '8', nome: 'Sertanejo' },
         ]);
-        
+
         setEstilosDanca([
           { id: '1', nome: 'Ballet' },
           { id: '2', nome: 'Jazz' },
@@ -208,15 +243,15 @@ export default function NovoCasting() {
           { id: '4', nome: 'Salsa' },
           { id: '5', nome: 'Hip Hop' },
           { id: '6', nome: 'Dança de Salão' },
-          { id: '7', nome: 'Sapateado' }
+          { id: '7', nome: 'Sapateado' },
         ]);
-        
+
         setPlataformasBusca([
           { id: '1', nome: 'Casting.com' },
           { id: '2', nome: 'Elenco Direto' },
           { id: '3', nome: 'Casting Net' },
           { id: '4', nome: 'Dama Cast' },
-          { id: '5', nome: 'Qual Casting' }
+          { id: '5', nome: 'Qual Casting' },
         ]);
       } catch (error) {
         notifications.show({
@@ -226,7 +261,7 @@ export default function NovoCasting() {
         });
       }
     };
-    
+
     carregarDados();
   }, []);
 
@@ -245,17 +280,17 @@ export default function NovoCasting() {
   const removerFoto = (index: number) => {
     const novasFotos = [...fotosAdicionais];
     const novasLegendas = [...legendasFotos];
-    
+
     novasFotos.splice(index, 1);
     novasLegendas.splice(index, 1);
-    
+
     setFotosAdicionais(novasFotos);
     setLegendasFotos(novasLegendas);
   };
 
   const atualizarFoto = (file: File | null, index: number) => {
     if (!file) return;
-    
+
     const novasFotos = [...fotosAdicionais];
     novasFotos[index] = file;
     setFotosAdicionais(novasFotos);
@@ -277,7 +312,7 @@ export default function NovoCasting() {
     const novosVideos = [...videos];
     novosVideos.splice(index, 1);
     setVideos(novosVideos);
-    
+
     const novasDescricoes = [...descricaoVideos];
     novasDescricoes.splice(index, 1);
     setDescricaoVideos(novasDescricoes);
@@ -288,7 +323,7 @@ export default function NovoCasting() {
     novosVideos[index] = valor;
     setVideos(novosVideos);
   };
-  
+
   const atualizarDescricaoVideo = (valor: string, index: number) => {
     const novasDescricoes = [...descricaoVideos];
     novasDescricoes[index] = valor;
@@ -300,60 +335,69 @@ export default function NovoCasting() {
     setIsSubmitting(true);
     try {
       // Verificar se os campos obrigatórios estão preenchidos
-      if (!values.altura || !values.peso || !values.biografia || !values.experiencia || !values.foto_principal) {
+      if (
+        !values.altura ||
+        !values.peso ||
+        !values.biografia ||
+        !values.experiencia ||
+        !values.foto_principal
+      ) {
         errorToast('Por favor, preencha todos os campos obrigatórios');
         return;
       }
-      
+
       console.log('Dados a enviar:', values);
-      
+
       // Criar FormData para envio de arquivos
       const formData = new FormData();
-      
+
       // Adicionar campos básicos manualmente
       formData.set('nome', values.nome);
       if (values.nome_artistico) formData.set('nome_artistico', values.nome_artistico);
       formData.set('tipo', values.tipo || 'ator_exclusivo');
       formData.set('genero', values.genero || 'masculino');
       formData.set('categoria', values.categoria);
-      
+
       // Características físicas - campos obrigatórios
       formData.set('altura', values.altura);
       formData.set('peso', values.peso);
       if (values.manequim) formData.set('manequim', String(values.manequim));
       if (values.sapato) formData.set('sapato', String(values.sapato));
-      
+
       // Adicionar biografia - campos obrigatórios
       formData.set('biografia', values.biografia);
       formData.set('experiencia', values.experiencia);
-      
+
       // Adicionar campos booleanos
       formData.set('ativo', values.ativo ? 'true' : 'false');
-      formData.set('autoriza_imagem_site', values.autoriza_imagem_site ? 'true' : 'false');
-      
+      formData.set(
+        'autoriza_imagem_site',
+        values.autoriza_imagem_site ? 'true' : 'false',
+      );
+
       // Tratar arrays
       if (values.funcoes && values.funcoes.length > 0) {
         values.funcoes.forEach((funcao: string) => {
           formData.append('funcoes', funcao);
         });
       }
-      
+
       if (values.idiomas && values.idiomas.length > 0) {
         formData.set('idiomas', JSON.stringify(values.idiomas));
       }
-      
+
       // Adicionar foto principal - campo obrigatório
       if (values.foto_principal) {
         formData.set('foto_principal', values.foto_principal);
       }
-      
+
       // Depurar o FormData antes de enviar
       const formDataEntries: { [key: string]: any } = {};
       for (const pair of formData.entries()) {
         formDataEntries[pair[0]] = pair[1];
       }
       console.log('Conteúdo do FormData:', formDataEntries);
-      
+
       // Verificar autenticação
       const token = localStorage.getItem('accessToken');
       if (!token) {
@@ -361,7 +405,7 @@ export default function NovoCasting() {
         router.push('/admin/login');
         return;
       }
-      
+
       // Verificar se o FormData foi criado corretamente - outra forma de debug
       let formDataContent = '';
       for (const [key, value] of formData.entries()) {
@@ -372,37 +416,39 @@ export default function NovoCasting() {
         }
       }
       console.log('Conteúdo final do FormData antes de enviar:\n', formDataContent);
-      
+
       // Enviar para o backend
       try {
         // Modificando a abordagem para enviar o FormData
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/casting/castings/`, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/casting/castings/`,
+          {
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+            body: formData,
           },
-          body: formData
-        });
-        
+        );
+
         if (!response.ok) {
           const errorData = await response.json();
           throw new Error(`Erro ${response.status}: ${JSON.stringify(errorData)}`);
         }
-        
+
         const casting = await response.json();
         console.log('Casting criado com sucesso:', casting);
 
-      
         // Adicionar fotos adicionais
         if (fotosAdicionais.length > 0) {
           const fotosPromises = fotosAdicionais.map(async (foto, index) => {
             if (!foto) return null;
-            
+
             const fotoFormData = new FormData();
             fotoFormData.append('imagem', foto);
             fotoFormData.append('legenda', legendasFotos[index] || '');
             fotoFormData.append('ordem', index.toString());
-            
+
             try {
               return await CastingService.adicionarFoto(casting.id, fotoFormData);
             } catch (error) {
@@ -410,42 +456,44 @@ export default function NovoCasting() {
               return null;
             }
           });
-          
+
           await Promise.all(fotosPromises.filter(Boolean));
         }
-        
+
         // Adicionar vídeos
         if (videos.length > 0) {
           const videosPromises = videos.map(async (url, index) => {
             if (!url) return null;
-            
+
             try {
               return await CastingService.adicionarVideo(casting.id, {
                 titulo: descricaoVideos[index] || 'Vídeo ' + (index + 1),
                 url,
-                ordem: index
+                ordem: index,
               });
             } catch (error) {
               console.error('Erro ao adicionar vídeo:', error);
               return null;
             }
           });
-          
+
           await Promise.all(videosPromises.filter(Boolean));
         }
-      
-      successToast('Casting cadastrado com sucesso!');
-      router.push('/admin/casting/castings');
+
+        successToast('Casting cadastrado com sucesso!');
+        router.push('/admin/casting/castings');
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
-        
+
         // Verificar se é erro de autenticação
         if (error?.response?.status === 401) {
           errorToast('Sessão expirada. Faça login novamente.');
           localStorage.removeItem('accessToken');
           router.push('/admin/login');
         } else {
-          errorToast(`Falha ao cadastrar: ${error?.response?.data?.detail || error.message || 'Erro desconhecido'}`);
+          errorToast(
+            `Falha ao cadastrar: ${error?.response?.data?.detail || error.message || 'Erro desconhecido'}`,
+          );
         }
       }
     } catch (error) {
@@ -458,7 +506,14 @@ export default function NovoCasting() {
 
   if (authLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <Loader size="xl" />
       </div>
     );
@@ -479,19 +534,37 @@ export default function NovoCasting() {
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Tabs defaultValue="informacoes-basicas" mb="xl">
             <Tabs.List mb="md">
-              <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>Informações Básicas</Tabs.Tab>
-              <Tabs.Tab value="caracteristicas" icon={<IconInfoCircle size={14} />}>Características</Tabs.Tab>
-              <Tabs.Tab value="documentos" icon={<IconId size={14} />}>Documentos</Tabs.Tab>
-              <Tabs.Tab value="habilidades" icon={<IconAward size={14} />}>Habilidades</Tabs.Tab>
-              <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>Mídia</Tabs.Tab>
-              <Tabs.Tab value="contato" icon={<IconMail size={14} />}>Contato</Tabs.Tab>
-              <Tabs.Tab value="endereco" icon={<IconCreditCard size={14} />}>Endereço e Finanças</Tabs.Tab>
-              <Tabs.Tab value="idiomas" icon={<IconEdit size={14} />}>Idiomas e Veículos</Tabs.Tab>
+              <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
+                Informações Básicas
+              </Tabs.Tab>
+              <Tabs.Tab value="caracteristicas" icon={<IconInfoCircle size={14} />}>
+                Características
+              </Tabs.Tab>
+              <Tabs.Tab value="documentos" icon={<IconId size={14} />}>
+                Documentos
+              </Tabs.Tab>
+              <Tabs.Tab value="habilidades" icon={<IconAward size={14} />}>
+                Habilidades
+              </Tabs.Tab>
+              <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
+                Mídia
+              </Tabs.Tab>
+              <Tabs.Tab value="contato" icon={<IconMail size={14} />}>
+                Contato
+              </Tabs.Tab>
+              <Tabs.Tab value="endereco" icon={<IconCreditCard size={14} />}>
+                Endereço e Finanças
+              </Tabs.Tab>
+              <Tabs.Tab value="idiomas" icon={<IconEdit size={14} />}>
+                Idiomas e Veículos
+              </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="informacoes-basicas">
               <Card withBorder p="xl" radius="md" mb="md">
-                <Title order={3} mb="lg">Informações Básicas</Title>
-                
+                <Title order={3} mb="lg">
+                  Informações Básicas
+                </Title>
+
                 <SimpleGrid cols={2}>
                   <TextInput
                     label="Nome"
@@ -500,7 +573,7 @@ export default function NovoCasting() {
                     {...form.getInputProps('nome')}
                     mb="md"
                   />
-                  
+
                   <TextInput
                     label="Nome Artístico"
                     placeholder="Nome artístico (opcional)"
@@ -508,16 +581,19 @@ export default function NovoCasting() {
                     mb="md"
                   />
                 </SimpleGrid>
-                
+
                 <SimpleGrid cols={3} mb="md">
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
-                    data={categorias.map(cat => ({ value: cat.id.toString(), label: cat.nome }))}
+                    data={categorias.map((cat) => ({
+                      value: cat.id.toString(),
+                      label: cat.nome,
+                    }))}
                     required
                     {...form.getInputProps('categoria')}
                   />
-                  
+
                   <Select
                     label="Tipo"
                     placeholder="Selecione o tipo"
@@ -531,7 +607,7 @@ export default function NovoCasting() {
                     ]}
                     {...form.getInputProps('tipo')}
                   />
-                  
+
                   <Select
                     label="Gênero"
                     placeholder="Selecione o gênero"
@@ -543,15 +619,18 @@ export default function NovoCasting() {
                     {...form.getInputProps('genero')}
                   />
                 </SimpleGrid>
-                
+
                 <MultiSelect
                   label="Funções"
                   placeholder="Selecione uma ou mais funções"
-                  data={funcoes.map(funcao => ({ value: funcao.id.toString(), label: funcao.nome }))}
+                  data={funcoes.map((funcao) => ({
+                    value: funcao.id.toString(),
+                    label: funcao.nome,
+                  }))}
                   {...form.getInputProps('funcoes')}
                   mb="md"
                 />
-                
+
                 <SimpleGrid cols={2}>
                   <TextInput
                     label="Naturalidade"
@@ -559,7 +638,7 @@ export default function NovoCasting() {
                     {...form.getInputProps('natural_de')}
                     mb="md"
                   />
-                  
+
                   <TextInput
                     label="Nacionalidade"
                     placeholder="Ex: Brasileira"
@@ -567,14 +646,14 @@ export default function NovoCasting() {
                     mb="md"
                   />
                 </SimpleGrid>
-                
+
                 <TextInput
                   label="Etnia"
                   placeholder="Etnia"
                   {...form.getInputProps('etnia')}
                   mb="md"
                 />
-                
+
                 <FileInput
                   label="Foto Principal"
                   description="Selecione uma imagem para a foto principal (formatos: JPG, PNG, WebP)"
@@ -583,24 +662,26 @@ export default function NovoCasting() {
                   {...form.getInputProps('foto_principal')}
                   mb="md"
                 />
-                
+
                 <Switch
                   label="Ativo"
                   {...form.getInputProps('ativo', { type: 'checkbox' })}
                   mb="md"
                 />
-                
+
                 <Switch
                   label="Autoriza imagem no site"
                   {...form.getInputProps('autoriza_imagem_site', { type: 'checkbox' })}
                 />
               </Card>
             </Tabs.Panel>
-          
+
             <Tabs.Panel value="caracteristicas">
               <Card withBorder p="xl" radius="md" mb="md">
-                <Title order={3} mb="lg">Características Físicas</Title>
-                
+                <Title order={3} mb="lg">
+                  Características Físicas
+                </Title>
+
                 <SimpleGrid cols={3} mb="md">
                   <DateInput
                     label="Data de Nascimento"
@@ -608,7 +689,7 @@ export default function NovoCasting() {
                     valueFormat="DD/MM/YYYY"
                     {...form.getInputProps('data_nascimento')}
                   />
-                  
+
                   <NumberInput
                     label="Ano"
                     placeholder="Ano de nascimento"
@@ -616,7 +697,7 @@ export default function NovoCasting() {
                     max={new Date().getFullYear()}
                     {...form.getInputProps('ano')}
                   />
-                  
+
                   <NumberInput
                     label="Altura (em metros)"
                     placeholder="Ex: 1.75"
@@ -627,7 +708,7 @@ export default function NovoCasting() {
                     {...form.getInputProps('altura')}
                   />
                 </SimpleGrid>
-                
+
                 <SimpleGrid cols={3} mb="md">
                   <NumberInput
                     label="Peso (em kg)"
@@ -637,34 +718,34 @@ export default function NovoCasting() {
                     max={200}
                     {...form.getInputProps('peso')}
                   />
-                  
+
                   <NumberInput
                     label="Manequim"
                     placeholder="Tamanho do manequim"
                     {...form.getInputProps('manequim')}
                   />
-                  
+
                   <NumberInput
                     label="Sapato"
                     placeholder="Número do sapato"
                     {...form.getInputProps('sapato')}
                   />
                 </SimpleGrid>
-                
+
                 <SimpleGrid cols={2} mb="md">
                   <NumberInput
                     label="Terno"
                     placeholder="Tamanho do terno"
                     {...form.getInputProps('terno')}
                   />
-                  
+
                   <NumberInput
                     label="Camisa"
                     placeholder="Tamanho da camisa"
                     {...form.getInputProps('camisa')}
                   />
                 </SimpleGrid>
-                
+
                 <SimpleGrid cols={3} mb="md">
                   <Select
                     label="Cor dos Olhos"
@@ -681,7 +762,7 @@ export default function NovoCasting() {
                     ]}
                     {...form.getInputProps('olhos')}
                   />
-                  
+
                   <Select
                     label="Tipo de Cabelo"
                     placeholder="Selecione o tipo de cabelo"
@@ -694,7 +775,7 @@ export default function NovoCasting() {
                     ]}
                     {...form.getInputProps('tipo_cabelo')}
                   />
-                  
+
                   <Select
                     label="Cor do Cabelo"
                     placeholder="Selecione a cor do cabelo"
@@ -712,13 +793,13 @@ export default function NovoCasting() {
                     {...form.getInputProps('cor_cabelo')}
                   />
                 </SimpleGrid>
-                
+
                 <Switch
                   label="Possui Tatuagens"
                   {...form.getInputProps('tem_tatuagens', { type: 'checkbox' })}
                   mb="md"
                 />
-                
+
                 {form.values.tem_tatuagens && (
                   <Textarea
                     label="Locais das Tatuagens"
@@ -729,11 +810,13 @@ export default function NovoCasting() {
                 )}
               </Card>
             </Tabs.Panel>
-          
+
             <Tabs.Panel value="documentos">
               <Card withBorder p="xl" radius="md" mb="md">
-                <Title order={3} mb="lg">Documentos e Registros Profissionais</Title>
-                
+                <Title order={3} mb="lg">
+                  Documentos e Registros Profissionais
+                </Title>
+
                 <SimpleGrid cols={3} mb="md">
                   <TextInput
                     label="DRT"
@@ -741,14 +824,14 @@ export default function NovoCasting() {
                     icon={<IconId size={14} />}
                     {...form.getInputProps('DRT')}
                   />
-                  
+
                   <TextInput
                     label="RG"
                     placeholder="Número do RG"
                     icon={<IconId size={14} />}
                     {...form.getInputProps('RG')}
                   />
-                  
+
                   <TextInput
                     label="CPF"
                     placeholder="Número do CPF"
@@ -756,7 +839,7 @@ export default function NovoCasting() {
                     {...form.getInputProps('CPF')}
                   />
                 </SimpleGrid>
-                
+
                 <SimpleGrid cols={2} mb="md">
                   <Group align="center">
                     <Switch
@@ -764,16 +847,20 @@ export default function NovoCasting() {
                       {...form.getInputProps('tem_passaporte', { type: 'checkbox' })}
                     />
                   </Group>
-                  
+
                   <TextInput
                     label="CNH"
                     placeholder="Número da CNH"
                     {...form.getInputProps('CNH')}
                   />
                 </SimpleGrid>
-                
-                <Divider my="md" label="Informações para Nota Fiscal" labelPosition="center" />
-                
+
+                <Divider
+                  my="md"
+                  label="Informações para Nota Fiscal"
+                  labelPosition="center"
+                />
+
                 <SimpleGrid cols={3} mb="md">
                   <TextInput
                     label="CNPJ"
@@ -781,20 +868,20 @@ export default function NovoCasting() {
                     icon={<IconCreditCard size={14} />}
                     {...form.getInputProps('CNPJ')}
                   />
-                  
+
                   <TextInput
                     label="Razão Social"
                     placeholder="Razão Social da empresa"
                     {...form.getInputProps('razao_social')}
                   />
-                  
+
                   <TextInput
                     label="Inscrição Estadual"
                     placeholder="Número da Inscrição Estadual"
                     {...form.getInputProps('inscricao_estadual')}
                   />
                 </SimpleGrid>
-                
+
                 <Switch
                   label="Possui Nota Própria"
                   {...form.getInputProps('possui_nota_propria', { type: 'checkbox' })}
@@ -802,11 +889,13 @@ export default function NovoCasting() {
                 />
               </Card>
             </Tabs.Panel>
-            
+
             <Tabs.Panel value="habilidades">
               <Card withBorder p="xl" radius="md" mb="md">
-                <Title order={3} mb="lg">Biografia e Experiência</Title>
-                
+                <Title order={3} mb="lg">
+                  Biografia e Experiência
+                </Title>
+
                 <Textarea
                   label="Biografia"
                   placeholder="Biografia do casting"
@@ -814,7 +903,7 @@ export default function NovoCasting() {
                   {...form.getInputProps('biografia')}
                   mb="md"
                 />
-                
+
                 <Textarea
                   label="Experiência"
                   placeholder="Experiência profissional do casting"
@@ -822,7 +911,7 @@ export default function NovoCasting() {
                   {...form.getInputProps('experiencia')}
                   mb="md"
                 />
-                
+
                 <Textarea
                   label="Curriculum Artístico"
                   placeholder="Breve descrição de seu curriculum artístico"
@@ -834,399 +923,408 @@ export default function NovoCasting() {
             </Tabs.Panel>
 
             <Tabs.Panel value="midia">
-            <Card withBorder p="xl" radius="md" mb="md">
-              <Group position="apart" mb="lg">
-                <Title order={3}>Fotos Adicionais</Title>
-                <Button
-                  leftIcon={<IconPlus size={16} />}
-                  variant="outline"
-                  onClick={adicionarFoto}
-                  styles={{
-                    root: {
-                      borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                      color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                      transition: 'transform 0.3s, box-shadow 0.3s',
-                      '&:hover': {
-                        transform: 'translateY(-3px)',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                      }
-                    }
-                  }}
-                >
-                  Adicionar Foto
-                </Button>
-              </Group>
-              
-              {fotosAdicionais.length === 0 ? (
-                <Text color="dimmed" align="center" py="lg">
-                  Nenhuma foto adicional. Clique em &quot;Adicionar Foto&quot; para incluir mais fotos.
-                </Text>
-              ) : (
-                fotosAdicionais.map((foto, index) => (
-                  <Card key={index} withBorder p="md" radius="md" mb="md">
-                    <Group position="apart" mb="xs">
-                      <Text weight={500}>Foto {index + 1}</Text>
-                      <ActionIcon color="red" onClick={() => removerFoto(index)}>
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
-                    
-                    <FileInput
-                      label="Imagem"
-                      description="Selecione uma imagem"
-                      accept="image/png,image/jpeg,image/webp"
-                      icon={<IconUpload size={14} />}
-                      value={foto}
-                      onChange={(file) => atualizarFoto(file, index)}
-                      mb="md"
-                    />
-                    
-                    <TextInput
-                      label="Legenda"
-                      placeholder="Legenda da foto"
-                      value={legendasFotos[index] || ''}
-                      onChange={(e) => atualizarLegenda(e.target.value, index)}
-                    />
-                  </Card>
-                ))
-              )}
-            </Card>
-          
-            <Card withBorder p="xl" radius="md" mb="md">
-              <Group position="apart" mb="lg">
-                <Title order={3}>Links de Mídia</Title>
-              </Group>
-              
-              <SimpleGrid cols={2} mb="md">
+              <Card withBorder p="xl" radius="md" mb="md">
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Fotos Adicionais</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarFoto}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Foto
+                  </Button>
+                </Group>
+
+                {fotosAdicionais.length === 0 ? (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhuma foto adicional. Clique em &quot;Adicionar Foto&quot; para
+                    incluir mais fotos.
+                  </Text>
+                ) : (
+                  fotosAdicionais.map((foto, index) => (
+                    <Card key={index} withBorder p="md" radius="md" mb="md">
+                      <Group position="apart" mb="xs">
+                        <Text weight={500}>Foto {index + 1}</Text>
+                        <ActionIcon color="red" onClick={() => removerFoto(index)}>
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      </Group>
+
+                      <FileInput
+                        label="Imagem"
+                        description="Selecione uma imagem"
+                        accept="image/png,image/jpeg,image/webp"
+                        icon={<IconUpload size={14} />}
+                        value={foto}
+                        onChange={(file) => atualizarFoto(file, index)}
+                        mb="md"
+                      />
+
+                      <TextInput
+                        label="Legenda"
+                        placeholder="Legenda da foto"
+                        value={legendasFotos[index] || ''}
+                        onChange={(e) => atualizarLegenda(e.target.value, index)}
+                      />
+                    </Card>
+                  ))
+                )}
+              </Card>
+
+              <Card withBorder p="xl" radius="md" mb="md">
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Links de Mídia</Title>
+                </Group>
+
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Link de Monólogo"
+                    placeholder="URL do monólogo ou apresentação"
+                    icon={<IconMovie size={14} />}
+                    {...form.getInputProps('link_monologo')}
+                  />
+
+                  <TextInput
+                    label="Link de Trabalho 1"
+                    placeholder="URL de algum trabalho realizado"
+                    icon={<IconMovie size={14} />}
+                    {...form.getInputProps('link_trabalho_1')}
+                  />
+                </SimpleGrid>
+
                 <TextInput
-                  label="Link de Monólogo"
-                  placeholder="URL do monólogo ou apresentação"
+                  label="Link de Trabalho 2"
+                  placeholder="URL de outro trabalho realizado"
                   icon={<IconMovie size={14} />}
-                  {...form.getInputProps('link_monologo')}
-                />
-                
-                <TextInput
-                  label="Link de Trabalho 1"
-                  placeholder="URL de algum trabalho realizado"
-                  icon={<IconMovie size={14} />}
-                  {...form.getInputProps('link_trabalho_1')}
-                />
-              </SimpleGrid>
-              
-              <TextInput
-                label="Link de Trabalho 2"
-                placeholder="URL de outro trabalho realizado"
-                icon={<IconMovie size={14} />}
-                {...form.getInputProps('link_trabalho_2')}
-                mb="md"
-              />
-            </Card>
-          </Tabs.Panel>
-          
-          <Tabs.Panel value="contato">
-            <Card withBorder p="xl" radius="md" mb="md">
-              <Title order={3} mb="lg">Informações de Contato</Title>
-              
-              <SimpleGrid cols={2} mb="md">
-                <TextInput
-                  label="Email"
-                  placeholder="Endereço de email para contato"
-                  icon={<IconMail size={14} />}
-                  {...form.getInputProps('email')}
-                />
-                
-                <TextInput
-                  label="Telefone"
-                  placeholder="Número de telefone com DDD"
-                  icon={<IconPhone size={14} />}
-                  {...form.getInputProps('telefone')}
-                />
-              </SimpleGrid>
-              
-              <SimpleGrid cols={2} mb="md">
-                <TextInput
-                  label="Celular"
-                  placeholder="Número de celular com DDD"
-                  icon={<IconPhone size={14} />}
-                  {...form.getInputProps('celular')}
-                />
-                
-                <TextInput
-                  label="WhatsApp"
-                  placeholder="Número de WhatsApp (se diferente do celular)"
-                  icon={<IconBrandWhatsapp size={14} />}
-                  {...form.getInputProps('whatsapp')}
-                />
-              </SimpleGrid>
-              
-              <SimpleGrid cols={3} mb="md">
-                <TextInput
-                  label="Instagram"
-                  placeholder="@usuario"
-                  icon={<IconBrandInstagram size={14} />}
-                  {...form.getInputProps('instagram')}
-                />
-                
-                <TextInput
-                  label="TikTok"
-                  placeholder="@usuario"
-                  icon={<IconBrandTiktok size={14} />}
-                  {...form.getInputProps('tiktok')}
-                />
-                
-                <TextInput
-                  label="Youtube"
-                  placeholder="URL do canal ou vídeo"
-                  icon={<IconBrandYoutube size={14} />}
-                  {...form.getInputProps('youtube')}
-                />
-              </SimpleGrid>
-              
-              <TextInput
-                label="Website"
-                placeholder="URL do site pessoal (se houver)"
-                icon={<IconWorld size={14} />}
-                {...form.getInputProps('website')}
-                mb="md"
-              />
-              
-              <Divider my="md" label="Contato de Emergência" labelPosition="center" />
-              
-              <SimpleGrid cols={2} mb="md">
-                <TextInput
-                  label="Nome do Contato de Emergência"
-                  placeholder="Nome completo"
-                  {...form.getInputProps('emergencia_nome')}
-                />
-                
-                <TextInput
-                  label="Telefone de Emergência"
-                  placeholder="Número de telefone com DDD"
-                  icon={<IconPhone size={14} />}
-                  {...form.getInputProps('emergencia_telefone')}
-                />
-              </SimpleGrid>
-            </Card>
-          </Tabs.Panel>
-          
-          <Tabs.Panel value="endereco">
-            <Card withBorder p="xl" radius="md" mb="md">
-              <Title order={3} mb="lg">Endereço e Informações Financeiras</Title>
-              
-              <SimpleGrid cols={2} mb="md">
-                <TextInput
-                  label="CEP"
-                  placeholder="Formato: 00000-000"
-                  icon={<IconMap size={14} />}
-                  {...form.getInputProps('CEP')}
-                />
-                
-                <TextInput
-                  label="Rua/Avenida"
-                  placeholder="Nome da rua ou avenida"
-                  {...form.getInputProps('rua')}
-                />
-              </SimpleGrid>
-              
-              <SimpleGrid cols={3} mb="md">
-                <TextInput
-                  label="Número"
-                  placeholder="Número do endereço"
-                  {...form.getInputProps('numero')}
-                />
-                
-                <TextInput
-                  label="Complemento"
-                  placeholder="Apto, bloco, etc (se houver)"
-                  {...form.getInputProps('complemento')}
-                />
-                
-                <TextInput
-                  label="Bairro"
-                  placeholder="Nome do bairro"
-                  {...form.getInputProps('bairro')}
-                />
-              </SimpleGrid>
-              
-              <SimpleGrid cols={3} mb="md">
-                <TextInput
-                  label="Cidade"
-                  placeholder="Nome da cidade"
-                  {...form.getInputProps('cidade')}
-                />
-                
-                <TextInput
-                  label="Estado"
-                  placeholder="UF"
-                  maxLength={2}
-                  {...form.getInputProps('estado')}
-                />
-                
-                <TextInput
-                  label="País"
-                  placeholder="País"
-                  {...form.getInputProps('pais')}
-                />
-              </SimpleGrid>
-              
-              <Divider my="md" label="Dados Bancários" labelPosition="center" />
-              
-              <SimpleGrid cols={3} mb="md">
-                <TextInput
-                  label="Banco"
-                  placeholder="Número ou nome do banco"
-                  {...form.getInputProps('banco')}
-                />
-                
-                <TextInput
-                  label="Agência"
-                  placeholder="Número da agência"
-                  {...form.getInputProps('agencia')}
-                />
-                
-                <TextInput
-                  label="Conta"
-                  placeholder="Número da conta com dígito"
-                  {...form.getInputProps('conta')}
-                />
-              </SimpleGrid>
-              
-              <SimpleGrid cols={2} mb="md">
-                <Select
-                  label="Tipo de Conta"
-                  placeholder="Selecione o tipo de conta"
-                  data={[
-                    { value: 'corrente', label: 'Corrente' },
-                    { value: 'poupanca', label: 'Poupança' },
-                    { value: 'conjunta', label: 'Conjunta' },
-                    { value: 'pagamento', label: 'Pagamento' },
-                  ]}
-                  {...form.getInputProps('tipo_conta')}
-                />
-                
-                <TextInput
-                  label="PIX"
-                  placeholder="Chave PIX"
-                  {...form.getInputProps('pix')}
-                />
-              </SimpleGrid>
-            </Card>
-          </Tabs.Panel>
-          
-          <Tabs.Panel value="idiomas">
-            <Card withBorder p="xl" radius="md" mb="md">
-              <Title order={3} mb="lg">Idiomas</Title>
-              
-              <MultiSelect
-                label="Idiomas"
-                placeholder="Selecione os idiomas que domina"
-                data={[
-                  { value: 'portugues', label: 'Português' },
-                  { value: 'ingles', label: 'Inglês' },
-                  { value: 'espanhol', label: 'Espanhol' },
-                  { value: 'frances', label: 'Francês' },
-                  { value: 'alemao', label: 'Alemão' },
-                  { value: 'italiano', label: 'Italiano' },
-                  { value: 'japones', label: 'Japonês' },
-                  { value: 'mandarim', label: 'Mandarim' },
-                  { value: 'outros', label: 'Outros' }
-                ]}
-                {...form.getInputProps('idiomas')}
-                mb="md"
-              />
-              
-              <Divider my="md" label="Veículos" labelPosition="center" />
-              
-              <Card withBorder p="sm" radius="md" mb="md">
-                <Title order={4} mb="sm">Habilitação</Title>
-                
-                <MultiSelect
-                  label="Categorias de Habilitação"
-                  placeholder="Selecione as categorias de habilitação que possui"
-                  data={[
-                    { value: 'A', label: 'A - Motos' },
-                    { value: 'B', label: 'B - Carros' },
-                    { value: 'C', label: 'C - Veículos de carga acima de 3,5t' },
-                    { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
-                    { value: 'E', label: 'E - Veículos com unidade acoplada acima de 6t' },
-                  ]}
-                  {...form.getInputProps('habilitacao_categorias')}
-                  mb="md"
-                />
-                
-                <DateInput
-                  label="Validade da CNH"
-                  placeholder="Data de validade da CNH"
-                  valueFormat="DD/MM/YYYY"
-                  {...form.getInputProps('habilitacao_validade')}
+                  {...form.getInputProps('link_trabalho_2')}
                   mb="md"
                 />
               </Card>
-              
-              <Group position="apart" mb="lg">
-                <Title order={4}>Veículos</Title>
-                <Button
-                  leftIcon={<IconPlus size={16} />}
-                  variant="outline"
-                  onClick={adicionarVideo}
-                  styles={{
-                    root: {
-                      borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                      color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                      transition: 'transform 0.3s, box-shadow 0.3s',
-                      '&:hover': {
-                        transform: 'translateY(-3px)',
-                        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                      }
-                    }
-                  }}
-                >
-                  Adicionar Veículo
-                </Button>
-              </Group>
-              
-              {videos.length === 0 ? (
-                <Text color="dimmed" align="center" py="lg">
-                  Nenhum veículo adicionado. Clique em &quot;Adicionar Veículo&quot; para incluir os veículos do casting.
-                </Text>
-              ) : (
-                videos.map((video, index) => (
-                  <Card key={index} withBorder p="md" radius="md" mb="md">
-                    <Group position="apart" mb="xs">
-                      <Text weight={500}>Veículo {index + 1}</Text>
-                      <ActionIcon color="red" onClick={() => removerVideo(index)}>
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
-                    
-                    <TextInput
-                      label="Marca e Modelo"
-                      placeholder="Ex: Honda Civic, Yamaha Factor, etc."
-                      value={video}
-                      onChange={(e) => atualizarVideo(e.target.value, index)}
-                      icon={<IconCar size={14} />}
-                      mb="md"
-                    />
-                    
-                    <TextInput
-                      label="Ano"
-                      placeholder="Ano do veículo"
-                      value={descricaoVideos[index] || ''}
-                      onChange={(e) => atualizarDescricaoVideo(e.target.value, index)}
-                    />
-                  </Card>
-                ))
-              )}
-            </Card>
-          </Tabs.Panel>
-          
+            </Tabs.Panel>
+
+            <Tabs.Panel value="contato">
+              <Card withBorder p="xl" radius="md" mb="md">
+                <Title order={3} mb="lg">
+                  Informações de Contato
+                </Title>
+
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Email"
+                    placeholder="Endereço de email para contato"
+                    icon={<IconMail size={14} />}
+                    {...form.getInputProps('email')}
+                  />
+
+                  <TextInput
+                    label="Telefone"
+                    placeholder="Número de telefone com DDD"
+                    icon={<IconPhone size={14} />}
+                    {...form.getInputProps('telefone')}
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Celular"
+                    placeholder="Número de celular com DDD"
+                    icon={<IconPhone size={14} />}
+                    {...form.getInputProps('celular')}
+                  />
+
+                  <TextInput
+                    label="WhatsApp"
+                    placeholder="Número de WhatsApp (se diferente do celular)"
+                    icon={<IconBrandWhatsapp size={14} />}
+                    {...form.getInputProps('whatsapp')}
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    label="Instagram"
+                    placeholder="@usuario"
+                    icon={<IconBrandInstagram size={14} />}
+                    {...form.getInputProps('instagram')}
+                  />
+
+                  <TextInput
+                    label="TikTok"
+                    placeholder="@usuario"
+                    icon={<IconBrandTiktok size={14} />}
+                    {...form.getInputProps('tiktok')}
+                  />
+
+                  <TextInput
+                    label="Youtube"
+                    placeholder="URL do canal ou vídeo"
+                    icon={<IconBrandYoutube size={14} />}
+                    {...form.getInputProps('youtube')}
+                  />
+                </SimpleGrid>
+
+                <TextInput
+                  label="Website"
+                  placeholder="URL do site pessoal (se houver)"
+                  icon={<IconWorld size={14} />}
+                  {...form.getInputProps('website')}
+                  mb="md"
+                />
+
+                <Divider my="md" label="Contato de Emergência" labelPosition="center" />
+
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Nome do Contato de Emergência"
+                    placeholder="Nome completo"
+                    {...form.getInputProps('emergencia_nome')}
+                  />
+
+                  <TextInput
+                    label="Telefone de Emergência"
+                    placeholder="Número de telefone com DDD"
+                    icon={<IconPhone size={14} />}
+                    {...form.getInputProps('emergencia_telefone')}
+                  />
+                </SimpleGrid>
+              </Card>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="endereco">
+              <Card withBorder p="xl" radius="md" mb="md">
+                <Title order={3} mb="lg">
+                  Endereço e Informações Financeiras
+                </Title>
+
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="CEP"
+                    placeholder="Formato: 00000-000"
+                    icon={<IconMap size={14} />}
+                    {...form.getInputProps('CEP')}
+                  />
+
+                  <TextInput
+                    label="Rua/Avenida"
+                    placeholder="Nome da rua ou avenida"
+                    {...form.getInputProps('rua')}
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    label="Número"
+                    placeholder="Número do endereço"
+                    {...form.getInputProps('numero')}
+                  />
+
+                  <TextInput
+                    label="Complemento"
+                    placeholder="Apto, bloco, etc (se houver)"
+                    {...form.getInputProps('complemento')}
+                  />
+
+                  <TextInput
+                    label="Bairro"
+                    placeholder="Nome do bairro"
+                    {...form.getInputProps('bairro')}
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    label="Cidade"
+                    placeholder="Nome da cidade"
+                    {...form.getInputProps('cidade')}
+                  />
+
+                  <TextInput
+                    label="Estado"
+                    placeholder="UF"
+                    maxLength={2}
+                    {...form.getInputProps('estado')}
+                  />
+
+                  <TextInput
+                    label="País"
+                    placeholder="País"
+                    {...form.getInputProps('pais')}
+                  />
+                </SimpleGrid>
+
+                <Divider my="md" label="Dados Bancários" labelPosition="center" />
+
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    label="Banco"
+                    placeholder="Número ou nome do banco"
+                    {...form.getInputProps('banco')}
+                  />
+
+                  <TextInput
+                    label="Agência"
+                    placeholder="Número da agência"
+                    {...form.getInputProps('agencia')}
+                  />
+
+                  <TextInput
+                    label="Conta"
+                    placeholder="Número da conta com dígito"
+                    {...form.getInputProps('conta')}
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={2} mb="md">
+                  <Select
+                    label="Tipo de Conta"
+                    placeholder="Selecione o tipo de conta"
+                    data={[
+                      { value: 'corrente', label: 'Corrente' },
+                      { value: 'poupanca', label: 'Poupança' },
+                      { value: 'conjunta', label: 'Conjunta' },
+                      { value: 'pagamento', label: 'Pagamento' },
+                    ]}
+                    {...form.getInputProps('tipo_conta')}
+                  />
+
+                  <TextInput
+                    label="PIX"
+                    placeholder="Chave PIX"
+                    {...form.getInputProps('pix')}
+                  />
+                </SimpleGrid>
+              </Card>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="idiomas">
+              <Card withBorder p="xl" radius="md" mb="md">
+                <Title order={3} mb="lg">
+                  Idiomas
+                </Title>
+
+                <MultiSelect
+                  label="Idiomas"
+                  placeholder="Selecione os idiomas que domina"
+                  data={[
+                    { value: 'portugues', label: 'Português' },
+                    { value: 'ingles', label: 'Inglês' },
+                    { value: 'espanhol', label: 'Espanhol' },
+                    { value: 'frances', label: 'Francês' },
+                    { value: 'alemao', label: 'Alemão' },
+                    { value: 'italiano', label: 'Italiano' },
+                    { value: 'japones', label: 'Japonês' },
+                    { value: 'mandarim', label: 'Mandarim' },
+                    { value: 'outros', label: 'Outros' },
+                  ]}
+                  {...form.getInputProps('idiomas')}
+                  mb="md"
+                />
+
+                <Divider my="md" label="Veículos" labelPosition="center" />
+
+                <Card withBorder p="sm" radius="md" mb="md">
+                  <Title order={4} mb="sm">
+                    Habilitação
+                  </Title>
+
+                  <MultiSelect
+                    label="Categorias de Habilitação"
+                    placeholder="Selecione as categorias de habilitação que possui"
+                    data={[
+                      { value: 'A', label: 'A - Motos' },
+                      { value: 'B', label: 'B - Carros' },
+                      { value: 'C', label: 'C - Veículos de carga acima de 3,5t' },
+                      { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
+                      {
+                        value: 'E',
+                        label: 'E - Veículos com unidade acoplada acima de 6t',
+                      },
+                    ]}
+                    {...form.getInputProps('habilitacao_categorias')}
+                    mb="md"
+                  />
+
+                  <DateInput
+                    label="Validade da CNH"
+                    placeholder="Data de validade da CNH"
+                    valueFormat="DD/MM/YYYY"
+                    {...form.getInputProps('habilitacao_validade')}
+                    mb="md"
+                  />
+                </Card>
+
+                <Group position="apart" mb="lg">
+                  <Title order={4}>Veículos</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarVideo}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Veículo
+                  </Button>
+                </Group>
+
+                {videos.length === 0 ? (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhum veículo adicionado. Clique em &quot;Adicionar Veículo&quot;
+                    para incluir os veículos do casting.
+                  </Text>
+                ) : (
+                  videos.map((video, index) => (
+                    <Card key={index} withBorder p="md" radius="md" mb="md">
+                      <Group position="apart" mb="xs">
+                        <Text weight={500}>Veículo {index + 1}</Text>
+                        <ActionIcon color="red" onClick={() => removerVideo(index)}>
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      </Group>
+
+                      <TextInput
+                        label="Marca e Modelo"
+                        placeholder="Ex: Honda Civic, Yamaha Factor, etc."
+                        value={video}
+                        onChange={(e) => atualizarVideo(e.target.value, index)}
+                        icon={<IconCar size={14} />}
+                        mb="md"
+                      />
+
+                      <TextInput
+                        label="Ano"
+                        placeholder="Ano do veículo"
+                        value={descricaoVideos[index] || ''}
+                        onChange={(e) => atualizarDescricaoVideo(e.target.value, index)}
+                      />
+                    </Card>
+                  ))
+                )}
+              </Card>
+            </Tabs.Panel>
           </Tabs>
-          
+
           <Group position="right" mt="xl">
-            <Button
-              variant="outline"
-              onClick={() => router.push('/admin/casting')}
-            >
+            <Button variant="outline" onClick={() => router.push('/admin/casting')}>
               Cancelar
             </Button>
             <Button
@@ -1239,8 +1337,8 @@ export default function NovoCasting() {
                   color: '#FFFFFF !important',
                   '&:hover': {
                     backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                  }
-                }
+                  },
+                },
               }}
             >
               Salvar Casting

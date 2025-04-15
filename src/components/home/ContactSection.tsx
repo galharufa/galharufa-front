@@ -18,10 +18,13 @@ const ContactSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Entre em Contato</h2>
+          <h2 className="heading-secondary text-black dark:text-white">
+            Entre em Contato
+          </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Estamos prontos para atender às suas necessidades. Entre em contato conosco para saber mais sobre nossos serviços ou para agendar uma reunião.
+            Estamos prontos para atender às suas necessidades. Entre em contato conosco
+            para saber mais sobre nossos serviços ou para agendar uma reunião.
           </p>
         </motion.div>
 
@@ -36,10 +39,10 @@ const ContactSection = () => {
             <div className="flex justify-center mb-4">
               <FaPhone className="text-3xl text-black dark:text-white" />
             </div>
-            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Telefone</h3>
-            <p className="text-gray-600 dark:text-gray-400">
-              (11) 98709-0824
-            </p>
+            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">
+              Telefone
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">(11) 98709-0824</p>
           </motion.div>
 
           {/* Email */}
@@ -52,7 +55,9 @@ const ContactSection = () => {
             <div className="flex justify-center mb-4">
               <FaEnvelope className="text-3xl text-black dark:text-white" />
             </div>
-            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Email</h3>
+            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">
+              Email
+            </h3>
             <p className="text-gray-600 dark:text-gray-400">
               <a href="mailto:atendimento@agenciagalharufa.com.br">
                 atendimento@agenciagalharufa.com.br
@@ -70,9 +75,11 @@ const ContactSection = () => {
             <div className="flex justify-center mb-4">
               <FaClock className="text-3xl text-black dark:text-white" />
             </div>
-            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">Horário de Funcionamento</h3>
+            <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">
+              Horário de Funcionamento
+            </h3>
             <p className="text-gray-600 dark:text-gray-400">
-            Segunda a Sexta: 10h às 19h
+              Segunda a Sexta: 10h às 19h
             </p>
           </motion.div>
         </div>

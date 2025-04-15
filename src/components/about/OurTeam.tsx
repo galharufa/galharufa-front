@@ -114,7 +114,6 @@ const teamMembers = [
       email: 'leo@galharufa.com.br',
     },
   },
-
 ];
 
 const OurTeam = () => {
@@ -130,12 +129,11 @@ const OurTeam = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="heading-secondary text-black dark:text-white">
-            Nossa Equipe
-          </h2>
+          <h2 className="heading-secondary text-black dark:text-white">Nossa Equipe</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Conheça os profissionais apaixonados que fazem da Galharufa uma agência de excelência.
+            Conheça os profissionais apaixonados que fazem da Galharufa uma agência de
+            excelência.
           </p>
         </motion.div>
 
@@ -148,24 +146,26 @@ const OurTeam = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
             >
-          <div className="relative h-80 flex items-center justify-center bg-gray-200 dark:bg-gray-800">
-            {member.image ? (
-              <Image
-                src={member.image}
-                alt={member.name}
-                fill
-                className="object-cover object-center transition-transform duration-500 hover:scale-105"
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-gray-400 dark:bg-gray-700 flex items-center justify-center text-white text-3xl font-bold shadow-md">
-                {getInitials(member.name)}
+              <div className="relative h-80 flex items-center justify-center bg-gray-200 dark:bg-gray-800">
+                {member.image ? (
+                  <Image
+                    src={member.image}
+                    alt={member.name}
+                    fill
+                    className="object-cover object-center transition-transform duration-500 hover:scale-105"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full bg-gray-400 dark:bg-gray-700 flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                    {getInitials(member.name)}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
 
               <div className="p-6">
-                <h3 className="text-xl font-semibold mb-1 text-black dark:text-white">{member.name}</h3>
+                <h3 className="text-xl font-semibold mb-1 text-black dark:text-white">
+                  {member.name}
+                </h3>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">{member.role}</p>
                 <div className="flex space-x-4">
                   <a

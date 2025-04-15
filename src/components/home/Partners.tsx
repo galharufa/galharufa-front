@@ -48,7 +48,7 @@ const partners = [
     id: '8',
     name: 'SBT',
     logo: '/images/partners/partner8.png',
-  }
+  },
 ];
 
 const Partners = () => {
@@ -64,9 +64,12 @@ const Partners = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Nossos Parceiros</h2>
+          <h2 className="heading-secondary text-black dark:text-white">
+            Nossos Parceiros
+          </h2>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Trabalhamos com as principais empresas e produtoras do mercado audiovisual, garantindo as melhores oportunidades para nossos talentos.
+            Trabalhamos com as principais empresas e produtoras do mercado audiovisual,
+            garantindo as melhores oportunidades para nossos talentos.
           </p>
         </motion.div>
 

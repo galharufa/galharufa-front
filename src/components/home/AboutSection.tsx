@@ -66,8 +66,12 @@ const AboutSection = () => {
               <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mt-2 mb-6"></div>
             </motion.div>
 
-            <motion.p variants={itemVariants} className="text-gray-700 dark:text-gray-300 text-lg">
-            A Galharufa é um Bureau de Arte que emergiu do desejo em conectar artistas do palco à cena do audiovisual.                 
+            <motion.p
+              variants={itemVariants}
+              className="text-gray-700 dark:text-gray-300 text-lg"
+            >
+              A Galharufa é um Bureau de Arte que emergiu do desejo em conectar artistas
+              do palco à cena do audiovisual.
             </motion.p>
 
             <motion.div variants={itemVariants} className="pt-4">
@@ -78,7 +82,6 @@ const AboutSection = () => {
               </Link>
             </motion.div>
           </motion.div>
-
         </div>
       </div>
     </section>

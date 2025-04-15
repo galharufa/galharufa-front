@@ -19,7 +19,8 @@ const services = [
   {
     icon: <FaAd className="text-4xl mb-4" />,
     title: 'Marketing de Influência',
-    description: 'Conexão entre marcas e talentos para campanhas publicitárias impactantes e autênticas.',
+    description:
+      'Conexão entre marcas e talentos para campanhas publicitárias impactantes e autênticas.',
   },
   // {
   //   icon: <FaGlobe className="text-4xl mb-4" />,
@@ -29,8 +30,9 @@ const services = [
   {
     icon: <FaGraduationCap className="text-4xl mb-4" />,
     title: 'Workshops e Treinamentos',
-    description: 'Capacitação contínua para nossos talentos através de workshops, cursos e treinamentos especializados.',
-  }
+    description:
+      'Capacitação contínua para nossos talentos através de workshops, cursos e treinamentos especializados.',
+  },
 ];
 
 const ServicesSection = () => {
@@ -46,10 +48,13 @@ const ServicesSection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Nossos Serviços</h2>
+          <h2 className="heading-secondary text-black dark:text-white">
+            Nossos Serviços
+          </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
-            Oferecemos uma gama completa de serviços para impulsionar a carreira dos nossos talentos e atender às necessidades dos nossos clientes.
+            Oferecemos uma gama completa de serviços para impulsionar a carreira dos
+            nossos talentos e atender às necessidades dos nossos clientes.
           </p>
         </motion.div>
 
@@ -63,9 +68,16 @@ const ServicesSection = () => {
               className="bg-white dark:bg-black p-8 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 text-center"
             >
               <div className="text-black dark:text-white">{service.icon}</div>
-              <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">{service.title}</h3>
-              <p className="text-gray-600 dark:text-gray-400 mb-4">{service.description}</p>
-              <Link href="/servicos" className="nav-link inline-block text-black dark:text-white font-medium">
+              <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">
+                {service.title}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-4">
+                {service.description}
+              </p>
+              <Link
+                href="/servicos"
+                className="nav-link inline-block text-black dark:text-white font-medium"
+              >
                 Saiba mais
               </Link>
             </motion.div>

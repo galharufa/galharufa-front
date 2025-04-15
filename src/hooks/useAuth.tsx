@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
@@ -41,7 +42,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const checkAuth = async () => {
       try {
         const storedUser = AuthService.getStoredUser();
-        
+
         if (storedUser) {
           setUser(storedUser);
         }
@@ -61,9 +62,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const response = await AuthService.login({
         username: credentials.username,
         password: credentials.password,
-        remember_me: credentials.remember_me
+        remember_me: credentials.remember_me,
       });
-      
+
       setUser(response.user);
       router.push('/admin/dashboard');
     } catch (error: Error | unknown) {

@@ -17,7 +17,7 @@ const CtaBanner = ({
   description,
   buttonText,
   buttonLink,
-  bgColor = 'black'
+  bgColor = 'black',
 }: CtaBannerProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });

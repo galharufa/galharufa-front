@@ -1,25 +1,21 @@
 'use client';
 
-import { ThemeProvider } from "next-themes";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import { AuthProvider } from "@/hooks/useAuth";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { ThemeProvider } from 'next-themes';
+import Navbar from '@/components/layout/Navbar';
+import Footer from '@/components/layout/Footer';
+import { AuthProvider } from '@/hooks/useAuth';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { MantineProvider } from '@mantine/core';
 import { usePathname } from 'next/navigation';
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  
+
   // Verificar se a rota atual é uma rota de admin (exceto login)
-  const isAdminRoute = pathname?.startsWith('/admin') && 
-    !pathname?.includes('/admin/login');
-    
+  const isAdminRoute =
+    pathname?.startsWith('/admin') && !pathname?.includes('/admin/login');
+
   // Verificar se é a página de login do admin
   const isAdminLoginPage = pathname === '/admin/login';
 

@@ -26,14 +26,14 @@ body {
   .container-section {
     @apply container mx-auto px-4;
   }
-  
+
   /* Media queries para responsividade */
   @screen sm {
     .container-section {
       @apply px-6;
     }
   }
-  
+
   @screen lg {
     .container-section {
       @apply px-8;

@@ -23,7 +23,7 @@ export const ConfiguracoesService = {
     const response = await api.get<Configuracoes>('/api/configuracoes/');
     return response.data;
   },
-  
+
   async atualizarConfiguracoes(formData: FormData): Promise<Configuracoes> {
     const response = await api.patch<Configuracoes>('/api/configuracoes/', formData, {
       headers: {
@@ -31,5 +31,5 @@ export const ConfiguracoesService = {
       },
     });
     return response.data;
-  }
+  },
 };

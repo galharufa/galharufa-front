@@ -16,15 +16,16 @@ interface MetadataBase {
 
 export const metadata: MetadataBase = {
   title: 'Serviços',
-  description: 'Conheça os serviços oferecidos pela Galharufa, desde agenciamento de talentos até produção de conteúdo e consultoria para projetos audiovisuais.',
+  description:
+    'Conheça os serviços oferecidos pela Galharufa, desde agenciamento de talentos até produção de conteúdo e consultoria para projetos audiovisuais.',
 };
 
 export default function ServicesPage() {
   return (
     <div className="bg-white dark:bg-gray-900">
-       {/* Script para otimizar carregamento de CSS */}
-       <Script id="optimize-css" strategy="afterInteractive">
-         {`
+      {/* Script para otimizar carregamento de CSS */}
+      <Script id="optimize-css" strategy="afterInteractive">
+        {`
            document.addEventListener('DOMContentLoaded', function() {
              const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
              preloadLinks.forEach(link => {
@@ -35,11 +36,11 @@ export default function ServicesPage() {
              });
            });
          `}
-       </Script>
+      </Script>
       <ServicesHero />
       <ServicesList />
       {/* <ServicesFaq /> */}
-      
+
       {/* <div className="container-section py-8 text-center">
         <Link 
           href="/servicos/faq" 
@@ -49,8 +50,8 @@ export default function ServicesPage() {
           <FiArrowRight className="ml-2" />
         </Link>
       </div> */}
-      
-      <CtaBanner 
+
+      <CtaBanner
         title="Precisa de Talentos para seu Projeto?"
         description="Temos um casting diversificado e profissional para atender às necessidades específicas do seu projeto audiovisual."
         buttonText="Fale Conosco"

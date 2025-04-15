@@ -9,42 +9,41 @@ import Script from 'next/script';
 // Carregamento dinâmico dos componentes (apenas do lado do cliente)
 const Hero = dynamic(() => import('@/components/home/Hero'), {
   loading: () => <Loading message="Carregando seção de destaque..." />,
-  ssr: false
+  ssr: false,
 });
 
 const AboutSection = dynamic(() => import('@/components/home/AboutSection'), {
   loading: () => <Loading message="Carregando seção sobre nós..." />,
-  ssr: false
+  ssr: false,
 });
 
 const ServicesSection = dynamic(() => import('@/components/home/ServicesSection'), {
   loading: () => <Loading message="Carregando seção de serviços..." />,
-  ssr: false
+  ssr: false,
 });
 
 const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlights'), {
   loading: () => <Loading message="Carregando seção de casting..." />,
-  ssr: false
+  ssr: false,
 });
 
 const Partners = dynamic(() => import('@/components/home/Partners'), {
   loading: () => <Loading message="Carregando parceiros..." />,
-  ssr: false
+  ssr: false,
 });
 
 const ContactSection = dynamic(() => import('@/components/home/ContactSection'), {
   loading: () => <Loading message="Carregando seção de contato..." />,
-  ssr: false
+  ssr: false,
 });
 
 // Função principal da página inicial
 export default function Home() {
   return (
     <>
-
-       {/* Script para otimizar carregamento de CSS */}
-       <Script id="optimize-css" strategy="afterInteractive">
-         {`
+      {/* Script para otimizar carregamento de CSS */}
+      <Script id="optimize-css" strategy="afterInteractive">
+        {`
            document.addEventListener('DOMContentLoaded', function() {
              const preloadLinks = document.querySelectorAll('link[rel="preload"][as="style"]');
              preloadLinks.forEach(link => {
@@ -55,7 +54,7 @@ export default function Home() {
              });
            });
          `}
-       </Script>
+      </Script>
       <Suspense fallback={<Loading message="Carregando página inicial..." />}>
         <Hero />
         <AboutSection />

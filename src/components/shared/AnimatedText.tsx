@@ -10,7 +10,12 @@ interface AnimatedTextProps {
   delay?: number;
 }
 
-const AnimatedText = ({ text, className = '', once = true, delay = 0 }: AnimatedTextProps) => {
+const AnimatedText = ({
+  text,
+  className = '',
+  once = true,
+  delay = 0,
+}: AnimatedTextProps) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once });
 
@@ -57,11 +62,7 @@ const AnimatedText = ({ text, className = '', once = true, delay = 0 }: Animated
       animate={isInView ? 'visible' : 'hidden'}
     >
       {words.map((word, index) => (
-        <motion.span
-          key={index}
-          className="inline-block mr-1"
-          variants={child}
-        >
+        <motion.span key={index} className="inline-block mr-1" variants={child}>
           {word}{' '}
         </motion.span>
       ))}

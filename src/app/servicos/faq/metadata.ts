@@ -7,6 +7,15 @@ interface MetadataBase {
 
 export const metadata: MetadataBase = {
   title: 'Perguntas Frequentes | Serviços',
-  description: 'Encontre respostas para as dúvidas mais comuns sobre os serviços oferecidos pela Agência Galharufa.',
-  keywords: ['FAQ', 'perguntas frequentes', 'dúvidas', 'casting', 'agência', 'talentos', 'Galharufa'],
+  description:
+    'Encontre respostas para as dúvidas mais comuns sobre os serviços oferecidos pela Agência Galharufa.',
+  keywords: [
+    'FAQ',
+    'perguntas frequentes',
+    'dúvidas',
+    'casting',
+    'agência',
+    'talentos',
+    'Galharufa',
+  ],
 };

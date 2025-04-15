@@ -37,21 +37,21 @@ const ThemeToggle = ({ className = '' }: ThemeToggleProps) => {
       <div className="relative w-6 h-6 overflow-hidden">
         <motion.div
           initial={false}
-          animate={{ 
+          animate={{
             y: theme === 'dark' ? 0 : -30,
-            opacity: theme === 'dark' ? 1 : 0 
+            opacity: theme === 'dark' ? 1 : 0,
           }}
           transition={{ duration: 0.2 }}
           className="absolute inset-0 flex items-center justify-center text-black dark:text-white"
         >
           <FiSun className="w-5 h-5" />
         </motion.div>
-        
+
         <motion.div
           initial={false}
-          animate={{ 
+          animate={{
             y: theme === 'dark' ? 30 : 0,
-            opacity: theme === 'dark' ? 0 : 1 
+            opacity: theme === 'dark' ? 0 : 1,
           }}
           transition={{ duration: 0.2 }}
           className="absolute inset-0 flex items-center justify-center text-black dark:text-white"

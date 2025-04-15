@@ -89,7 +89,7 @@ export default function CastingPage() {
     // Simulando busca de dados
     if (params.id) {
       const id = parseInt(params.id as string);
-      const foundCasting = castingsData.find(c => c.id === id) || castingsData[0]; // Fallback para o primeiro casting se não encontrar
+      const foundCasting = castingsData.find((c) => c.id === id) || castingsData[0]; // Fallback para o primeiro casting se não encontrar
       setCasting(foundCasting);
       setLoading(false);
     }
@@ -110,8 +110,12 @@ export default function CastingPage() {
   if (!casting) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex flex-col items-center justify-center p-4">
-        <h1 className="text-3xl font-bold text-black dark:text-white mb-4">Casting não encontrado</h1>
-        <p className="text-gray-700 dark:text-gray-300 mb-8">O casting que você está procurando não existe ou foi removido.</p>
+        <h1 className="text-3xl font-bold text-black dark:text-white mb-4">
+          Casting não encontrado
+        </h1>
+        <p className="text-gray-700 dark:text-gray-300 mb-8">
+          O casting que você está procurando não existe ou foi removido.
+        </p>
         <button
           onClick={handleGoBack}
           className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
@@ -161,14 +165,23 @@ export default function CastingPage() {
                   key={index}
                   className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
                 >
-                  {cat === 'atores' ? 'Ator' : 
-                   cat === 'atrizes' ? 'Atriz' : 
-                   cat === 'modelos' ? 'Modelo' : 
-                   cat === 'influenciadores' ? 'Influenciador' : 
-                   cat === 'apresentadores' ? 'Apresentador' : 
-                   cat === 'infantil' ? 'Infantil' : 
-                   cat === 'plus-size' ? 'Plus Size' : 
-                   cat === 'terceira-idade' ? 'Terceira Idade' : cat}
+                  {cat === 'atores'
+                    ? 'Ator'
+                    : cat === 'atrizes'
+                      ? 'Atriz'
+                      : cat === 'modelos'
+                        ? 'Modelo'
+                        : cat === 'influenciadores'
+                          ? 'Influenciador'
+                          : cat === 'apresentadores'
+                            ? 'Apresentador'
+                            : cat === 'infantil'
+                              ? 'Infantil'
+                              : cat === 'plus-size'
+                                ? 'Plus Size'
+                                : cat === 'terceira-idade'
+                                  ? 'Terceira Idade'
+                                  : cat}
                 </span>
               ))}
             </AnimatedSection>
@@ -182,67 +195,95 @@ export default function CastingPage() {
           {/* Coluna da esquerda - Informações básicas */}
           <AnimatedSection className="lg:col-span-1" direction="right" delay={0.2}>
             <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-6 sticky top-24">
-              <h2 className="text-2xl font-semibold text-black dark:text-white mb-6">Informações</h2>
-              
+              <h2 className="text-2xl font-semibold text-black dark:text-white mb-6">
+                Informações
+              </h2>
+
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Idade</h3>
                   <p className="text-black dark:text-white">{casting.age} anos</p>
                 </div>
-                
+
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
                   <p className="text-black dark:text-white">{casting.height}</p>
                 </div>
-                
+
                 {casting.measurements && (
                   <>
                     {casting.measurements.bust && (
                       <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">Busto</h3>
-                        <p className="text-black dark:text-white">{casting.measurements.bust}</p>
+                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                          Busto
+                        </h3>
+                        <p className="text-black dark:text-white">
+                          {casting.measurements.bust}
+                        </p>
                       </div>
                     )}
-                    
+
                     {casting.measurements.waist && (
                       <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">Cintura</h3>
-                        <p className="text-black dark:text-white">{casting.measurements.waist}</p>
+                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                          Cintura
+                        </h3>
+                        <p className="text-black dark:text-white">
+                          {casting.measurements.waist}
+                        </p>
                       </div>
                     )}
-                    
+
                     {casting.measurements.hips && (
                       <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">Quadril</h3>
-                        <div className="prose dark:prose-invert max-w-none">{casting.bio && <p>{casting.bio}</p>}</div>
+                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                          Quadril
+                        </h3>
+                        <div className="prose dark:prose-invert max-w-none">
+                          {casting.bio && <p>{casting.bio}</p>}
+                        </div>
                       </div>
                     )}
-                    
+
                     {casting.measurements.shoes && (
                       <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">Calçado</h3>
-                        <p className="text-black dark:text-white">{casting.measurements.shoes}</p>
+                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                          Calçado
+                        </h3>
+                        <p className="text-black dark:text-white">
+                          {casting.measurements.shoes}
+                        </p>
                       </div>
                     )}
-                    
+
                     {casting.measurements.eyes && (
                       <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
-                        <p className="text-black dark:text-white">{casting.measurements.eyes}</p>
+                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                          Olhos
+                        </h3>
+                        <p className="text-black dark:text-white">
+                          {casting.measurements.eyes}
+                        </p>
                       </div>
                     )}
-                    
+
                     {casting.measurements.hair && (
                       <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelo</h3>
-                        <p className="text-black dark:text-white">{casting.measurements.hair}</p>
+                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                          Cabelo
+                        </h3>
+                        <p className="text-black dark:text-white">
+                          {casting.measurements.hair}
+                        </p>
                       </div>
                     )}
                   </>
                 )}
-                
+
                 <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Especialidades</h3>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                    Especialidades
+                  </h3>
                   <div className="flex flex-wrap gap-2 mt-1">
                     {casting.specialties.map((specialty: string, index: number) => (
                       <span
@@ -254,10 +295,12 @@ export default function CastingPage() {
                     ))}
                   </div>
                 </div>
-                
+
                 {casting.social && (
                   <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">Redes Sociais</h3>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
+                      Redes Sociais
+                    </h3>
                     <div className="flex space-x-3">
                       {casting.social.instagram && (
                         <a
@@ -270,7 +313,7 @@ export default function CastingPage() {
                           <FaInstagram className="w-5 h-5" />
                         </a>
                       )}
-                      
+
                       {casting.social.youtube && (
                         <a
                           href={casting.social.youtube}
@@ -282,7 +325,7 @@ export default function CastingPage() {
                           <FaYoutube className="w-5 h-5" />
                         </a>
                       )}
-                      
+
                       {casting.social.imdb && (
                         <a
                           href={casting.social.imdb}
@@ -298,10 +341,12 @@ export default function CastingPage() {
                   </div>
                 )}
               </div>
-              
+
               <div className="mt-8">
                 <button
-                  onClick={() => window.location.href = '/contato?casting=' + casting.name}
+                  onClick={() =>
+                    (window.location.href = '/contato?casting=' + casting.name)
+                  }
                   className="btn-primary w-full"
                 >
                   Contratar este casting
@@ -309,7 +354,7 @@ export default function CastingPage() {
               </div>
             </div>
           </AnimatedSection>
-          
+
           {/* Coluna da direita - Conteúdo principal */}
           <AnimatedSection className="lg:col-span-2" direction="left" delay={0.4}>
             {/* Tabs */}
@@ -325,7 +370,7 @@ export default function CastingPage() {
                 >
                   Sobre
                 </button>
-                
+
                 {casting.experience && casting.experience.length > 0 && (
                   <button
                     onClick={() => setActiveTab('experiencia')}
@@ -338,7 +383,7 @@ export default function CastingPage() {
                     Experiência
                   </button>
                 )}
-                
+
                 {casting.gallery && casting.gallery.length > 0 && (
                   <button
                     onClick={() => setActiveTab('galeria')}
@@ -353,62 +398,72 @@ export default function CastingPage() {
                 )}
               </nav>
             </div>
-            
+
             {/* Conteúdo das tabs */}
             <div className="min-h-[400px]">
               {/* Sobre */}
               {activeTab === 'sobre' && casting.bio && (
                 <AnimatedSection direction="up" delay={0.2}>
-                  <h2 className="heading-tertiary text-black dark:text-white">Biografia</h2>
+                  <h2 className="heading-tertiary text-black dark:text-white">
+                    Biografia
+                  </h2>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
                     {casting.bio}
                   </p>
                 </AnimatedSection>
               )}
-              
+
               {/* Experiência */}
-              {activeTab === 'experiencia' && casting.experience && casting.experience.length > 0 && (
-                <AnimatedSection direction="up" delay={0.2}>
-                  <h2 className="heading-tertiary text-black dark:text-white">Experiência Profissional</h2>
-                  <ul className="space-y-4 mt-4">
-                    {casting.experience.map((exp: string, index: number) => (
-                      <li 
-                        key={index}
-                        className="border-l-2 border-gray-300 dark:border-gray-700 pl-4 py-1"
-                      >
-                        <p className="text-gray-700 dark:text-gray-300">{exp}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </AnimatedSection>
-              )}
-              
+              {activeTab === 'experiencia' &&
+                casting.experience &&
+                casting.experience.length > 0 && (
+                  <AnimatedSection direction="up" delay={0.2}>
+                    <h2 className="heading-tertiary text-black dark:text-white">
+                      Experiência Profissional
+                    </h2>
+                    <ul className="space-y-4 mt-4">
+                      {casting.experience.map((exp: string, index: number) => (
+                        <li
+                          key={index}
+                          className="border-l-2 border-gray-300 dark:border-gray-700 pl-4 py-1"
+                        >
+                          <p className="text-gray-700 dark:text-gray-300">{exp}</p>
+                        </li>
+                      ))}
+                    </ul>
+                  </AnimatedSection>
+                )}
+
               {/* Galeria */}
-              {activeTab === 'galeria' && casting.gallery && casting.gallery.length > 0 && (
-                <AnimatedSection direction="up" delay={0.2}>
-                  <h2 className="heading-tertiary text-black dark:text-white">Galeria de Fotos</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                    {casting.gallery.map((image: string, index: number) => (
-                      <AnimatedImage
-                        key={index}
-                        src={image}
-                        alt={`${casting.name} - Imagem ${index + 1}`}
-                        width={600}
-                        height={800}
-                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
-                        delay={index * 0.1}
-                      />
-                    ))}
-                  </div>
-                </AnimatedSection>
-              )}
+              {activeTab === 'galeria' &&
+                casting.gallery &&
+                casting.gallery.length > 0 && (
+                  <AnimatedSection direction="up" delay={0.2}>
+                    <h2 className="heading-tertiary text-black dark:text-white">
+                      Galeria de Fotos
+                    </h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                      {casting.gallery.map((image: string, index: number) => (
+                        <AnimatedImage
+                          key={index}
+                          src={image}
+                          alt={`${casting.name} - Imagem ${index + 1}`}
+                          width={600}
+                          height={800}
+                          className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
+                          delay={index * 0.1}
+                        />
+                      ))}
+                    </div>
+                  </AnimatedSection>
+                )}
             </div>
           </AnimatedSection>
         </div>
       </div>
-      
+
       {/* CTA Banner */}
-      <CtaBanner 
+      <CtaBanner
         title="Procurando castings para seu projeto?"
         description="Entre em contato conosco para encontrar o casting ideal para sua produção."
         buttonText="Fale Conosco"

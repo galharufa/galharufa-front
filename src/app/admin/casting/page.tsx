@@ -1,8 +1,25 @@
+/* eslint-disable no-console */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Container, Title, Text, Card, Button, Group, SimpleGrid, useMantineColorScheme, Loader, Modal, TextInput, Textarea, Tabs, Table, ActionIcon } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  Card,
+  Button,
+  Group,
+  SimpleGrid,
+  useMantineColorScheme,
+  Loader,
+  Modal,
+  TextInput,
+  Textarea,
+  Tabs,
+  Table,
+  ActionIcon,
+} from '@mantine/core';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
 import { CastingService, type CategoriasCasting, type CastingResumido } from '@/services';
@@ -17,19 +34,22 @@ export default function CastingAdmin() {
   const router = useRouter();
   const { colorScheme } = useMantineColorScheme();
   const isDark = colorScheme === 'dark';
-  
+
   const [categorias, setCategorias] = useState<CategoriasCasting[]>([]);
   const [castings, setCastings] = useState<CastingResumido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string | null>('categorias');
-  
+
   // Estados para modal de categoria
-  const [categoriaModalAberto, { open: abrirCategoriaModal, close: fecharCategoriaModal }] = useDisclosure(false);
+  const [
+    categoriaModalAberto,
+    { open: abrirCategoriaModal, close: fecharCategoriaModal },
+  ] = useDisclosure(false);
   const [modoEdicaoCategoria, setModoEdicaoCategoria] = useState(false);
   const [categoriaAtual, setCategoriaAtual] = useState<number | null>(null);
   const [deleteModalCategoriaOpen, setDeleteModalCategoriaOpen] = useState(false);
   const [categoriaToDelete, setCategoriaToDelete] = useState<number | null>(null);
-  
+
   // Formulário de categoria
   const categoriaForm = useForm({
     initialValues: {
@@ -37,8 +57,9 @@ export default function CastingAdmin() {
       descricao: '',
     },
     validate: {
-      nome: (value) => value.trim().length === 0 ? 'O nome é obrigatório' : null,
-      descricao: (value) => value.trim().length === 0 ? 'A descrição é obrigatória' : null,
+      nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
+      descricao: (value) =>
+        value.trim().length === 0 ? 'A descrição é obrigatória' : null,
     },
   });
 
@@ -46,14 +67,14 @@ export default function CastingAdmin() {
   useEffect(() => {
     const carregarDados = async () => {
       if (!isAuthenticated && !authLoading) return;
-      
+
       try {
         setIsLoading(true);
         const [categoriasResponse, castingsResponse] = await Promise.all([
           CastingService.getCategorias({ ordering: 'nome' }),
-          CastingService.getCastings({ ordering: 'nome' })
+          CastingService.getCastings({ ordering: 'nome' }),
         ]);
-        
+
         setCategorias(categoriasResponse.results);
         setCastings(castingsResponse.results);
       } catch (error) {
@@ -87,12 +108,12 @@ export default function CastingAdmin() {
     try {
       setIsLoading(true);
       const categoria = await CastingService.getCategoria(id);
-      
+
       categoriaForm.setValues({
         nome: categoria.nome,
         descricao: categoria.descricao,
       });
-      
+
       setModoEdicaoCategoria(true);
       setCategoriaAtual(id);
       abrirCategoriaModal();
@@ -111,18 +132,20 @@ export default function CastingAdmin() {
 
   const confirmarExclusaoCategoria = async () => {
     if (!categoriaToDelete) return;
-    
+
     try {
       setIsLoading(true);
       await CastingService.excluirCategoria(categoriaToDelete);
-      
+
       // Atualizar a lista de categorias
-      setCategorias(categorias.filter(cat => cat.id !== categoriaToDelete));
-      
+      setCategorias(categorias.filter((cat) => cat.id !== categoriaToDelete));
+
       successToast('Categoria excluída com sucesso');
     } catch (error) {
       console.error('Erro ao excluir categoria:', error);
-      errorToast('Erro ao excluir categoria. Verifique se não existem castings associados a ela.');
+      errorToast(
+        'Erro ao excluir categoria. Verifique se não existem castings associados a ela.',
+      );
     } finally {
       setIsLoading(false);
       setDeleteModalCategoriaOpen(false);
@@ -133,27 +156,27 @@ export default function CastingAdmin() {
   const handleSubmitCategoria = async (values: typeof categoriaForm.values) => {
     try {
       setIsLoading(true);
-      
+
       let response: CategoriasCasting;
-      
+
       if (modoEdicaoCategoria && categoriaAtual) {
         response = await CastingService.atualizarCategoria(categoriaAtual, values);
-        
+
         // Atualizar a categoria na lista
-        setCategorias(categorias.map(cat => 
-          cat.id === categoriaAtual ? response : cat
-        ));
-        
+        setCategorias(
+          categorias.map((cat) => (cat.id === categoriaAtual ? response : cat)),
+        );
+
         successToast('Categoria atualizada com sucesso');
       } else {
         response = await CastingService.criarCategoria(values);
-        
+
         // Adicionar a nova categoria à lista
         setCategorias([...categorias, response]);
-        
+
         successToast('Categoria criada com sucesso');
       }
-      
+
       fecharCategoriaModal();
     } catch (error) {
       console.error('Erro ao salvar categoria:', error);
@@ -175,17 +198,21 @@ export default function CastingAdmin() {
 
   // Função para excluir casting
   const handleExcluirCasting = async (id: number) => {
-    if (!confirm('Tem certeza que deseja excluir este casting? Esta ação não pode ser desfeita.')) {
+    if (
+      !confirm(
+        'Tem certeza que deseja excluir este casting? Esta ação não pode ser desfeita.',
+      )
+    ) {
       return;
     }
-    
+
     try {
       setIsLoading(true);
       await CastingService.excluirCasting(id);
-      
+
       // Atualizar a lista de castings
-      setCastings(castings.filter(casting => casting.id !== id));
-      
+      setCastings(castings.filter((casting) => casting.id !== id));
+
       successToast('Casting excluído com sucesso');
     } catch (error) {
       console.error('Erro ao excluir talento:', error);
@@ -197,12 +224,19 @@ export default function CastingAdmin() {
 
   // Contagem de castings por categoria
   const getCastingsCountByCategoria = (categoriaId: number) => {
-    return castings.filter(casting => casting.categoria === categoriaId).length;
+    return castings.filter((casting) => casting.categoria === categoriaId).length;
   };
 
   if (authLoading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100vh',
+        }}
+      >
         <Loader size="xl" />
       </div>
     );
@@ -219,7 +253,7 @@ export default function CastingAdmin() {
         <Group position="apart" mb="xl">
           <Title order={2}>Gerenciamento de Casting</Title>
           <Group>
-            <Button 
+            <Button
               onClick={handleCriarCategoria}
               styles={{
                 root: {
@@ -227,13 +261,13 @@ export default function CastingAdmin() {
                   color: '#FFFFFF !important',
                   '&:hover': {
                     backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                  }
-                }
+                  },
+                },
               }}
             >
               Nova Categoria
             </Button>
-            <Button 
+            <Button
               onClick={handleCriarCasting}
               styles={{
                 root: {
@@ -241,8 +275,8 @@ export default function CastingAdmin() {
                   color: '#FFFFFF !important',
                   '&:hover': {
                     backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                  }
-                }
+                  },
+                },
               }}
             >
               Novo Casting
@@ -264,13 +298,19 @@ export default function CastingAdmin() {
             <Tabs.Panel value="categorias">
               {categorias.length === 0 ? (
                 <Card withBorder p="xl" radius="md">
-                  <Text align="center" size="lg">Nenhuma categoria cadastrada.</Text>
+                  <Text align="center" size="lg">
+                    Nenhuma categoria cadastrada.
+                  </Text>
                 </Card>
               ) : (
-                <SimpleGrid cols={4} breakpoints={[
-                  { maxWidth: 'md', cols: 2 },
-                  { maxWidth: 'xs', cols: 1 },
-                ]} mb="xl">
+                <SimpleGrid
+                  cols={4}
+                  breakpoints={[
+                    { maxWidth: 'md', cols: 2 },
+                    { maxWidth: 'xs', cols: 1 },
+                  ]}
+                  mb="xl"
+                >
                   {categorias.map((categoria) => {
                     const count = getCastingsCountByCategoria(categoria.id);
                     return (
@@ -278,14 +318,14 @@ export default function CastingAdmin() {
                         <Group position="apart">
                           <Title order={3}>{categoria.nome}</Title>
                           <Group spacing={8}>
-                            <ActionIcon 
-                              color="blue" 
+                            <ActionIcon
+                              color="blue"
                               onClick={() => handleEditarCategoria(categoria.id)}
                             >
                               <IconEdit size={18} />
                             </ActionIcon>
-                            <ActionIcon 
-                              color="red" 
+                            <ActionIcon
+                              color="red"
                               onClick={() => handleExcluirCategoria(categoria.id)}
                             >
                               <IconTrash size={18} />
@@ -311,7 +351,9 @@ export default function CastingAdmin() {
             <Tabs.Panel value="castings">
               {castings.length === 0 ? (
                 <Card withBorder p="xl" radius="md">
-                  <Text align="center" size="lg">Nenhum casting cadastrado.</Text>
+                  <Text align="center" size="lg">
+                    Nenhum casting cadastrado.
+                  </Text>
                 </Card>
               ) : (
                 <Card withBorder p={0} radius="md">
@@ -330,17 +372,37 @@ export default function CastingAdmin() {
                         <tr key={casting.id}>
                           <td style={{ width: 60 }}>
                             {casting.foto_principal ? (
-                              <div style={{ width: 50, height: 50, position: 'relative', overflow: 'hidden', borderRadius: '4px' }}>
-                                <Image 
-                                  src={casting.foto_principal} 
+                              <div
+                                style={{
+                                  width: 50,
+                                  height: 50,
+                                  position: 'relative',
+                                  overflow: 'hidden',
+                                  borderRadius: '4px',
+                                }}
+                              >
+                                <Image
+                                  src={casting.foto_principal}
                                   alt={casting.nome}
                                   fill
                                   style={{ objectFit: 'cover' }}
                                 />
                               </div>
                             ) : (
-                              <div style={{ width: 50, height: 50, backgroundColor: '#f0f0f0', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                <Text size="xs" color="dimmed">Sem foto</Text>
+                              <div
+                                style={{
+                                  width: 50,
+                                  height: 50,
+                                  backgroundColor: '#f0f0f0',
+                                  borderRadius: '4px',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                }}
+                              >
+                                <Text size="xs" color="dimmed">
+                                  Sem foto
+                                </Text>
                               </div>
                             )}
                           </td>
@@ -355,14 +417,14 @@ export default function CastingAdmin() {
                           </td>
                           <td>
                             <Group spacing={8}>
-                              <ActionIcon 
-                                color="blue" 
+                              <ActionIcon
+                                color="blue"
                                 onClick={() => handleEditarCasting(casting.id)}
                               >
                                 <IconEdit size={18} />
                               </ActionIcon>
-                              <ActionIcon 
-                                color="red" 
+                              <ActionIcon
+                                color="red"
                                 onClick={() => handleExcluirCasting(casting.id)}
                               >
                                 <IconTrash size={18} />
@@ -384,7 +446,7 @@ export default function CastingAdmin() {
       <Modal
         opened={categoriaModalAberto}
         onClose={fecharCategoriaModal}
-        title={modoEdicaoCategoria ? "Editar Categoria" : "Nova Categoria"}
+        title={modoEdicaoCategoria ? 'Editar Categoria' : 'Nova Categoria'}
         size="md"
       >
         <form onSubmit={categoriaForm.onSubmit(handleSubmitCategoria)}>
@@ -395,7 +457,7 @@ export default function CastingAdmin() {
             {...categoriaForm.getInputProps('nome')}
             mb="md"
           />
-          
+
           <Textarea
             label="Descrição"
             placeholder="Descrição da categoria"
@@ -404,13 +466,13 @@ export default function CastingAdmin() {
             {...categoriaForm.getInputProps('descricao')}
             mb="xl"
           />
-          
+
           <Group position="right">
             <Button type="button" variant="outline" onClick={fecharCategoriaModal}>
               Cancelar
             </Button>
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               loading={isLoading}
               styles={{
                 root: {
@@ -418,11 +480,11 @@ export default function CastingAdmin() {
                   color: '#FFFFFF !important',
                   '&:hover': {
                     backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-                  }
-                }
+                  },
+                },
               }}
             >
-              {modoEdicaoCategoria ? "Atualizar" : "Salvar"}
+              {modoEdicaoCategoria ? 'Atualizar' : 'Salvar'}
             </Button>
           </Group>
         </form>
@@ -435,16 +497,14 @@ export default function CastingAdmin() {
         title="Confirmar Exclusão"
         size="sm"
       >
-        <Text mb="xl">Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.</Text>
+        <Text mb="xl">
+          Tem certeza que deseja excluir esta categoria? Esta ação não pode ser desfeita.
+        </Text>
         <Group position="right">
           <Button variant="outline" onClick={() => setDeleteModalCategoriaOpen(false)}>
             Cancelar
           </Button>
-          <Button 
-            color="red" 
-            onClick={confirmarExclusaoCategoria}
-            loading={isLoading}
-          >
+          <Button color="red" onClick={confirmarExclusaoCategoria} loading={isLoading}>
             Excluir
           </Button>
         </Group>

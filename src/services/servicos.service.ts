@@ -21,22 +21,24 @@ export interface ServicoResumido {
 }
 
 export const ServicosService = {
-  async getServicos(params?: { 
-    ativo?: boolean; 
-    search?: string; 
+  async getServicos(params?: {
+    ativo?: boolean;
+    search?: string;
     ordering?: string;
     page?: number;
     page_size?: number;
   }): Promise<PaginatedResponse<ServicoResumido>> {
-    const response = await api.get<PaginatedResponse<ServicoResumido>>('/api/servicos/', { params });
+    const response = await api.get<PaginatedResponse<ServicoResumido>>('/api/servicos/', {
+      params,
+    });
     return response.data;
   },
-  
+
   async getServico(id: number): Promise<Servico> {
     const response = await api.get<Servico>(`/api/servicos/${id}/`);
     return response.data;
   },
-  
+
   async criarServico(formData: FormData): Promise<Servico> {
     const response = await api.post<Servico>('/api/servicos/', formData, {
       headers: {
@@ -45,7 +47,7 @@ export const ServicosService = {
     });
     return response.data;
   },
-  
+
   async atualizarServico(id: number, formData: FormData): Promise<Servico> {
     const response = await api.patch<Servico>(`/api/servicos/${id}/`, formData, {
       headers: {
@@ -54,8 +56,8 @@ export const ServicosService = {
     });
     return response.data;
   },
-  
+
   async excluirServico(id: number): Promise<void> {
     await api.delete(`/api/servicos/${id}/`);
-  }
+  },
 };

@@ -1,7 +1,9 @@
 /* Estilo de hover para links na página de contato */
 .contact-hover-link {
   position: relative;
-  transition: transform 0.3s ease, color 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    color 0.3s ease;
   overflow: hidden;
 }
 
@@ -13,7 +15,7 @@
   width: 100%;
   height: 2px;
   background: linear-gradient(to right, #000, #ddd);
-  
+
   transform: scaleX(0);
   transform-origin: right;
   transition: transform 0.3s ease;

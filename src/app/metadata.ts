@@ -1,9 +1,11 @@
 // Define um tipo básico para o metadata
 interface MetadataBase {
-  title?: string | {
-    template: string;
-    default: string;
-  };
+  title?:
+    | string
+    | {
+        template: string;
+        default: string;
+      };
   description?: string;
   keywords?: string[];
   openGraph?: {
@@ -25,10 +27,20 @@ interface MetadataBase {
 export const metadata: MetadataBase = {
   title: 'Agência Galharufa | Agenciamento Artístico',
   description: 'Escritório de agenciamento artístico',
-  keywords: ['agência de atores', 'casting', 'elenco', 'castings', 'influencer', 'criativos', 'apresentadores', 'Galharufa'],
+  keywords: [
+    'agência de atores',
+    'casting',
+    'elenco',
+    'castings',
+    'influencer',
+    'criativos',
+    'apresentadores',
+    'Galharufa',
+  ],
   openGraph: {
     title: 'Agência Galharufa | Agenciamento Artístico',
-    description: 'Escritório de agenciamento artístico de atores, castings, influencers, comunicadores e criativos.',
+    description:
+      'Escritório de agenciamento artístico de atores, castings, influencers, comunicadores e criativos.',
     url: 'https://www.galharufa.com.br',
     siteName: 'Agência Galharufa',
     images: [

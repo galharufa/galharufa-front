@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
@@ -27,7 +28,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
         setApiError(false);
         const params: { ordering: string; ativo: boolean; categoria?: number } = {
           ordering: 'nome',
-          ativo: true
+          ativo: true,
         };
 
         // Se o filtro não for "todos", filtrar por categoria
@@ -55,7 +56,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
   // Incrementar o número de castings exibidos quando o elemento de referência estiver visível
   useEffect(() => {
     if (isInView && displayCount < castings.length) {
-      setDisplayCount(prev => Math.min(prev + 4, castings.length));
+      setDisplayCount((prev) => Math.min(prev + 4, castings.length));
     }
   }, [isInView, castings.length, displayCount]);
 
@@ -68,10 +69,10 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
       transition: {
         delay: i * 0.1,
         duration: 0.5,
-        ease: "easeOut"
-      }
+        ease: 'easeOut',
+      },
     }),
-    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } }
+    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } },
   };
 
   if (isLoading) {
@@ -89,10 +90,9 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
     );
   }
 
-
   // Componente de mensagem quando a API está indisponível
   const ErrorMessage = () => (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
@@ -102,7 +102,8 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
           Ainda não temos Castings selecionados
         </h3>
         <p className="text-gray-600 dark:text-gray-400">
-          No momento, nosso catálogo de castings está indisponível. Por favor, tente novamente mais tarde ou entre em contato conosco para mais informações.  
+          No momento, nosso catálogo de castings está indisponível. Por favor, tente
+          novamente mais tarde ou entre em contato conosco para mais informações.
         </p>
       </div>
     </motion.div>
@@ -115,45 +116,51 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
           <ErrorMessage />
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-            {castings.length > 0 ? castings.slice(0, displayCount).map((casting, index) => (
-            <motion.div
-              key={casting.id}
-              custom={index}
-              variants={cardVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              layoutId={`casting-${casting.id}`}
-              className="group cursor-pointer"
-            >
-              <Link href={`/cast/${casting.id}`} passHref>
-                <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
-                  <Image
-                    src={casting.foto_principal || '/images/placeholder-talent.jpg'}
-                    alt={casting.nome}
-                    fill
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
-                    <h3 className="text-white text-xl font-semibold">{casting.nome}</h3>
-                    <p className="text-gray-300 text-sm">{casting.categoria_nome}</p>
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-            )) : !isLoading && (
-              <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
-              >
-                <p className="text-gray-600 dark:text-gray-400">
-                  Nenhum casting encontrado para os filtros selecionados.
-                </p>
-              </motion.div>
-            )}
+            {castings.length > 0
+              ? castings.slice(0, displayCount).map((casting, index) => (
+                  <motion.div
+                    key={casting.id}
+                    custom={index}
+                    variants={cardVariants}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    layoutId={`casting-${casting.id}`}
+                    className="group cursor-pointer"
+                  >
+                    <Link href={`/cast/${casting.id}`} passHref>
+                      <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
+                        <Image
+                          src={casting.foto_principal || '/images/placeholder-talent.jpg'}
+                          alt={casting.nome}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                          className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
+                          <h3 className="text-white text-xl font-semibold">
+                            {casting.nome}
+                          </h3>
+                          <p className="text-gray-300 text-sm">
+                            {casting.categoria_nome}
+                          </p>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))
+              : !isLoading && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
+                  >
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Nenhum casting encontrado para os filtros selecionados.
+                    </p>
+                  </motion.div>
+                )}
           </div>
         )}
       </AnimatePresence>

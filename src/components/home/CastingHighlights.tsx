@@ -16,43 +16,46 @@ const highlightedTalents = [
     name: 'Ana Silva',
     category: 'Atriz',
     image: '/images/talents/talent1.jpg',
-    description: 'Atriz versátil com experiência em teatro, cinema e televisão.'
+    description: 'Atriz versátil com experiência em teatro, cinema e televisão.',
   },
   {
     id: '2',
     name: 'Carlos Mendes',
     category: 'Ator',
     image: '/images/talents/talent2.jpg',
-    description: 'Ator premiado com vasta experiência em produções nacionais e internacionais.'
+    description:
+      'Ator premiado com vasta experiência em produções nacionais e internacionais.',
   },
   {
     id: '3',
     name: 'Juliana Costa',
     category: 'Modelo',
     image: '/images/talents/talent3.jpg',
-    description: 'Modelo fotográfica e de passarela com experiência em campanhas publicitárias.'
+    description:
+      'Modelo fotográfica e de passarela com experiência em campanhas publicitárias.',
   },
   {
     id: '4',
     name: 'Pedro Almeida',
     category: 'Ator/Músico',
     image: '/images/talents/talent4.jpg',
-    description: 'Ator e músico multitalentoso com habilidades em diversos instrumentos.'
+    description: 'Ator e músico multitalentoso com habilidades em diversos instrumentos.',
   },
   {
     id: '5',
     name: 'Mariana Santos',
     category: 'Atriz/Dançarina',
     image: '/images/talents/talent5.jpg',
-    description: 'Atriz e dançarina com formação em ballet clássico e dança contemporânea.'
+    description:
+      'Atriz e dançarina com formação em ballet clássico e dança contemporânea.',
   },
   {
     id: '6',
     name: 'Lucas Oliveira',
     category: 'Ator',
     image: '/images/talents/talent6.jpg',
-    description: 'Ator com especialidade em personagens dramáticos e cômicos.'
-  }
+    description: 'Ator com especialidade em personagens dramáticos e cômicos.',
+  },
 ];
 
 const CastingHighlights = () => {
@@ -68,7 +71,9 @@ const CastingHighlights = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <h2 className="heading-secondary text-black dark:text-white">Castings em Destaque</h2>
+          <h2 className="heading-secondary text-black dark:text-white">
+            Castings em Destaque
+          </h2>
           {/* <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
             Conheça alguns dos castings excepcionais representados pela Galharufa, cada um com habilidades únicas e experiências diversificadas.
           </p> */}
@@ -108,11 +113,17 @@ const CastingHighlights = () => {
                     />
                   </div>
                   <div className="p-6">
-                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">{talent.category}</span>
-                    <h3 className="text-xl font-semibold text-black dark:text-white mt-1 mb-2">{talent.name}</h3>
-                    <p className="text-gray-700 dark:text-gray-300 mb-4">{talent.description}</p>
-                    <Link 
-                      href={`/cast/${talent.id}`} 
+                    <span className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                      {talent.category}
+                    </span>
+                    <h3 className="text-xl font-semibold text-black dark:text-white mt-1 mb-2">
+                      {talent.name}
+                    </h3>
+                    <p className="text-gray-700 dark:text-gray-300 mb-4">
+                      {talent.description}
+                    </p>
+                    <Link
+                      href={`/cast/${talent.id}`}
                       className="hover-link text-black dark:text-white font-medium"
                     >
                       Ver perfil completo
@@ -130,10 +141,7 @@ const CastingHighlights = () => {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center mt-8"
         >
-          <Link 
-            href="/cast" 
-            className="btn-primary"
-          >
+          <Link href="/cast" className="btn-primary">
             Ver Todos os Castings
           </Link>
         </motion.div>
