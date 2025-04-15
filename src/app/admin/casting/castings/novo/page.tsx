@@ -421,7 +421,7 @@ export default function NovoCasting() {
       try {
         // Modificando a abordagem para enviar o FormData
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/casting/castings/`,
+          `${process.env.NEXT_PUBLIC_API_URL}api/casting/castings/`,
           {
             method: 'POST',
             headers: {

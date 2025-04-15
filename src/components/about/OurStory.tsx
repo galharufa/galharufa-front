@@ -39,12 +39,8 @@ const OurStory = () => {
         >
           <motion.div variants={itemVariants} className="text-center mb-16">
             <h2 className="heading-secondary text-black dark:text-white">
-              Nossa Trajetória
+              Nossa Jornada
             </h2>
-            <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
-            <p className="text-gray-700 dark:text-gray-300 text-lg">
-              Uma história de paixão, dedicação e sucesso no mundo artístico.
-            </p>
           </motion.div>
 
           {/* Timeline */}
