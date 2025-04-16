@@ -55,7 +55,7 @@ const OurValues = () => {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section ref={ref} className="py-20 bg-white dark:bg-black">
+    <section ref={ref} className="py-10 bg-white dark:bg-black">
       <div className="container-section">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

@@ -29,13 +29,13 @@ export default function CastingPage() {
       <CastingHero />
       <CastingFilters activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
       <CastingGrid filter={activeFilter} />
-      <CtaBanner
+      {/* <CtaBanner
         title="Quer fazer parte do nosso casting?"
         description="Estamos sempre em busca de novos talentos. Se você tem interesse em fazer parte da nossa agência, entre em contato conosco."
         buttonText="Cadastre-se"
         buttonLink="/contato"
         bgColor="white"
-      />
+      /> */}
     </div>
   );
 }

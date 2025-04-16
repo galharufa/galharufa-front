@@ -29,7 +29,7 @@ const OurStory = () => {
   };
 
   return (
-    <section ref={ref} className="py-20 bg-white dark:bg-black">
+    <section ref={ref} className="py-10 bg-white dark:bg-black">
       <div className="container-section">
         <motion.div
           variants={containerVariants}
@@ -43,15 +43,13 @@ const OurStory = () => {
             </h2>
           </motion.div>
 
-          {/* Timeline */}
-          <div className="space-y-16">
-            {/* Item 1 */}
+          <div className="space-y-8">
             <motion.div
               variants={itemVariants}
               className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
             >
               <div className="md:col-span-5 order-2 md:order-1">
-                <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">
+                <h3 className="text-2xl font-medium mb-4 text-black dark:text-white">
                   A Galharufa
                 </h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
@@ -64,13 +62,15 @@ const OurStory = () => {
                   audiovisual dentro e fora das telas.
                 </p>
               </div>
-              <div className="md:col-span-7 order-1 md:order-2 relative h-[300px] overflow-hidden rounded-lg">
+              <div className="md:col-span-7 order-2 relative flex items-center justify-center h-[500px] overflow-hidden rounded-lg">
                 <Image
-                  src="/images/about-1.jpg"
-                  alt="Início da Galharufa"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  src="/images/LogoGalharufa_Antigo.png"
+                  alt="Agência Galharufa"
+                  width={426}
+                  height={426}
+                  className="object-cover object-center"
+                  sizes="(max-width: 426px) 80vw, 426px"
+                  priority
                 />
               </div>
             </motion.div>
@@ -80,16 +80,7 @@ const OurStory = () => {
               variants={itemVariants}
               className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
             >
-              <div className="md:col-span-7 order-1 relative h-[300px] overflow-hidden rounded-lg">
-                <Image
-                  src="/images/about-2.jpg"
-                  alt="Expansão da Galharufa"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
-              <div className="md:col-span-5 order-2">
+              <div className="md:col-span-5 order-1">
                 <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">
                   A Expansão
                 </h3>
@@ -104,6 +95,17 @@ const OurStory = () => {
                   atentos às inovações.
                 </p>
               </div>
+              <div className="md:col-span-7 order-2 relative flex items-center justify-center h-[500px] overflow-hidden rounded-lg">
+                <Image
+                  src="/images/Iniciais_Transparente_LetrasPretas.png"
+                  alt="Agência Galharufa"
+                  width={426}
+                  height={426}
+                  className="object-cover object-center"
+                  sizes="(max-width: 426px) 80vw, 426px"
+                  priority
+                />
+              </div>
             </motion.div>
 
             {/* Item 3 */}
@@ -111,23 +113,26 @@ const OurStory = () => {
               variants={itemVariants}
               className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center"
             >
-              <div className="md:col-span-5 order-2 md:order-1">
+              <div className="md:col-span-5 order-1 md:order-1">
                 <h3 className="text-2xl font-semibold mb-4 text-black dark:text-white">
                   Hoje: Referência no Mercado
                 </h3>
                 <p className="text-gray-700 dark:text-gray-300 mb-4">
                   Agenciar para transformar e conectar, através de um gerenciamento de
-                  carreira assertivo, explorando que os torna especiais, com o olhar
-                  sensível e os unindo as oportunidades, é o nosso ofício e missão.
+                  carreira assertivo, explorando o que os torna especiais, com o olhar
+                  sensível os unindo às oportunidades. É o nosso ofício e missão.
                 </p>
               </div>
-              <div className="md:col-span-7 order-1 md:order-2 relative h-[300px] overflow-hidden rounded-lg">
+
+              <div className="md:col-span-7 order-2 relative flex items-center justify-center h-[500px] overflow-hidden rounded-lg">
                 <Image
-                  src="/images/about-3.jpg"
-                  alt="Inovação na Galharufa"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  src="/images/LogoGalha_Atual_FundoBranco_Transparente_LetrasPretas.png"
+                  alt="Agência Galharufa"
+                  width={426}
+                  height={426}
+                  className="object-cover object-center"
+                  sizes="(max-width: 426px) 80vw, 426px"
+                  priority
                 />
               </div>
             </motion.div>
