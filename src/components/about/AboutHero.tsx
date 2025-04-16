@@ -17,7 +17,7 @@ const AboutHero = () => {
 
       {/* Background */}
       <div className="absolute inset-0 z-0">
-        <div className="w-full h-full bg-[url('/images/camera-2400-1600.jpg')] bg-cover bg-center"></div>
+        <div className="w-full h-full bg-[url('/images/capagalharufa_2400x1600.png')] bg-cover bg-center"></div>
       </div>
 
       {/* Conteúdo */}

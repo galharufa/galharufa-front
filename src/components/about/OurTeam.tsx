@@ -19,6 +19,7 @@ const teamMembers = [
     id: 1,
     name: 'Juliana Azevedo',
     role: 'Diretora Executivo & Co-Fundador',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: 'https://linkedin.com/in/ricardogalha',
@@ -30,6 +31,7 @@ const teamMembers = [
     id: 2,
     name: 'Alexandre Sean',
     role: 'Diretor Artístico & Co-Fundador',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: 'https://linkedin.com/in/rubiarufa',
@@ -41,6 +43,7 @@ const teamMembers = [
     id: 3,
     name: 'Elen Coutinho',
     role: 'Assistente de Booker',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -52,6 +55,7 @@ const teamMembers = [
     id: 4,
     name: 'Fabio Brum',
     role: 'Jurídico',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -63,6 +67,7 @@ const teamMembers = [
     id: 5,
     name: 'Isabel Bertolino',
     role: 'Contabilidade',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -74,6 +79,7 @@ const teamMembers = [
     id: 6,
     name: 'Gislaine Marconato',
     role: 'Assistente comercial departamento infantil',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -85,6 +91,7 @@ const teamMembers = [
     id: 7,
     name: 'Pamella Gaiguer',
     role: 'Tech Lead',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -96,6 +103,7 @@ const teamMembers = [
     id: 8,
     name: 'Tom Gomes',
     role: 'Fiscal de Set',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -107,6 +115,7 @@ const teamMembers = [
     id: 9,
     name: 'Leo Zaccur',
     role: 'Diretor de Arte',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
       linkedin: '',
@@ -146,7 +155,17 @@ const OurTeam = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-md hover:shadow-lg transition-all duration-300"
             >
-              <div className="relative h-80 flex items-center justify-center bg-gray-200 dark:bg-gray-800">
+              <div
+                className="relative h-80 flex items-center justify-center bg-gray-200 dark:bg-gray-800"
+                style={{
+                  backgroundImage:
+                    !member.image && member.backgroundImage
+                      ? `url(${member.backgroundImage})`
+                      : undefined,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                }}
+              >
                 {member.image ? (
                   <Image
                     src={member.image}
@@ -156,7 +175,7 @@ const OurTeam = () => {
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 ) : (
-                  <div className="w-24 h-24 rounded-full bg-gray-400 dark:bg-gray-700 flex items-center justify-center text-white text-3xl font-bold shadow-md">
+                  <div className="w-24 h-24 rounded-full bg-black/60 flex items-center justify-center text-white text-3xl font-bold shadow-md z-10">
                     {getInitials(member.name)}
                   </div>
                 )}

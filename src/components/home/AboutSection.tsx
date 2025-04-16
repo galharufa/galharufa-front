@@ -39,15 +39,16 @@ const AboutSection = () => {
             initial={{ opacity: 0, x: -50 }}
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
-            className="relative h-[500px] w-full overflow-hidden rounded-lg"
+            className="relative flex items-center justify-center h-[500px] w-full overflow-hidden rounded-lg"
           >
-            <div className="absolute inset-0  z-10 rounded-lg"></div>
+            <div className="absolute inset-0 z-10 rounded-lg"></div>
             <Image
               src="/images/Iniciais_Transparente_LetrasPretas.png"
               alt="Agência Galharufa"
-              fill
+              width={426}
+              height={426}
               className="object-cover object-center"
-              sizes="(max-width: 350px) 80vw, 25vw"
+              sizes="(max-width: 426px) 80vw, 426px"
               priority
             />
           </motion.div>
