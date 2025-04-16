@@ -115,16 +115,25 @@ export const CastingService = {
     }
   },
 
-  async getCasting(id: number): Promise<CastingDetalhado> {
+  async getCasting(id: string): Promise<CastingDetalhado> {
     console.log('Tentando obter casting com ID:', id);
     try {
-      const url = `/api/casting/castings/${id}/`;
-      console.log('URL da requisição:', url);
+      // Verificar se o ID é válido
+      if (!id || id === 'undefined' || id === 'null') {
+        throw new Error('ID de casting inválido');
+      }
+      
+      // Garantir que estamos usando o mesmo formato de URL que funciona em outras chamadas
+      const url = '/api/casting/castings/' + id + '/';
+      console.log('URL da requisição completa:', url);
+      console.log('API baseURL:', api.defaults.baseURL);
+      
+      // Tentar fazer a requisição
       const response = await api.get<CastingDetalhado>(url);
       console.log('Resposta recebida com sucesso:', response.status);
       return response.data;
     } catch (error) {
-      console.error('Erro ao obter casting:', error);
+      console.error('Erro ao obter casting - detalhes completos:', error);
       throw error;
     }
   },

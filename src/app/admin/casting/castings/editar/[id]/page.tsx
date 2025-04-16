@@ -87,7 +87,7 @@ export default function EditarCasting() {
         // Carregar categorias e casting em paralelo
         const [categoriasResponse, castingResponse] = await Promise.all([
           CastingService.getCategorias({ ordering: 'nome' }),
-          CastingService.getCasting(parseInt(id)),
+          CastingService.getCasting(id),
         ]);
 
         setCategorias(categoriasResponse.results);
