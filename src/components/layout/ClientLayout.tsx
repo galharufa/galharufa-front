@@ -4,8 +4,7 @@ import { ThemeProvider } from 'next-themes';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import { AuthProvider } from '@/hooks/useAuth';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Notifications } from '@mantine/notifications';
 import { MantineProvider } from '@mantine/core';
 import { usePathname } from 'next/navigation';
 
@@ -26,7 +25,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {!isAdminRoute && !isAdminLoginPage && <Navbar />}
           <main className="min-h-screen">{children}</main>
           {!isAdminRoute && !isAdminLoginPage && <Footer />}
-          <ToastContainer position="bottom-right" />
+          <Notifications position="bottom-right" />
         </MantineProvider>
       </ThemeProvider>
     </AuthProvider>

@@ -116,8 +116,17 @@ export const CastingService = {
   },
 
   async getCasting(id: number): Promise<CastingDetalhado> {
-    const response = await api.get<CastingDetalhado>(`/api/casting/castings/${id}/`);
-    return response.data;
+    console.log('Tentando obter casting com ID:', id);
+    try {
+      const url = `/api/casting/castings/${id}/`;
+      console.log('URL da requisição:', url);
+      const response = await api.get<CastingDetalhado>(url);
+      console.log('Resposta recebida com sucesso:', response.status);
+      return response.data;
+    } catch (error) {
+      console.error('Erro ao obter casting:', error);
+      throw error;
+    }
   },
 
   async criarCasting(formData: FormData): Promise<CastingDetalhado> {

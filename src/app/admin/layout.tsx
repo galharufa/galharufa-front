@@ -4,8 +4,7 @@ import { AppShell, MantineProvider, ColorSchemeProvider } from '@mantine/core';
 import { useState } from 'react';
 import { useColorScheme } from '@mantine/hooks';
 import { AuthProvider } from '@/hooks/useAuth';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { Notifications } from '@mantine/notifications';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 // Criando o cliente de consulta para React Query
@@ -29,7 +28,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <AuthProvider>
             <AppShell padding={0}>
-              <ToastContainer />
+              <Notifications position="top-right" />
               {children}
             </AppShell>
           </AuthProvider>

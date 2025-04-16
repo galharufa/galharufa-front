@@ -31,7 +31,7 @@ import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
-import { CastingService } from '@/services';
+import { CastingService, api } from '@/services';
 import { notifications } from '@mantine/notifications';
 import { errorToast, successToast } from '@/utils';
 import {
@@ -419,24 +419,15 @@ export default function NovoCasting() {
 
       // Enviar para o backend
       try {
-        // Modificando a abordagem para enviar o FormData
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/casting/castings/`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-            body: formData,
+        // Usando a instância de API configurada no projeto
+        const response = await api.post('/api/casting/castings/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`,
           },
-        );
+        });
 
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(`Erro ${response.status}: ${JSON.stringify(errorData)}`);
-        }
-
-        const casting = await response.json();
+        const casting = response.data;
         console.log('Casting criado com sucesso:', casting);
 
         // Adicionar fotos adicionais
@@ -481,7 +472,7 @@ export default function NovoCasting() {
         }
 
         successToast('Casting cadastrado com sucesso!');
-        router.push('/admin/casting/castings');
+        router.push('/admin/casting');
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
 
