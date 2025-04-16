@@ -11,11 +11,8 @@ const API_URL = isServer
   ? 'https://api.agenciagalharufa.com.br/'
   : process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/';
 
-console.log('API_URL configurada:', API_URL);
-
 // Verificar se a URL termina com barra e remover se necessário
 const baseURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
-console.log('URL base ajustada:', baseURL);
 
 // Verificar se estamos no servidor durante o build
 const isBuild = process.env.NODE_ENV === 'production' && isServer;
@@ -71,31 +68,15 @@ if (!isBuild) {
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
       const url = config.url || '';
-      console.log('Enviando requisição para:', `${config.baseURL}${url}`);
-      console.log('Método:', config.method?.toUpperCase());
-
-      // Não logar dados sensíveis como senhas
-      if (config.data && typeof config.data === 'object' && 'password' in config.data) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...safeData } = config.data;
-        console.log('Dados enviados (sem senha):', safeData);
-      } else {
-        console.log('Dados enviados:', config.data);
-      }
-
-      console.log('Parâmetros:', config.params);
-
+      
       // URL completa para verificação
       const fullUrl = `${config.baseURL}${url}`;
-      console.log('URL completa para verificação:', fullUrl);
-
+      
       // Verificar se o endpoint é público
       const isPublic = isPublicEndpoint(url);
-      console.log('Endpoint público:', isPublic);
-
+      
       // Verificar se estamos em uma página pública
       const isPublicPg = isPublicPage();
-      console.log('Página pública:', isPublicPg);
 
       // Endpoints administrativos específicos que SEMPRE precisam de autenticação
       const isAdminEndpoint =
@@ -111,23 +92,20 @@ if (!isBuild) {
         // Se temos um token, sempre o adicionamos às requisições
         config.headers = config.headers || {};
         config.headers.Authorization = `Bearer ${token}`;
-        console.log('Token adicionado ao cabeçalho (Bearer)');
+        // Token adicionado ao cabeçalho
       } else if (isAdminEndpoint) {
-        // Se é um endpoint administrativo e não temos token, podemos alertar no console
-        console.log('Sem token para endpoint administrativo:', url);
+        // Se é um endpoint administrativo e não temos token
       } else {
-        console.log('Sem token de autenticação - Requisição pública');
+        // Requisição pública sem token
       }
 
       // Não logar o valor real do cabeçalho de autorização
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { Authorization, ...safeHeaders } = config.headers || {};
-      console.log('Cabeçalhos da requisição (sem Authorization):', safeHeaders);
 
       return config;
     },
     (error) => {
-      console.error('Erro no interceptor de requisição:', error);
       return Promise.reject(error);
     },
   );
@@ -137,15 +115,9 @@ if (!isBuild) {
 if (!isBuild) {
   api.interceptors.response.use(
     (response) => {
-      console.log('Resposta recebida de:', response.config.url);
-      console.log('Status da resposta:', response.status);
-      console.log('Cabeçalhos da resposta:', response.headers);
       return response;
     },
     async (error: AxiosError) => {
-      console.error('Erro na resposta:', error.message);
-      console.error('Status do erro:', error.response?.status);
-      console.error('Dados do erro:', error.response?.data);
 
       const originalRequest = error.config as InternalAxiosRequestConfig & {
         _retry?: boolean;
@@ -154,7 +126,6 @@ if (!isBuild) {
 
       // Se for um endpoint público ou estamos em uma página pública, não redirecione para login
       if (isPublicEndpoint(url) || isPublicPage()) {
-        console.log('Endpoint público ou página pública - Não redirecionando para login');
         return Promise.reject(error);
       }
 
@@ -163,29 +134,24 @@ if (!isBuild) {
         error.response?.status === 401 &&
         window.location.pathname.includes('/admin/')
       ) {
-        console.warn('Erro 401 em página administrativa - Verificando sessão');
         // Aqui poderia ter uma lógica adicional para verificar a sessão
       }
 
       // Tentar renovar o token apenas se o erro for 401 (Unauthorized)
       if (error.response?.status === 401 && !originalRequest._retry) {
-        console.log('Erro 401 detectado - Tentando renovar o token');
         originalRequest._retry = true;
 
         try {
           const refreshToken =
             localStorage.getItem('refreshToken') ||
             sessionStorage.getItem('refreshToken');
-          console.log('Refresh token encontrado:', !!refreshToken);
+
 
           if (!refreshToken) {
-            console.log('Sem refresh token - Redirecionando para login');
             // Se não tiver refresh token e não for um endpoint público, redirecionar para login
             window.location.href = '/admin/login';
             return Promise.reject(error);
           }
-
-          console.log('Tentando renovar o token com refresh token');
           const response = await axios.post(
             `${baseURL}/api/token/refresh/`,
             {
@@ -196,33 +162,15 @@ if (!isBuild) {
             },
           );
 
-          console.log('Token renovado com sucesso');
           localStorage.setItem('accessToken', response.data.access);
 
           // Refazer a requisição original com o novo token
           if (originalRequest.headers) {
             originalRequest.headers.Authorization = `Bearer ${response.data.access}`;
-            console.log('Novo token adicionado à requisição original');
           }
-          console.log('Refazendo a requisição original');
           return axios(originalRequest);
         } catch (refreshError: Error | unknown) {
-          console.error(
-            'Erro ao renovar o token:',
-            refreshError instanceof Error ? refreshError.message : 'Erro desconhecido',
-          );
-
-          // Verificar se o erro é do tipo AxiosError para acessar propriedades específicas
-          if (axios.isAxiosError(refreshError)) {
-            console.error('Status do erro de renovação:', refreshError.response?.status);
-            console.error('Dados do erro de renovação:', refreshError.response?.data);
-          } else {
-            console.error('Status do erro de renovação: Desconhecido');
-            console.error('Dados do erro de renovação: Desconhecidos');
-          }
-
           // Limpar tokens e redirecionar para login
-          console.log('Limpando tokens e redirecionando para login');
           localStorage.removeItem('accessToken');
           localStorage.removeItem('refreshToken');
           localStorage.removeItem('userData');
@@ -243,7 +191,6 @@ if (!isBuild) {
       const errorData = error.response?.data as ErrorResponse | undefined;
 
       if (errorData) {
-        console.log('Dados completos do erro:', errorData);
 
         // Verificar se há mensagens de erro específicas
         if (typeof errorData === 'object') {
@@ -261,21 +208,20 @@ if (!isBuild) {
             .filter(Boolean);
 
           if (fieldErrors.length > 0) {
-            console.error('Erros de validação de campos:', fieldErrors);
+
             errorToast(fieldErrors.join('\n'));
           } else if (errorData.detail) {
-            console.error('Mensagem de erro detalhada:', errorData.detail);
+
             errorToast(errorData.detail);
           } else if (errorData.message) {
-            console.error('Mensagem de erro:', errorData.message);
+
             errorToast(errorData.message);
           }
         }
       } else if (error.message) {
-        console.error('Mensagem de erro genérica:', error.message);
+
         errorToast(error.message);
       } else {
-        console.error('Erro desconhecido na requisição');
         errorToast('Ocorreu um erro na requisição');
       }
 

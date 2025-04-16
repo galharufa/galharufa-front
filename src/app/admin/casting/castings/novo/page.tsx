@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
@@ -346,7 +345,7 @@ export default function NovoCasting() {
         return;
       }
 
-      console.log('Dados a enviar:', values);
+
 
       // Criar FormData para envio de arquivos
       const formData = new FormData();
@@ -396,7 +395,7 @@ export default function NovoCasting() {
       for (const pair of formData.entries()) {
         formDataEntries[pair[0]] = pair[1];
       }
-      console.log('Conteúdo do FormData:', formDataEntries);
+
 
       // Verificar autenticação
       const token = localStorage.getItem('accessToken');
@@ -415,7 +414,7 @@ export default function NovoCasting() {
           formDataContent += `${key}: [Arquivo ou objeto]\n`;
         }
       }
-      console.log('Conteúdo final do FormData antes de enviar:\n', formDataContent);
+
 
       // Enviar para o backend
       try {
@@ -428,7 +427,7 @@ export default function NovoCasting() {
         });
 
         const casting = response.data;
-        console.log('Casting criado com sucesso:', casting);
+
 
         // Adicionar fotos adicionais
         if (fotosAdicionais.length > 0) {

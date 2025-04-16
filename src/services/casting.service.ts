@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import api from './api';
 
 export interface Categoria {
@@ -62,7 +61,6 @@ export const CastingService = {
       );
       return response.data;
     } catch (error) {
-      console.error('Erro ao obter categorias:', error);
       // Retornar uma estrutura padrão vazia para evitar erros
       return { count: 0, next: null, previous: null, results: [] };
     }
@@ -109,14 +107,12 @@ export const CastingService = {
       );
       return response.data;
     } catch (error) {
-      console.error('Erro ao obter castings:', error);
       // Retornar uma estrutura padrão vazia para evitar erros
       return { count: 0, next: null, previous: null, results: [] };
     }
   },
 
   async getCasting(id: string): Promise<CastingDetalhado> {
-    console.log('Tentando obter casting com ID:', id);
     try {
       // Verificar se o ID é válido
       if (!id || id === 'undefined' || id === 'null') {
@@ -125,15 +121,11 @@ export const CastingService = {
       
       // Garantir que estamos usando o mesmo formato de URL que funciona em outras chamadas
       const url = '/api/casting/castings/' + id + '/';
-      console.log('URL da requisição completa:', url);
-      console.log('API baseURL:', api.defaults.baseURL);
       
       // Tentar fazer a requisição
       const response = await api.get<CastingDetalhado>(url);
-      console.log('Resposta recebida com sucesso:', response.status);
       return response.data;
     } catch (error) {
-      console.error('Erro ao obter casting - detalhes completos:', error);
       throw error;
     }
   },
