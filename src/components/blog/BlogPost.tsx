@@ -37,6 +37,12 @@ const OurStory = () => {
           animate={isInView ? 'visible' : 'hidden'}
           className="max-w-4xl mx-auto"
         >
+          <motion.div variants={itemVariants} className="text-center mb-16">
+            <h2 className="heading-secondary text-black dark:text-white">
+              Nossa Jornada
+            </h2>
+          </motion.div>
+
           <div className="space-y-8">
             <motion.div
               variants={itemVariants}

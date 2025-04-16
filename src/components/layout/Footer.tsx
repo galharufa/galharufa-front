@@ -12,6 +12,7 @@ const Footer = () => {
     { href: '/sobre', label: 'Sobre Nós' },
     { href: '/servicos', label: 'Serviços' },
     { href: '/cast', label: 'Casting' },
+    { href: '/blog', label: 'Blog' },
     { href: '/contato', label: 'Contato' },
   ];
 

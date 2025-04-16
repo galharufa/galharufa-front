@@ -41,6 +41,7 @@ const Navbar = () => {
     { href: '/sobre', label: 'Sobre Nós' },
     { href: '/servicos', label: 'Serviços' },
     { href: '/cast', label: 'Casting' },
+    { href: '/blog', label: 'Blog' },
     { href: '/contato', label: 'Contato' },
   ];
 
@@ -67,10 +68,10 @@ const Navbar = () => {
             : 'bg-white dark:bg-black/90 backdrop-blur-md'
       }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex items-center justify-between py-2">
           {/* Logo */}
-          <Link href="/" className="relative z-10">
+          <Link href="/" className="relative z-10 ">
             <div className="flex items-center">
               {scrolled || pathname !== '/' ? (
                 <div className="relative w-auto">
@@ -101,13 +102,13 @@ const Navbar = () => {
           </Link>
 
           {/* Links de navegação para desktop */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="hidden md:flex items-center space-x-8 -ml-40">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
                 className={`hover-link ${getTextColor()} ${
-                  pathname === link.href ? 'font-medium' : 'font-normal'
+                  pathname === link.href ? 'font-bold' : 'font-light'
                 } ${!scrolled && pathname === '/' ? 'hover-link-light' : ''}`}
               >
                 {link.label}
@@ -151,7 +152,7 @@ const Navbar = () => {
                     key={link.href}
                     href={link.href}
                     className={`text-xl hover-link text-black dark:text-white ${
-                      pathname === link.href ? 'font-medium' : 'font-normal'
+                      pathname === link.href ? 'font-bold' : 'font-light'
                     }`}
                   >
                     {link.label}
