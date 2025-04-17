@@ -1,4 +1,5 @@
 /* eslint-disable camelcase */
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
@@ -345,8 +346,6 @@ export default function NovoCasting() {
         return;
       }
 
-
-
       // Criar FormData para envio de arquivos
       const formData = new FormData();
 
@@ -396,7 +395,6 @@ export default function NovoCasting() {
         formDataEntries[pair[0]] = pair[1];
       }
 
-
       // Verificar autenticação
       const token = localStorage.getItem('accessToken');
       if (!token) {
@@ -415,7 +413,6 @@ export default function NovoCasting() {
         }
       }
 
-
       // Enviar para o backend
       try {
         // Usando a instância de API configurada no projeto
@@ -427,7 +424,6 @@ export default function NovoCasting() {
         });
 
         const casting = response.data;
-
 
         // Adicionar fotos adicionais
         if (fotosAdicionais.length > 0) {

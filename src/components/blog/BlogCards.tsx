@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 // import { FaUserTie, FaCamera, FaAd, FaGraduationCap } from 'react-icons/fa';
 
 const blogPosts = [
@@ -66,9 +67,11 @@ const BlogCards = () => {
               transition={{ duration: 0.6, delay: index * 0.1 }}
               className="bg-white dark:bg-black p-0 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
             >
-              <img
-                src={post.image}
+              <Image
+                src={post.image || '/images/placeholder-talent.jpg'}
                 alt={post.title}
+                fill
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                 className="w-full h-48 object-cover rounded-t-lg"
               />
               <div className="p-6 text-center">

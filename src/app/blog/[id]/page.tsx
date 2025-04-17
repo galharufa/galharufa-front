@@ -7,7 +7,6 @@ import { FaArrowLeft, FaInstagram, FaYoutube, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import CtaBanner from '@/components/shared/CtaBanner';
 
 // Tipo para os castings
 type Blog = {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import api from './api';
 
 export interface Categoria {
@@ -118,10 +119,10 @@ export const CastingService = {
       if (!id || id === 'undefined' || id === 'null') {
         throw new Error('ID de casting inválido');
       }
-      
+
       // Garantir que estamos usando o mesmo formato de URL que funciona em outras chamadas
       const url = '/api/casting/castings/' + id + '/';
-      
+
       // Tentar fazer a requisição
       const response = await api.get<CastingDetalhado>(url);
       return response.data;

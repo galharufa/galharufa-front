@@ -1,4 +1,5 @@
-/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { errorToast } from '@/utils';
 
@@ -68,13 +69,13 @@ if (!isBuild) {
   api.interceptors.request.use(
     (config: InternalAxiosRequestConfig) => {
       const url = config.url || '';
-      
+
       // URL completa para verificação
       const fullUrl = `${config.baseURL}${url}`;
-      
+
       // Verificar se o endpoint é público
       const isPublic = isPublicEndpoint(url);
-      
+
       // Verificar se estamos em uma página pública
       const isPublicPg = isPublicPage();
 
@@ -100,7 +101,7 @@ if (!isBuild) {
       }
 
       // Não logar o valor real do cabeçalho de autorização
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
       const { Authorization, ...safeHeaders } = config.headers || {};
 
       return config;
@@ -118,7 +119,6 @@ if (!isBuild) {
       return response;
     },
     async (error: AxiosError) => {
-
       const originalRequest = error.config as InternalAxiosRequestConfig & {
         _retry?: boolean;
       };
@@ -145,7 +145,6 @@ if (!isBuild) {
           const refreshToken =
             localStorage.getItem('refreshToken') ||
             sessionStorage.getItem('refreshToken');
-
 
           if (!refreshToken) {
             // Se não tiver refresh token e não for um endpoint público, redirecionar para login
@@ -191,7 +190,6 @@ if (!isBuild) {
       const errorData = error.response?.data as ErrorResponse | undefined;
 
       if (errorData) {
-
         // Verificar se há mensagens de erro específicas
         if (typeof errorData === 'object') {
           // Verificar se há erros de validação de campos
@@ -208,18 +206,14 @@ if (!isBuild) {
             .filter(Boolean);
 
           if (fieldErrors.length > 0) {
-
             errorToast(fieldErrors.join('\n'));
           } else if (errorData.detail) {
-
             errorToast(errorData.detail);
           } else if (errorData.message) {
-
             errorToast(errorData.message);
           }
         }
       } else if (error.message) {
-
         errorToast(error.message);
       } else {
         errorToast('Ocorreu um erro na requisição');
