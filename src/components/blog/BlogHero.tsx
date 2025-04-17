@@ -3,7 +3,7 @@
 import { useRef } from 'react';
 import { motion } from 'framer-motion';
 
-const AboutHero = () => {
+const BlogHero = () => {
   const heroRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -28,11 +28,11 @@ const AboutHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Nossa Jornada
+          Blog
         </motion.h1>
       </div>
     </div>
   );
 };
 
-export default AboutHero;
+export default BlogHero;

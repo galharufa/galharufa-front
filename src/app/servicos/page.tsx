@@ -41,16 +41,6 @@ export default function ServicesPage() {
       <ServicesList />
       {/* <ServicesFaq /> */}
 
-      {/* <div className="container-section py-8 text-center">
-        <Link 
-          href="/servicos/faq" 
-          className="hover-link inline-flex items-center text-black dark:text-white font-medium"
-        >
-          Ver todas as perguntas frequentes
-          <FiArrowRight className="ml-2" />
-        </Link>
-      </div> */}
-
       <CtaBanner
         title="Precisa de Talentos para seu Projeto?"
         description="Temos um casting diversificado e profissional para atender às necessidades específicas do seu projeto audiovisual."
