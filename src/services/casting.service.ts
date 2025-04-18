@@ -62,6 +62,7 @@ export const CastingService = {
       );
       return response.data;
     } catch (error) {
+      console.error('Erro ao obter categorias:', error);
       // Retornar uma estrutura padrão vazia para evitar erros
       return { count: 0, next: null, previous: null, results: [] };
     }
@@ -108,6 +109,7 @@ export const CastingService = {
       );
       return response.data;
     } catch (error) {
+      console.error('Erro ao obter castings:', error);
       // Retornar uma estrutura padrão vazia para evitar erros
       return { count: 0, next: null, previous: null, results: [] };
     }

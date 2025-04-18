@@ -42,10 +42,17 @@ const isPublicEndpoint = (url: string | undefined): boolean => {
   if (!url) return false;
 
   // Verificando endpoints públicos
-  return PUBLIC_ENDPOINTS.some((endpoint) => {
+  for (const endpoint of PUBLIC_ENDPOINTS) {
     // Verificar se a URL começa com o endpoint
-    return url.startsWith(endpoint);
-  });
+    // Precisamos verificar o endpoint exato ou com / no final
+    if (url === endpoint || 
+        url.startsWith(endpoint + '/') || 
+        url.startsWith(endpoint + '?')) {
+      return true;
+    }
+  }
+  
+  return false;
 };
 
 // Verificar se estamos em uma página pública
@@ -86,22 +93,52 @@ if (!isBuild) {
         url.includes('/update') ||
         url.includes('/delete');
 
-      // Adicionar token para páginas administrativas ou quando disponível para endpoints públicos
-      const token = localStorage.getItem('accessToken');
+            // Imprimir URL para debug
+      console.log('URL da requisição:', url);
+      console.log('É endpoint público:', isPublic);
 
-      if (token) {
-        // Se temos um token, sempre o adicionamos às requisições
-        config.headers = config.headers || {};
-        config.headers.Authorization = `Bearer ${token}`;
-        // Token adicionado ao cabeçalho
-      } else if (isAdminEndpoint) {
-        // Se é um endpoint administrativo e não temos token
-      } else {
-        // Requisição pública sem token
+      // Determinar se é uma requisição administrativa ou pública
+      const isAdminPage = typeof window !== 'undefined' && window.location.pathname.includes('/admin/');
+      console.log('É página administrativa:', isAdminPage);
+
+      // 1. Se é um endpoint público E NÃO estamos em página administrativa
+      if (isPublic && !isAdminPage) {
+        // Requisições públicas não devem ter token
+        console.log('Requisição pública: removendo token se existir');
+        
+        // Certifique-se de remover qualquer token existente
+        if (config.headers) {
+          delete config.headers.Authorization;
+        }
+      } 
+      // 2. Se estamos em página administrativa OU é um endpoint administrativo
+      else if (isAdminPage || isAdminEndpoint) {
+        // Adicionar token para autenticação
+        const token = localStorage.getItem('accessToken');
+        
+        if (token) {
+          console.log('Requisição administrativa: adicionando token');
+          config.headers = config.headers || {};
+          config.headers.Authorization = `Bearer ${token}`;
+        } else {
+          console.log('Requisição administrativa sem token disponível');
+        }
+      } 
+      // 3. Para outros casos (híbridos)
+      else {
+        // Verificar se temos token disponível
+        const token = localStorage.getItem('accessToken');
+        
+        if (token) {
+          console.log('Requisição híbrida: adicionando token disponível');
+          config.headers = config.headers || {};
+          config.headers.Authorization = `Bearer ${token}`;
+        } else {
+          console.log('Requisição híbrida sem token');
+        }
       }
 
       // Não logar o valor real do cabeçalho de autorização
-
       const { Authorization, ...safeHeaders } = config.headers || {};
 
       return config;
