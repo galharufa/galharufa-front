@@ -16,14 +16,13 @@ export interface CompressionOptions {
  */
 export async function compressImage(
   imageFile: File,
-  options: CompressionOptions = {}
+  options: CompressionOptions = {},
 ): Promise<File> {
   try {
-    // Extrair tipo e extensão do arquivo original
+    // Extrair tipo e nome do arquivo original
     const originalType = imageFile.type || 'image/jpeg';
     const originalName = imageFile.name || 'imagem.jpg';
-    const fileExtension = originalName.split('.').pop() || 'jpg';
-    
+
     // Configurar as opções padrão
     const defaultOptions = {
       maxSizeMB: 1, // 1MB
@@ -34,21 +33,24 @@ export async function compressImage(
 
     const mergedOptions = { ...defaultOptions, ...options };
     const compressedFile = await imageCompression(imageFile, mergedOptions);
-    
-    console.log('Compressão de imagem:');
-    console.log(`Nome original: ${originalName}`);
-    console.log(`Tamanho original: ${(imageFile.size / 1024 / 1024).toFixed(2)} MB`);
-    console.log(`Tamanho após compressão: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`);
-    
-    // Criar um novo File com o mesmo nome do arquivo original para preservar a extensão
-    const renamedFile = new File(
-      [compressedFile], 
-      originalName, 
-      { type: compressedFile.type }
+
+    // Logs para desenvolvimento - podem ser removidos em produção
+    // eslint-disable-next-line no-console
+    console.log(
+      'Compressão de imagem:',
+      `Nome original: ${originalName}`,
+      `Tamanho original: ${(imageFile.size / 1024 / 1024).toFixed(2)} MB`,
+      `Tamanho após compressão: ${(compressedFile.size / 1024 / 1024).toFixed(2)} MB`,
     );
-    
+
+    // Criar um novo File com o mesmo nome do arquivo original para preservar a extensão
+    const renamedFile = new File([compressedFile], originalName, {
+      type: compressedFile.type,
+    });
+
     return renamedFile;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Erro ao comprimir imagem:', error);
     // Se houver erro na compressão, retorna o arquivo original
     return imageFile;

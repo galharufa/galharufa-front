@@ -336,7 +336,7 @@ export default function NovoCasting() {
           // Continua com a foto original se houver erro na compressão
         }
       }
-      
+
       // Comprimir fotos adicionais se existirem
       const compressedFotos: (File | null)[] = [...fotosAdicionais];
       for (let i = 0; i < compressedFotos.length; i++) {
@@ -426,23 +426,29 @@ export default function NovoCasting() {
         if (typeof value === 'string') {
           formDataContent += `${key}: ${value}\n`;
         } else {
-          formDataContent += `${key}: [Arquivo ou objeto]\n`;
+          formDataContent += `${key}: [Arquivo: ${value.name} - ${(value.size / 1024).toFixed(2)} KB]\n`;
         }
       }
 
       // Enviar para o backend
       try {
         // Usando a instância de API configurada no projeto
+        // Ajustar a URL para usar o proxy local que configuramos no next.config.ts
+        const apiUrl = '/api/casting/castings/';
+        console.log('Enviando dados para:', apiUrl);
+
         // Verificar cada chave e valor no formData para debug
         console.log('Conteúdo do FormData:');
         for (const [key, value] of formData.entries()) {
           if (typeof value === 'string') {
             console.log(`${key}: ${value}`);
           } else {
-            console.log(`${key}: [Arquivo: ${value.name} - ${(value.size / 1024).toFixed(2)} KB]`);
+            console.log(
+              `${key}: [Arquivo: ${value.name} - ${(value.size / 1024).toFixed(2)} KB]`,
+            );
           }
         }
-        
+
         // Usar a URL relativa para aproveitar o proxy configurado no next.config.ts
         const response = await api.post('/api/casting/castings/', formData, {
           headers: {
@@ -500,14 +506,14 @@ export default function NovoCasting() {
         router.push('/admin/casting');
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
-        
+
         // Log detalhado dos erros
         if (error.response) {
           // Resposta do servidor com status de erro
           console.error('Detalhes do erro:', {
             data: error.response.data,
             status: error.response.status,
-            headers: error.response.headers
+            headers: error.response.headers,
           });
         } else if (error.request) {
           // Requisição foi feita mas não houve resposta
