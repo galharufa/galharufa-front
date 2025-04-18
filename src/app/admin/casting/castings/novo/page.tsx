@@ -34,6 +34,7 @@ import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import { notifications } from '@mantine/notifications';
 import { errorToast, successToast } from '@/utils';
+import { compressImage } from '@/utils/imageCompression';
 import {
   IconUpload,
   IconPlus,
@@ -322,6 +323,35 @@ export default function NovoCasting() {
   const handleSubmit = async (values: any) => {
     setIsSubmitting(true);
     try {
+      // Comprimir a foto principal se existir
+      if (values.foto_principal) {
+        try {
+          const compressedImage = await compressImage(values.foto_principal, {
+            maxSizeMB: 0.8, // 800KB
+            maxWidthOrHeight: 1280,
+          });
+          values.foto_principal = compressedImage;
+        } catch (compressionError) {
+          console.warn('Erro ao comprimir a foto principal:', compressionError);
+          // Continua com a foto original se houver erro na compressão
+        }
+      }
+      
+      // Comprimir fotos adicionais se existirem
+      const compressedFotos: (File | null)[] = [...fotosAdicionais];
+      for (let i = 0; i < compressedFotos.length; i++) {
+        if (compressedFotos[i]) {
+          try {
+            compressedFotos[i] = await compressImage(compressedFotos[i] as File, {
+              maxSizeMB: 0.8, // 800KB
+              maxWidthOrHeight: 1280,
+            });
+          } catch (compressionError) {
+            console.warn(`Erro ao comprimir a foto adicional ${i}:`, compressionError);
+            // Continua com a foto original se houver erro na compressão
+          }
+        }
+      }
       // Verificar se os campos obrigatórios estão preenchidos
       if (
         !values.altura ||
@@ -403,18 +433,31 @@ export default function NovoCasting() {
       // Enviar para o backend
       try {
         // Usando a instância de API configurada no projeto
+        // Verificar cada chave e valor no formData para debug
+        console.log('Conteúdo do FormData:');
+        for (const [key, value] of formData.entries()) {
+          if (typeof value === 'string') {
+            console.log(`${key}: ${value}`);
+          } else {
+            console.log(`${key}: [Arquivo: ${value.name} - ${(value.size / 1024).toFixed(2)} KB]`);
+          }
+        }
+        
+        // Usar a URL relativa para aproveitar o proxy configurado no next.config.ts
         const response = await api.post('/api/casting/castings/', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             Authorization: `Bearer ${token}`,
           },
+          // Aumentar o timeout para uploads grandes
+          timeout: 60000, // 60 segundos
         });
 
         const casting = response.data;
 
         // Adicionar fotos adicionais
-        if (fotosAdicionais.length > 0) {
-          const fotosPromises = fotosAdicionais.map(async (foto, index) => {
+        if (compressedFotos.length > 0) {
+          const fotosPromises = compressedFotos.map(async (foto, index) => {
             if (!foto) return null;
 
             const fotoFormData = new FormData();
@@ -457,6 +500,22 @@ export default function NovoCasting() {
         router.push('/admin/casting');
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
+        
+        // Log detalhado dos erros
+        if (error.response) {
+          // Resposta do servidor com status de erro
+          console.error('Detalhes do erro:', {
+            data: error.response.data,
+            status: error.response.status,
+            headers: error.response.headers
+          });
+        } else if (error.request) {
+          // Requisição foi feita mas não houve resposta
+          console.error('Sem resposta do servidor:', error.request);
+        } else {
+          // Erro durante a configuração da requisição
+          console.error('Erro de configuração da requisição:', error.message);
+        }
 
         // Verificar se é erro de autenticação
         if (error?.response?.status === 401) {

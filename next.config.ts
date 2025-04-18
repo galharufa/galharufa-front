@@ -12,6 +12,15 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  // Configuração para contornar CORS em desenvolvimento
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: 'https://api.agenciagalharufa.com.br/api/:path*',
+      },
+    ];
+  },
 };
 
 export default nextConfig;
