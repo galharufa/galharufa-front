@@ -84,7 +84,6 @@ export default function NovoCasting() {
       // Informações Básicas
       nome: '',
       nome_artistico: '',
-      tipo: 'ator_exclusivo',
       genero: 'masculino',
       categoria: '',
       funcoes: [] as string[],
@@ -352,7 +351,6 @@ export default function NovoCasting() {
       // Adicionar campos básicos manualmente
       formData.set('nome', values.nome);
       if (values.nome_artistico) formData.set('nome_artistico', values.nome_artistico);
-      formData.set('tipo', values.tipo || 'ator_exclusivo');
       formData.set('genero', values.genero || 'masculino');
       formData.set('categoria', values.categoria);
 
@@ -578,20 +576,6 @@ export default function NovoCasting() {
                     }))}
                     required
                     {...form.getInputProps('categoria')}
-                  />
-
-                  <Select
-                    label="Tipo"
-                    placeholder="Selecione o tipo"
-                    data={[
-                      { value: 'ator_exclusivo', label: 'Ator exclusivo' },
-                      { value: 'ator_nao_exclusivo', label: 'Ator não-exclusivo' },
-                      { value: 'influencer', label: 'Influencer' },
-                      { value: 'talento', label: 'Talento' },
-                      { value: 'infantil', label: 'Infantil' },
-                      { value: 'criativo', label: 'Criativo' },
-                    ]}
-                    {...form.getInputProps('tipo')}
                   />
 
                   <Select
