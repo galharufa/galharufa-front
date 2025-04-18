@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
+// Serviços para gerenciamento de casting
 import api from './api';
 
 export interface Categoria {
@@ -61,8 +61,8 @@ export const CastingService = {
         { params },
       );
       return response.data;
-    } catch (error) {
-      console.error('Erro ao obter categorias:', error);
+    } catch {
+      // Tratamento de erro ao obter categorias
       // Retornar uma estrutura padrão vazia para evitar erros
       return { count: 0, next: null, previous: null, results: [] };
     }
@@ -108,8 +108,8 @@ export const CastingService = {
         { params },
       );
       return response.data;
-    } catch (error) {
-      console.error('Erro ao obter castings:', error);
+    } catch {
+      // Tratamento de erro ao obter castings
       // Retornar uma estrutura padrão vazia para evitar erros
       return { count: 0, next: null, previous: null, results: [] };
     }

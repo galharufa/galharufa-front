@@ -45,13 +45,15 @@ const isPublicEndpoint = (url: string | undefined): boolean => {
   for (const endpoint of PUBLIC_ENDPOINTS) {
     // Verificar se a URL começa com o endpoint
     // Precisamos verificar o endpoint exato ou com / no final
-    if (url === endpoint || 
-        url.startsWith(endpoint + '/') || 
-        url.startsWith(endpoint + '?')) {
+    if (
+      url === endpoint ||
+      url.startsWith(endpoint + '/') ||
+      url.startsWith(endpoint + '?')
+    ) {
       return true;
     }
   }
-  
+
   return false;
 };
 
@@ -93,48 +95,46 @@ if (!isBuild) {
         url.includes('/update') ||
         url.includes('/delete');
 
-            // Imprimir URL para debug
-      console.log('URL da requisição:', url);
-      console.log('É endpoint público:', isPublic);
+      // URL e endpoint público verificados
 
       // Determinar se é uma requisição administrativa ou pública
-      const isAdminPage = typeof window !== 'undefined' && window.location.pathname.includes('/admin/');
-      console.log('É página administrativa:', isAdminPage);
+      const isAdminPage =
+        typeof window !== 'undefined' && window.location.pathname.includes('/admin/');
+      // Verificação de página administrativa
 
       // 1. Se é um endpoint público E NÃO estamos em página administrativa
       if (isPublic && !isAdminPage) {
         // Requisições públicas não devem ter token
-        console.log('Requisição pública: removendo token se existir');
-        
+
         // Certifique-se de remover qualquer token existente
         if (config.headers) {
           delete config.headers.Authorization;
         }
-      } 
+      }
       // 2. Se estamos em página administrativa OU é um endpoint administrativo
       else if (isAdminPage || isAdminEndpoint) {
         // Adicionar token para autenticação
         const token = localStorage.getItem('accessToken');
-        
+
         if (token) {
-          console.log('Requisição administrativa: adicionando token');
+          // Requisição administrativa: adicionando token
           config.headers = config.headers || {};
           config.headers.Authorization = `Bearer ${token}`;
         } else {
-          console.log('Requisição administrativa sem token disponível');
+          // Requisição administrativa sem token disponível
         }
-      } 
+      }
       // 3. Para outros casos (híbridos)
       else {
         // Verificar se temos token disponível
         const token = localStorage.getItem('accessToken');
-        
+
         if (token) {
-          console.log('Requisição híbrida: adicionando token disponível');
+          // Requisição híbrida: adicionando token disponível
           config.headers = config.headers || {};
           config.headers.Authorization = `Bearer ${token}`;
         } else {
-          console.log('Requisição híbrida sem token');
+          // Requisição híbrida sem token
         }
       }
 
