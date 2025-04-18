@@ -14,7 +14,7 @@ export interface Categoria {
 }
 
 export interface CastingResumido {
-  id: number;
+  id: string;
   nome: string;
   categoria: number;
   categoria_nome: string;
@@ -62,10 +62,9 @@ export const CastingService = {
     ordering?: string;
   }): Promise<PaginatedResponse<Funcao>> {
     try {
-      const response = await api.get<PaginatedResponse<Funcao>>(
-        '/api/casting/funcoes/',
-        { params },
-      );
+      const response = await api.get<PaginatedResponse<Funcao>>('/api/casting/funcoes/', {
+        params,
+      });
       return response.data;
     } catch {
       // Tratamento de erro ao obter funções
@@ -170,7 +169,7 @@ export const CastingService = {
     return response.data;
   },
 
-  async atualizarCasting(id: number, formData: FormData): Promise<CastingDetalhado> {
+  async atualizarCasting(id: string, formData: FormData): Promise<CastingDetalhado> {
     const response = await api.patch<CastingDetalhado>(
       `/api/casting/castings/${id}/`,
       formData,
@@ -183,12 +182,12 @@ export const CastingService = {
     return response.data;
   },
 
-  async excluirCasting(id: number): Promise<void> {
+  async excluirCasting(id: string): Promise<void> {
     await api.delete(`/api/casting/castings/${id}/`);
   },
 
   // Fotos
-  async adicionarFoto(castingId: number, formData: FormData): Promise<Foto> {
+  async adicionarFoto(castingId: string, formData: FormData): Promise<Foto> {
     const response = await api.post<Foto>(
       `/api/casting/castings/${castingId}/add_foto/`,
       formData,
@@ -201,12 +200,12 @@ export const CastingService = {
     return response.data;
   },
 
-  async excluirFoto(castingId: number, fotoId: number): Promise<void> {
+  async excluirFoto(castingId: string, fotoId: number): Promise<void> {
     await api.delete(`/api/casting/castings/${castingId}/fotos/${fotoId}/`);
   },
 
   // Vídeos
-  async adicionarVideo(castingId: number, video: Omit<Video, 'id'>): Promise<Video> {
+  async adicionarVideo(castingId: string, video: Omit<Video, 'id'>): Promise<Video> {
     const response = await api.post<Video>(
       `/api/casting/castings/${castingId}/videos/`,
       video,
@@ -214,7 +213,7 @@ export const CastingService = {
     return response.data;
   },
 
-  async excluirVideo(castingId: number, videoId: number): Promise<void> {
+  async excluirVideo(castingId: string, videoId: number): Promise<void> {
     await api.delete(`/api/casting/castings/${castingId}/videos/${videoId}/`);
   },
 };
