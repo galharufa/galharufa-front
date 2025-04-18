@@ -180,20 +180,9 @@ export default function NovoCasting() {
         const categoriasData = await CastingService.getCategorias({ ordering: 'nome' });
         setCategorias(categoriasData.results || []);
 
-        // Quando tivermos o endpoint para obter funções, descomentar e usar abaixo:
-        // const funcoesData = await CastingService.getFuncoes();
-        // setFuncoes(funcoesData.results || []);
-
-        // Por enquanto, usamos dados mocados para funções
-        setFuncoes([
-          { id: '1', nome: 'Ator/Atriz' },
-          { id: '2', nome: 'Modelo' },
-          { id: '3', nome: 'Apresentador(a)' },
-          { id: '4', nome: 'Comediante' },
-          { id: '5', nome: 'Diretor(a)' },
-          { id: '6', nome: 'Dançarino(a)' },
-          { id: '7', nome: 'Músico' },
-        ]);
+        // Buscar funções da API
+        const funcoesData = await CastingService.getFuncoes({ ordering: 'nome' });
+        setFuncoes(funcoesData.results || []);
 
         setEsportes([
           { id: '1', nome: 'Futebol' },

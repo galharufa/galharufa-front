@@ -1,6 +1,12 @@
 // Serviços para gerenciamento de casting
 import api from './api';
 
+export interface Funcao {
+  id: string;
+  nome: string;
+  descricao?: string;
+}
+
 export interface Categoria {
   id: number;
   nome: string;
@@ -50,6 +56,24 @@ export interface PaginatedResponse<T> {
 }
 
 export const CastingService = {
+  // Funções
+  async getFuncoes(params?: {
+    search?: string;
+    ordering?: string;
+  }): Promise<PaginatedResponse<Funcao>> {
+    try {
+      const response = await api.get<PaginatedResponse<Funcao>>(
+        '/api/casting/funcoes/',
+        { params },
+      );
+      return response.data;
+    } catch {
+      // Tratamento de erro ao obter funções
+      // Retornar uma estrutura padrão vazia para evitar erros
+      return { count: 0, next: null, previous: null, results: [] };
+    }
+  },
+
   // Categorias
   async getCategorias(params?: {
     search?: string;
