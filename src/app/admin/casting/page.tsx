@@ -197,7 +197,7 @@ export default function CastingAdmin() {
   };
 
   // Função para excluir casting
-  const handleExcluirCasting = async (id: number) => {
+  const handleExcluirCasting = async (id: string) => {
     if (
       !confirm(
         'Tem certeza que deseja excluir este casting? Esta ação não pode ser desfeita.',
