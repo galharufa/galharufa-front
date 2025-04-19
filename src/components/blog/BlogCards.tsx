@@ -4,35 +4,35 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
-// import { FaUserTie, FaCamera, FaAd, FaGraduationCap } from 'react-icons/fa';
+import { BlogService, Post } from '@/services/blog.service';
 
 const blogPosts = [
   {
     title: 'Agenciamento Artístico na Prática',
     description:
       'Entenda como funciona o trabalho de um agente artístico e o impacto na carreira de um talento.',
-    image: '/images/blog/agenciamento-artistico.jpg',
+    image: '/images/placeholder-talent.jpg',
     slug: 'agenciamento-artistico-na-pratica',
   },
   {
     title: 'Dicas para Criar um Material Atrativo',
     description:
       'Saiba como produzir fotos e vídeos que realmente vendem sua imagem como ator ou atriz.',
-    image: '/images/blog/material-para-atores.jpg',
+    image: '/images/placeholder-talent.jpg',
     slug: 'dicas-material-para-atores',
   },
   {
     title: 'Marketing de Influência: Muito Além dos Números',
     description:
       'Como criar parcerias autênticas com marcas e se destacar como influenciador.',
-    image: '/images/blog/marketing-de-influencia.jpg',
+    image: '/images/placeholder-talent.jpg',
     slug: 'marketing-de-influencia-autenticidade',
   },
   {
     title: 'Por que Fazer Workshops com Frequência?',
     description:
       'Conheça os benefícios de manter-se sempre atualizado através de treinamentos e cursos.',
-    image: '/images/blog/workshops-e-treinamentos.jpg',
+    image: '/images/placeholder-talent.jpg',
     slug: 'importancia-dos-workshops',
   },
 ];
@@ -71,8 +71,8 @@ const BlogCards = () => {
                 src={post.image || '/images/placeholder-talent.jpg'}
                 alt={post.title}
                 fill
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                className="w-full h-48 object-cover rounded-t-lg"
+                sizes="(max-width: 420px) 100vw"
+                className="object-content rounded-t-lg"
               />
               <div className="p-6 text-center">
                 <h3 className="text-xl font-semibold mb-3 text-black dark:text-white">
@@ -97,13 +97,7 @@ const BlogCards = () => {
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.6 }}
           className="text-center mt-12"
-        >
-          <Link href="/blog">
-            <button className="btn-primary dark:bg-white dark:text-black dark:hover:bg-gray-200">
-              Ver Todas as Postagens
-            </button>
-          </Link>
-        </motion.div>
+        ></motion.div>
       </div>
     </section>
   );
