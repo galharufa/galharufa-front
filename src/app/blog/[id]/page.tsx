@@ -8,32 +8,22 @@ import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
 
-// Tipo para os castings
+type Tag = {
+  id: number;
+  nome: string;
+  slug: string;
+};
+
+// Tipo para os posts do Blog
 type Blog = {
   id: number;
-  name: string;
-  category: string[];
-  image: string;
-  age: number;
-  height: string;
-  specialties: string[];
-  featured: boolean;
-  bio?: string;
-  experience?: string[];
-  gallery?: string[];
-  social?: {
-    instagram?: string;
-    youtube?: string;
-    imdb?: string;
-  };
-  measurements?: {
-    bust?: string;
-    waist?: string;
-    hips?: string;
-    shoes?: string;
-    eyes?: string;
-    hair?: string;
-  };
+  titulo: string;
+  resumo: string;
+  data_publicacao: string;
+  imagem_destaque: string;
+  categoria_nome: string;
+  conteudo: string;
+  tags: Tag[];
 };
 
 // Dados simulados detalhados de castings
@@ -132,8 +122,8 @@ export default function BlogPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 z-10"></div>
         <div className="absolute inset-0">
           <Image
-            src={blog.image}
-            alt={blog.name}
+            src={blog.imagem_destaque}
+            alt={blog.titulo}
             fill
             className="object-cover object-center"
             priority

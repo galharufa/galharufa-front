@@ -132,7 +132,7 @@ const BlogCards = ({ filter }: BlogCardsProps) => {
                     layoutId={`post-${post.id}`}
                     className="group cursor-pointer"
                   >
-                    <Link href={`/cast/${post.id}`} passHref>
+                    <Link href={`/blog/${post.id}`} passHref>
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                         <Image
                           src={post.imagem_destaque || '/images/placeholder-talent.jpg'}
