@@ -1,23 +1,12 @@
-import React from 'react';
-import BlogHero from '@/components/blog/BlogHero';
+'use client';
 
+import { useState } from 'react';
+import BlogHero from '@/components/blog/BlogHero';
 import Script from 'next/script';
 import BlogCards from '@/components/blog/BlogCards';
 
-// Define um tipo básico para o metadata
-interface MetadataBase {
-  title?: string;
-  description?: string;
-  keywords?: string[];
-}
-
-export const metadata: MetadataBase = {
-  title: 'Blog',
-  description:
-    'Conheça a história, valores e equipe por trás da Galharufa, uma agência de talentos comprometida com a excelência e o desenvolvimento de artistas.',
-};
-
 export default function BlogPage() {
+  const [activeFilter, setActiveFilter] = useState('todos');
   return (
     <div className="bg-white dark:bg-gray-900">
       {/* Script para otimizar carregamento de CSS */}
@@ -35,7 +24,7 @@ export default function BlogPage() {
          `}
       </Script>
       <BlogHero />
-      <BlogCards />
+      <BlogCards filter={activeFilter} />
     </div>
   );
 }

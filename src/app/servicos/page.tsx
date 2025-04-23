@@ -1,24 +1,8 @@
 import React from 'react';
 import ServicesHero from '@/components/services/ServicesHero';
 import ServicesList from '@/components/services/ServicesList';
-// import ServicesFaq from '@/components/services/ServicesFaq';
 import CtaBanner from '@/components/shared/CtaBanner';
-// import Link from 'next/link';
-// import { FiArrowRight } from 'react-icons/fi';
 import Script from 'next/script';
-
-// Define um tipo básico para o metadata
-interface MetadataBase {
-  title?: string;
-  description?: string;
-  keywords?: string[];
-}
-
-export const metadata: MetadataBase = {
-  title: 'Serviços',
-  description:
-    'Conheça os serviços oferecidos pela Galharufa, desde agenciamento de talentos até produção de conteúdo e consultoria para projetos audiovisuais.',
-};
 
 export default function ServicesPage() {
   return (
