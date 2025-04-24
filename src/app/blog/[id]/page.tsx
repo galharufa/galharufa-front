@@ -1,4 +1,5 @@
-/* eslint-disable camelcase */
+/* eslint-disable no-console */
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -7,7 +8,7 @@ import Image from 'next/image';
 import { FaArrowLeft } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
-// import AnimatedImage from '@/components/shared/AnimatedImage';
+import { BlogService, PostResumido } from '@/services/blog.service';
 
 type Tag = {
   id: number;
@@ -16,7 +17,7 @@ type Tag = {
 };
 
 // Tipo para os posts do Blog
-type Blog = {
+type Posts = {
   id: number;
   titulo: string;
   resumo: string;
@@ -28,69 +29,79 @@ type Blog = {
 };
 
 // Dados simulados detalhados de castings
-const blogsData: Blog[] = [
-  {
-    id: 1,
-    titulo: 'Como o Rock Mudou Minha Vida',
-    resumo: 'Uma jornada pessoal por riffs, acordes e transformações internas.',
-    data_publicacao: '2025-04-20',
-    imagem_destaque: '/images/about-1.jpg',
-    categoria_nome: 'Música',
-    conteudo:
-      'Sempre fui apaixonado por música, mas foi no rock que encontrei minha voz. Neste artigo, compartilho como bandas como Led Zeppelin e Maestrick moldaram minha visão de mundo.',
-    tags: [
-      { id: 1, nome: 'rock', slug: 'rock' },
-      { id: 2, nome: 'música', slug: 'musica' },
-      { id: 3, nome: 'história pessoal', slug: 'historia-pessoal' },
-    ],
-  },
-  {
-    id: 2,
-    titulo: 'A Arte do Estúdio: Bastidores de uma Gravação',
-    resumo: 'O que acontece por trás das cortinas na produção de um álbum.',
-    data_publicacao: '2025-04-15',
-    imagem_destaque: '/images/about-2.jpg',
-    categoria_nome: 'Produção Musical',
-    conteudo:
-      'Do silêncio absoluto ao som final, cada passo da gravação de um disco é uma arte em si. Explore comigo o processo criativo e técnico que dá vida às músicas.',
-    tags: [
-      { id: 4, nome: 'estúdio', slug: 'estudio' },
-      { id: 5, nome: 'produção', slug: 'producao' },
-      { id: 2, nome: 'música', slug: 'musica' },
-    ],
-  },
-  {
-    id: 3,
-    titulo: '5 Dicas para Escrever Letras Impactantes',
-    resumo: 'A alma da música está na letra – aprenda a escrever com emoção.',
-    data_publicacao: '2025-04-10',
-    imagem_destaque: '/images/about-3.jpg',
-    categoria_nome: 'Composição',
-    conteudo:
-      'Escrever letras é traduzir sentimentos em palavras cantadas. Neste artigo, compartilho técnicas que me ajudaram a construir letras mais significativas e marcantes.',
-    tags: [
-      { id: 6, nome: 'composição', slug: 'composicao' },
-      { id: 7, nome: 'letras', slug: 'letras' },
-      { id: 3, nome: 'história pessoal', slug: 'historia-pessoal' },
-    ],
-  },
+const blogsData: Posts[] = [
+  // {
+  //   id: 1,
+  //   titulo: 'Como o Rock Mudou Minha Vida',
+  //   resumo: 'Uma jornada pessoal por riffs, acordes e transformações internas.',
+  //   data_publicacao: '2025-04-20',
+  //   imagem_destaque: '/images/about-1.jpg',
+  //   categoria_nome: 'Música',
+  //   conteudo:
+  //     'Sempre fui apaixonado por música, mas foi no rock que encontrei minha voz. Neste artigo, compartilho como bandas como Led Zeppelin e Maestrick moldaram minha visão de mundo.',
+  //   tags: [
+  //     { id: 1, nome: 'rock', slug: 'rock' },
+  //     { id: 2, nome: 'música', slug: 'musica' },
+  //     { id: 3, nome: 'história pessoal', slug: 'historia-pessoal' },
+  //   ],
+  // },
+  // {
+  //   id: 2,
+  //   titulo: 'A Arte do Estúdio: Bastidores de uma Gravação',
+  //   resumo: 'O que acontece por trás das cortinas na produção de um álbum.',
+  //   data_publicacao: '2025-04-15',
+  //   imagem_destaque: '/images/about-2.jpg',
+  //   categoria_nome: 'Produção Musical',
+  //   conteudo:
+  //     'Do silêncio absoluto ao som final, cada passo da gravação de um disco é uma arte em si. Explore comigo o processo criativo e técnico que dá vida às músicas.',
+  //   tags: [
+  //     { id: 4, nome: 'estúdio', slug: 'estudio' },
+  //     { id: 5, nome: 'produção', slug: 'producao' },
+  //     { id: 2, nome: 'música', slug: 'musica' },
+  //   ],
+  // },
+  // {
+  //   id: 3,
+  //   titulo: '5 Dicas para Escrever Letras Impactantes',
+  //   resumo: 'A alma da música está na letra – aprenda a escrever com emoção.',
+  //   data_publicacao: '2025-04-10',
+  //   imagem_destaque: '/images/about-3.jpg',
+  //   categoria_nome: 'Composição',
+  //   conteudo:
+  //     'Escrever letras é traduzir sentimentos em palavras cantadas. Neste artigo, compartilho técnicas que me ajudaram a construir letras mais significativas e marcantes.',
+  //   tags: [
+  //     { id: 6, nome: 'composição', slug: 'composicao' },
+  //     { id: 7, nome: 'letras', slug: 'letras' },
+  //     { id: 3, nome: 'história pessoal', slug: 'historia-pessoal' },
+  //   ],
+  // },
 ];
 // Outros castings seriam adicionados aqui
 
 export default function BlogPost() {
   const params = useParams();
   const router = useRouter();
-  const [blog, setBlog] = useState<Blog | null>(null);
+  const [post, setPost] = useState<Posts | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('sobre');
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
-    // Simulando busca de dados
+    const fetchPost = async () => {
+      try {
+        setLoading(true);
+        const response = await BlogService.getPost(Number(params.id));
+        setPost(response);
+        setApiError(false);
+      } catch (error) {
+        console.error('Erro ao carregar post: ', error);
+        setApiError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (params.id) {
-      const id = parseInt(params.id as string);
-      const foundBlock = blogsData.find((c) => c.id === id) || blogsData[0]; // Fallback para o primeiro casting se não encontrar
-      setBlog(foundBlock);
-      setLoading(false);
+      fetchPost();
     }
   }, [params.id]);
 
@@ -106,20 +117,20 @@ export default function BlogPost() {
     );
   }
 
-  if (!blog) {
+  if (!post || apiError) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex flex-col items-center justify-center p-4">
         <h1 className="text-3xl font-bold text-black dark:text-white mb-4">
           Post não encontrado
         </h1>
         <p className="text-gray-700 dark:text-gray-300 mb-8">
-          O casting que você está procurando não existe ou foi removido.
+          O post que você está procurando não existe ou foi removido.
         </p>
         <button
           onClick={handleGoBack}
           className="flex items-center gap-2 bg-black dark:bg-white text-white dark:text-black px-6 py-3 rounded-lg hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors"
         >
-          <FaArrowLeft /> Voltar para o Casting
+          <FaArrowLeft /> Voltar para o blog
         </button>
       </div>
     );
@@ -132,8 +143,8 @@ export default function BlogPost() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 z-10"></div>
         <div className="absolute inset-0">
           <Image
-            src={blog.imagem_destaque}
-            alt={blog.titulo}
+            src={post.imagem_destaque}
+            alt={post.titulo}
             fill
             className="object-cover object-center"
             priority
@@ -150,7 +161,7 @@ export default function BlogPost() {
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
           <div className="container mx-auto">
             <AnimatedText
-              text={blog.titulo}
+              text={post.titulo}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2"
               delay={0.2}
             />
@@ -159,7 +170,7 @@ export default function BlogPost() {
               delay={0.4}
               direction="up"
             >
-              {blog.tags.map((cat, index) => (
+              {post.tags.map((cat, index) => (
                 <span
                   key={index}
                   className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
@@ -175,8 +186,42 @@ export default function BlogPost() {
       {/* Conteúdo */}
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          {/* Coluna da esquerda - Informações básicas */}
-          <AnimatedSection className="lg:col-span-1" direction="right" delay={0.2}>
+          {/* Coluna da esquerda - Conteúdo principal */}
+          <AnimatedSection className="lg:col-span-2" direction="right" delay={0.4}>
+            {/* Tabs */}
+            <div className="border-b border-gray-200 dark:border-gray-800 mb-8">
+              <h1>{post.titulo}</h1>
+              {/* <Text fs="italic">{post.resumo}</Text> */}
+              {/* {blog.experience && blog.experience.length > 0 && (
+                  <button
+                    onClick={() => setActiveTab('experiencia')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
+                      activeTab === 'experiencia'
+                        ? 'border-black dark:border-white text-black dark:text-white'
+                        : 'border-transparent text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    Experiência
+                  </button>
+                )}
+
+                {blog.gallery && blog.gallery.length > 0 && (
+                  <button
+                    onClick={() => setActiveTab('galeria')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
+                      activeTab === 'galeria'
+                        ? 'border-black dark:border-white text-black dark:text-white'
+                        : 'border-transparent text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    Galeria
+                  </button>
+                )} */}
+            </div>
+          </AnimatedSection>
+
+          {/* Coluna da direita - Informações básicas */}
+          <AnimatedSection className="lg:col-span-1" direction="left" delay={0.2}>
             <div className="bg-gray-100 dark:bg-gray-900 rounded-lg p-6 sticky top-24">
               <h2 className="text-2xl font-semibold text-black dark:text-white mb-6">
                 Informações
@@ -333,51 +378,6 @@ export default function BlogPost() {
                   Contratar este casting
                 </button>
               </div>
-            </div>
-          </AnimatedSection>
-
-          {/* Coluna da direita - Conteúdo principal */}
-          <AnimatedSection className="lg:col-span-2" direction="left" delay={0.4}>
-            {/* Tabs */}
-            <div className="border-b border-gray-200 dark:border-gray-800 mb-8">
-              <nav className="flex space-x-8">
-                <button
-                  onClick={() => setActiveTab('sobre')}
-                  className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
-                    activeTab === 'sobre'
-                      ? 'border-black dark:border-white text-black dark:text-white'
-                      : 'border-transparent text-gray-500 dark:text-gray-400'
-                  }`}
-                >
-                  Sobre
-                </button>
-
-                {/* {blog.experience && blog.experience.length > 0 && (
-                  <button
-                    onClick={() => setActiveTab('experiencia')}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
-                      activeTab === 'experiencia'
-                        ? 'border-black dark:border-white text-black dark:text-white'
-                        : 'border-transparent text-gray-500 dark:text-gray-400'
-                    }`}
-                  >
-                    Experiência
-                  </button>
-                )}
-
-                {blog.gallery && blog.gallery.length > 0 && (
-                  <button
-                    onClick={() => setActiveTab('galeria')}
-                    className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
-                      activeTab === 'galeria'
-                        ? 'border-black dark:border-white text-black dark:text-white'
-                        : 'border-transparent text-gray-500 dark:text-gray-400'
-                    }`}
-                  >
-                    Galeria
-                  </button>
-                )} */}
-              </nav>
             </div>
           </AnimatedSection>
         </div>

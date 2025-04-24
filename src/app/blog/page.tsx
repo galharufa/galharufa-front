@@ -2,8 +2,8 @@
 
 import { useState } from 'react';
 import BlogHero from '@/components/blog/BlogHero';
-import Script from 'next/script';
 import BlogCards from '@/components/blog/BlogCards';
+import Script from 'next/script';
 
 export default function BlogPage() {
   const [activeFilter, setActiveFilter] = useState('todos');
