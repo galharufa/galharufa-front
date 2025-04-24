@@ -151,7 +151,8 @@ export default function BlogPost() {
             {/* Resumo e Data */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <div className="order-1">
-                <small>{post.resumo}</small>
+                {/* Espaço em branco para criar coluna vazia e alinhar data a direita */}
+                <small></small>
               </div>
               <div className="order-2 text-right text-sm text-gray-500">
                 {formatarData(post.data_publicacao)}
@@ -185,16 +186,14 @@ export default function BlogPost() {
                 </div>
 
                 <div>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Resumo:</h3>
+                  <p className="flex flex-wrap gap-2 mt-1">{post.resumo}</p>
+
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Autor:</h3>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    <p>{post.autor_nome}</p>
-                  </div>
-                </div>
-                <div>
+                  <p className="flex flex-wrap gap-2 mt-1">{post.autor_nome}</p>
+
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Categoria:</h3>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    <p>{post.categoria_nome}</p>
-                  </div>
+                  <p className="flex flex-wrap gap-2 mt-1">{post.categoria_nome}</p>
                 </div>
               </div>
 
