@@ -108,7 +108,7 @@ const Navbar = () => {
                 key={link.href}
                 href={link.href}
                 className={`hover-link ${getTextColor()} ${
-                  pathname === link.href ? 'font-bold' : 'font-light'
+                  pathname.startsWith(link.href) ? 'font-bold' : 'font-light'
                 } ${!scrolled && pathname === '/' ? 'hover-link-light' : ''}`}
               >
                 {link.label}
