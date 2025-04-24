@@ -6,7 +6,7 @@ import BlogCards from '@/components/blog/BlogCards';
 import Script from 'next/script';
 
 export default function BlogPage() {
-  const [activeFilter, setActiveFilter] = useState('todos');
+  const [activeFilter] = useState('todos');
   return (
     <div className="bg-white dark:bg-gray-900">
       {/* Script para otimizar carregamento de CSS */}

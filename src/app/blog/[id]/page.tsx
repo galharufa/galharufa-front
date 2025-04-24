@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { FaArrowLeft } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
-import { BlogService, PostResumido } from '@/services/blog.service';
+import { BlogService } from '@/services/blog.service';
 
 type Tag = {
   id: number;
@@ -28,54 +28,6 @@ type Posts = {
   tags: Tag[];
 };
 
-// Dados simulados detalhados de castings
-const blogsData: Posts[] = [
-  // {
-  //   id: 1,
-  //   titulo: 'Como o Rock Mudou Minha Vida',
-  //   resumo: 'Uma jornada pessoal por riffs, acordes e transformações internas.',
-  //   data_publicacao: '2025-04-20',
-  //   imagem_destaque: '/images/about-1.jpg',
-  //   categoria_nome: 'Música',
-  //   conteudo:
-  //     'Sempre fui apaixonado por música, mas foi no rock que encontrei minha voz. Neste artigo, compartilho como bandas como Led Zeppelin e Maestrick moldaram minha visão de mundo.',
-  //   tags: [
-  //     { id: 1, nome: 'rock', slug: 'rock' },
-  //     { id: 2, nome: 'música', slug: 'musica' },
-  //     { id: 3, nome: 'história pessoal', slug: 'historia-pessoal' },
-  //   ],
-  // },
-  // {
-  //   id: 2,
-  //   titulo: 'A Arte do Estúdio: Bastidores de uma Gravação',
-  //   resumo: 'O que acontece por trás das cortinas na produção de um álbum.',
-  //   data_publicacao: '2025-04-15',
-  //   imagem_destaque: '/images/about-2.jpg',
-  //   categoria_nome: 'Produção Musical',
-  //   conteudo:
-  //     'Do silêncio absoluto ao som final, cada passo da gravação de um disco é uma arte em si. Explore comigo o processo criativo e técnico que dá vida às músicas.',
-  //   tags: [
-  //     { id: 4, nome: 'estúdio', slug: 'estudio' },
-  //     { id: 5, nome: 'produção', slug: 'producao' },
-  //     { id: 2, nome: 'música', slug: 'musica' },
-  //   ],
-  // },
-  // {
-  //   id: 3,
-  //   titulo: '5 Dicas para Escrever Letras Impactantes',
-  //   resumo: 'A alma da música está na letra – aprenda a escrever com emoção.',
-  //   data_publicacao: '2025-04-10',
-  //   imagem_destaque: '/images/about-3.jpg',
-  //   categoria_nome: 'Composição',
-  //   conteudo:
-  //     'Escrever letras é traduzir sentimentos em palavras cantadas. Neste artigo, compartilho técnicas que me ajudaram a construir letras mais significativas e marcantes.',
-  //   tags: [
-  //     { id: 6, nome: 'composição', slug: 'composicao' },
-  //     { id: 7, nome: 'letras', slug: 'letras' },
-  //     { id: 3, nome: 'história pessoal', slug: 'historia-pessoal' },
-  //   ],
-  // },
-];
 // Outros castings seriam adicionados aqui
 
 export default function BlogPost() {
