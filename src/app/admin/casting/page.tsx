@@ -419,7 +419,7 @@ export default function CastingAdmin() {
                             <Group spacing={8}>
                               <ActionIcon
                                 color="blue"
-                                onClick={() => handleEditarCasting(casting.id)}
+                                onClick={() => handleEditarCasting(Number(casting.id))}
                               >
                                 <IconEdit size={18} />
                               </ActionIcon>
