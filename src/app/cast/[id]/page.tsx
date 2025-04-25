@@ -1,85 +1,14 @@
 /* eslint-disable no-console */
-
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaArrowLeft, FaInstagram, FaYoutube, FaImdb } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa'; //FaInstagram, FaYoutube, FaImdb
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-// import CtaBanner from '@/components/shared/CtaBanner';
 import { CastingDetalhado, CastingService } from '@/services';
-
-// Tipo para os castings
-type Casting = {
-  id: number;
-  name: string;
-  category: string[];
-  image: string;
-  age: number;
-  height: string;
-  specialties: string[];
-  featured: boolean;
-  bio?: string;
-  experience?: string[];
-  gallery?: string[];
-  social?: {
-    instagram?: string;
-    youtube?: string;
-    imdb?: string;
-  };
-  measurements?: {
-    bust?: string;
-    waist?: string;
-    hips?: string;
-    shoes?: string;
-    eyes?: string;
-    hair?: string;
-  };
-};
-
-// Dados simulados detalhados de castings
-// const castingsData: Casting[] = [
-//   {
-//     id: 1,
-//     name: 'Ana Silva',
-//     category: ['atrizes', 'modelos'],
-//     image: '/images/talent-1.jpg',
-//     age: 28,
-//     height: '1.75m',
-//     specialties: ['Drama', 'Comerciais', 'Passarela'],
-//     featured: true,
-//     bio: 'Ana Silva é uma atriz e modelo versátil com experiência em produções nacionais e internacionais. Formada em artes cênicas pela Escola de Arte Dramática da USP, ela tem se destacado em papéis dramáticos e trabalhos publicitários.',
-//     experience: [
-//       'Novela "Amor Eterno" - Papel: Júlia (2022)',
-//       'Filme "Além do Horizonte" - Papel: Mariana (2021)',
-//       'Campanha Renault - Protagonista (2020)',
-//       'Desfile São Paulo Fashion Week - Marca: Osklen (2019)',
-//     ],
-//     gallery: [
-//       '/images/talent-1-gallery-1.jpg',
-//       '/images/talent-1-gallery-2.jpg',
-//       '/images/talent-1-gallery-3.jpg',
-//       '/images/talent-1-gallery-4.jpg',
-//     ],
-//     social: {
-//       instagram: 'https://instagram.com/anasilva',
-//       youtube: 'https://youtube.com/anasilva',
-//       imdb: 'https://imdb.com/name/anasilva',
-//     },
-//     measurements: {
-//       bust: '86cm',
-//       waist: '62cm',
-//       hips: '90cm',
-//       shoes: '37',
-//       eyes: 'Castanhos',
-//       hair: 'Castanho escuro',
-//     },
-//   },
-//   // Outros castings seriam adicionados aqui
-// ];
 
 export default function CastingPage() {
   const params = useParams();
@@ -88,9 +17,17 @@ export default function CastingPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
   const [apiError, setApiError] = useState(false);
+  // const categoriasMap: Record<string, string> = {
+  //   'e3977243-fd7e-4253-8246-eb0fb14256ea': 'Ator Exclusivo',
+  //   '58c73f56-df4c-4f41-86b7-89d234654c7c': 'Ator Mirim',
+  //   '7824be46-59c2-4035-b6fb-fb700a594868': 'Ator Não Exclusivo',
+  //   '0005742c-6fe3-45ec-b830-b5a5df55c3be': 'Criativos',
+  //   '0c59e94a-6ba0-4ac3-9b21-61436e33ae50': 'Desenvolvedor',
+  //   'd42b2a71-fde9-4521-ae80-283a076a99e0': 'Digital',
+  //   '032d43bb-4f87-4b5e-8079-6d71cfbd42fb': 'Talentos',
+  // };
 
   useEffect(() => {
-    // Simulando busca de dados
     const fetchCasts = async () => {
       try {
         setLoading(true);
@@ -122,7 +59,7 @@ export default function CastingPage() {
     );
   }
 
-  if (!casting) {
+  if (!casting || apiError) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex flex-col items-center justify-center p-4">
         <h1 className="text-3xl font-bold text-black dark:text-white mb-4">
@@ -167,30 +104,9 @@ export default function CastingPage() {
               delay={0.4}
               direction="up"
             >
-              {casting.categoria.map((cat, index) => (
-                <span
-                  key={index}
-                  className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
-                >
-                  {cat === 'atores'
-                    ? 'Ator'
-                    : cat === 'atrizes'
-                      ? 'Atriz'
-                      : cat === 'modelos'
-                        ? 'Modelo'
-                        : cat === 'influenciadores'
-                          ? 'Influenciador'
-                          : cat === 'apresentadores'
-                            ? 'Apresentador'
-                            : cat === 'infantil'
-                              ? 'Infantil'
-                              : cat === 'plus-size'
-                                ? 'Plus Size'
-                                : cat === 'terceira-idade'
-                                  ? 'Terceira Idade'
-                                  : cat}
-                </span>
-              ))}
+              <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                {casting.categoria_nome}
+              </span>
             </AnimatedSection>
           </div>
         </div>
@@ -216,7 +132,7 @@ export default function CastingPage() {
 
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
-                  <p className="text-black dark:text-white">{casting.height}</p>
+                  <p className="text-black dark:text-white">{casting.altura}</p>
                 </div>
 
                 {/* {casting.measurements && (
@@ -305,7 +221,7 @@ export default function CastingPage() {
                   </div>
                 </div>
 
-                {casting.social && (
+                {/* {casting.social && (
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                       Redes Sociais
@@ -348,14 +264,14 @@ export default function CastingPage() {
                       )}
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="mt-8">
                 <button
-                  onClick={() =>
-                    (window.location.href = '/contato?casting=' + casting.name)
-                  }
+                  // onClick={() =>
+                  //   (window.location.href = '/contato?casting=' + casting.name)
+                  // }
                   className="btn-primary w-full"
                 >
                   Contratar este casting
@@ -380,7 +296,7 @@ export default function CastingPage() {
                   Sobre
                 </button>
 
-                {casting.experience && casting.experience.length > 0 && (
+                {casting.experiencia && casting.experiencia.length > 0 && (
                   <button
                     onClick={() => setActiveTab('experiencia')}
                     className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
@@ -393,7 +309,7 @@ export default function CastingPage() {
                   </button>
                 )}
 
-                {casting.gallery && casting.gallery.length > 0 && (
+                {casting.fotos && casting.fotos.length > 0 && (
                   <button
                     onClick={() => setActiveTab('galeria')}
                     className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
@@ -411,61 +327,56 @@ export default function CastingPage() {
             {/* Conteúdo das tabs */}
             <div className="min-h-[400px]">
               {/* Sobre */}
-              {activeTab === 'sobre' && casting.bio && (
+              {activeTab === 'sobre' && casting.biografia && (
                 <AnimatedSection direction="up" delay={0.2}>
                   <h2 className="heading-tertiary text-black dark:text-white">
                     Biografia
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
-                    {casting.bio}
+                    {casting.biografia}
                   </p>
                 </AnimatedSection>
               )}
 
               {/* Experiência */}
               {activeTab === 'experiencia' &&
-                casting.experience &&
-                casting.experience.length > 0 && (
+                casting.experiencia &&
+                casting.experiencia.length > 0 && (
                   <AnimatedSection direction="up" delay={0.2}>
                     <h2 className="heading-tertiary text-black dark:text-white">
                       Experiência Profissional
                     </h2>
                     <ul className="space-y-4 mt-4">
-                      {casting.experience.map((exp: string, index: number) => (
-                        <li
-                          key={index}
-                          className="border-l-2 border-gray-300 dark:border-gray-700 pl-4 py-1"
-                        >
-                          <p className="text-gray-700 dark:text-gray-300">{exp}</p>
-                        </li>
-                      ))}
+                      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                        {casting.experiencia}
+                      </p>
                     </ul>
                   </AnimatedSection>
                 )}
 
               {/* Galeria */}
-              {activeTab === 'galeria' &&
-                casting.gallery &&
-                casting.gallery.length > 0 && (
-                  <AnimatedSection direction="up" delay={0.2}>
-                    <h2 className="heading-tertiary text-black dark:text-white">
-                      Galeria de Fotos
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                      {casting.gallery.map((image: string, index: number) => (
-                        <AnimatedImage
-                          key={index}
-                          src={image}
-                          alt={`${casting.name} - Imagem ${index + 1}`}
-                          width={600}
-                          height={800}
-                          className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
-                          delay={index * 0.1}
-                        />
-                      ))}
-                    </div>
-                  </AnimatedSection>
-                )}
+              {activeTab === 'galeria' && casting.fotos && casting.fotos.length > 0 && (
+                <AnimatedSection direction="up" delay={0.2}>
+                  <h2 className="heading-tertiary text-black dark:text-white">
+                    Galeria de Fotos
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {casting.fotos.map((foto, index) => (
+                      <AnimatedImage
+                        key={foto.id}
+                        src={foto.imagem}
+                        alt={
+                          foto.legenda || `${casting.nome_artistico} - Foto ${index + 1}`
+                        }
+                        width={600}
+                        height={800}
+                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
+                        delay={index * 0.1}
+                      />
+                    ))}
+                  </div>
+                </AnimatedSection>
+              )}
             </div>
           </AnimatedSection>
         </div>

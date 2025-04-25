@@ -226,11 +226,11 @@ export default function EditarCasting() {
       }
 
       // Atualizar o casting
-      await CastingService.atualizarCasting(casting.id, formData);
+      await CastingService.atualizarCasting(String(casting.id), formData);
 
       // Excluir fotos marcadas para exclusão
       const excluirFotosPromises = fotosParaExcluir.map((id) =>
-        CastingService.excluirFoto(casting.id, id),
+        CastingService.excluirFoto(String(casting.id), id),
       );
 
       await Promise.all(excluirFotosPromises);
@@ -244,14 +244,14 @@ export default function EditarCasting() {
         fotoFormData.append('legenda', legendasFotos[index] || '');
         fotoFormData.append('ordem', (fotosExistentes.length + index).toString());
 
-        return CastingService.adicionarFoto(casting.id, fotoFormData);
+        return CastingService.adicionarFoto(String(casting.id), fotoFormData);
       });
 
       await Promise.all(uploadFotosPromises.filter(Boolean));
 
       // Excluir vídeos marcados para exclusão
       const excluirVideosPromises = videosParaExcluir.map((id) =>
-        CastingService.excluirVideo(casting.id, id),
+        CastingService.excluirVideo(String(casting.id), id),
       );
 
       await Promise.all(excluirVideosPromises);

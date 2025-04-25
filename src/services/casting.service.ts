@@ -16,7 +16,7 @@ export interface Categoria {
 export interface CastingResumido {
   id: string;
   nome: string;
-  categoria: number;
+  categoria: string[];
   categoria_nome: string;
   foto_principal: string;
   ativo: boolean;
@@ -37,11 +37,21 @@ export interface Video {
 }
 
 export interface CastingDetalhado extends CastingResumido {
-  data_nascimento: string;
+  nome_artistico: string;
+  tipo: string;
+  genero: string;
+  nacionalidade: string | null;
+  etnia: string | null;
   altura: string;
   peso: string;
-  biografia: string;
-  experiencia: string;
+  olhos: string | null;
+  cor_cabelo: string | null;
+  canta_profissionalmente: boolean;
+  danca_profissionalmente: boolean;
+  autoriza_imagem_site: boolean;
+  data_nascimento: string;
+  biografia?: string;
+  experiencia?: string;
   data_cadastro: string;
   data_atualizacao: string;
   fotos: Foto[];
