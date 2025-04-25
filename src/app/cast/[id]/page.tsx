@@ -96,7 +96,7 @@ export default function CastingPage() {
           <div className="container mx-auto">
             <AnimatedText
               text={casting.nome}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2"
               delay={0.2}
             />
             <AnimatedSection

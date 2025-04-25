@@ -223,6 +223,7 @@ export default function NovoCasting() {
           { id: '6', nome: 'Bossa Nova' },
           { id: '7', nome: 'Funk' },
           { id: '8', nome: 'Sertanejo' },
+          { id: '9', nome: 'Metal' },
         ]);
 
         setEstilosDanca([
@@ -327,7 +328,7 @@ export default function NovoCasting() {
       if (values.foto_principal) {
         try {
           const compressedImage = await compressImage(values.foto_principal, {
-            maxSizeMB: 0.8, // 800KB
+            maxSizeMB: 0.8, // 1200KB
             maxWidthOrHeight: 1280,
           });
           values.foto_principal = compressedImage;
@@ -343,7 +344,7 @@ export default function NovoCasting() {
         if (compressedFotos[i]) {
           try {
             compressedFotos[i] = await compressImage(compressedFotos[i] as File, {
-              maxSizeMB: 0.8, // 800KB
+              maxSizeMB: 0.8, // 1000kb
               maxWidthOrHeight: 1280,
             });
           } catch (compressionError) {
@@ -614,7 +615,8 @@ export default function NovoCasting() {
 
                   <TextInput
                     label="Nome Artístico"
-                    placeholder="Nome artístico (opcional)"
+                    placeholder="Nome artístico"
+                    required
                     {...form.getInputProps('nome_artistico')}
                     mb="md"
                   />
@@ -645,8 +647,8 @@ export default function NovoCasting() {
                 </SimpleGrid>
 
                 <MultiSelect
-                  label="Funções"
-                  placeholder="Selecione uma ou mais funções"
+                  label="Habilidades"
+                  placeholder="Selecione uma ou mais habilidades"
                   data={funcoes.map((funcao) => ({
                     value: funcao.id.toString(),
                     label: funcao.nome,
@@ -671,16 +673,26 @@ export default function NovoCasting() {
                   />
                 </SimpleGrid>
 
-                <TextInput
+                {/* <TextInput
                   label="Etnia"
                   placeholder="Etnia"
                   {...form.getInputProps('etnia')}
                   mb="md"
+                /> */}
+                <Select
+                  label="Etnia"
+                  placeholder="Selecione a etnia"
+                  data={[
+                    { value: 'masculino', label: 'Masculino' },
+                    { value: 'feminino', label: 'Feminino' },
+                    { value: 'nao_binario', label: 'Não-binário' },
+                  ]}
+                  {...form.getInputProps('etnia')}
                 />
 
                 <FileInput
                   label="Foto Principal"
-                  description="Selecione uma imagem para a foto principal (formatos: JPG, PNG, WebP)"
+                  description="Selecione uma imagem para a foto principal - formato landscape(formatos: JPG, PNG, WebP)"
                   accept="image/png,image/jpeg,image/webp"
                   icon={<IconUpload size={14} />}
                   {...form.getInputProps('foto_principal')}
@@ -782,7 +794,6 @@ export default function NovoCasting() {
                       { value: 'mel', label: 'Mel' },
                       { value: 'cinza', label: 'Cinza' },
                       { value: 'castanho_esverdeado', label: 'Castanho Esverdeado' },
-                      { value: 'outro', label: 'Outro' },
                     ]}
                     {...form.getInputProps('olhos')}
                   />
@@ -795,6 +806,7 @@ export default function NovoCasting() {
                       { value: 'ondulado', label: 'Ondulado' },
                       { value: 'cacheado', label: 'Cacheado' },
                       { value: 'crespo', label: 'Crespo' },
+                      { value: 'careca', label: 'Careca' },
                       { value: 'outro', label: 'Outro' },
                     ]}
                     {...form.getInputProps('tipo_cabelo')}
@@ -808,6 +820,7 @@ export default function NovoCasting() {
                       { value: 'castanho_escuro', label: 'Castanho Escuro' },
                       { value: 'castanho_claro', label: 'Castanho Claro' },
                       { value: 'loiro', label: 'Loiro' },
+                      { value: 'loiro_escuro', label: 'Loiro Escuro' },
                       { value: 'ruivo', label: 'Ruivo' },
                       { value: 'grisalho', label: 'Grisalho' },
                       { value: 'branco', label: 'Branco' },
@@ -1246,9 +1259,12 @@ export default function NovoCasting() {
                     { value: 'espanhol', label: 'Espanhol' },
                     { value: 'frances', label: 'Francês' },
                     { value: 'alemao', label: 'Alemão' },
-                    { value: 'italiano', label: 'Italiano' },
-                    { value: 'japones', label: 'Japonês' },
                     { value: 'mandarim', label: 'Mandarim' },
+                    { value: 'japones', label: 'Japonês' },
+                    { value: 'italiano', label: 'Italiano' },
+                    { value: 'russo', label: 'Russo' },
+                    { value: 'arabe', label: 'Arábe' },
+                    { value: 'hungaro', label: 'Hungaro' },
                     { value: 'outros', label: 'Outros' },
                   ]}
                   {...form.getInputProps('idiomas')}
