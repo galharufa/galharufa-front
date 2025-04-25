@@ -65,7 +65,7 @@ const Partners = () => {
           className="text-center mb-12"
         >
           <h2 className="heading-secondary text-black dark:text-white">
-            Nossos Parceiros
+            Nossos Clientes
           </h2>
           <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
             Trabalhamos com as principais empresas e produtoras do mercado audiovisual,

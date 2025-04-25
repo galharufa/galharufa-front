@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -7,7 +9,8 @@ import { FaArrowLeft, FaInstagram, FaYoutube, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import CtaBanner from '@/components/shared/CtaBanner';
+// import CtaBanner from '@/components/shared/CtaBanner';
+import { CastingDetalhado, CastingService } from '@/services';
 
 // Tipo para os castings
 type Casting = {
@@ -38,60 +41,72 @@ type Casting = {
 };
 
 // Dados simulados detalhados de castings
-const castingsData: Casting[] = [
-  {
-    id: 1,
-    name: 'Ana Silva',
-    category: ['atrizes', 'modelos'],
-    image: '/images/talent-1.jpg',
-    age: 28,
-    height: '1.75m',
-    specialties: ['Drama', 'Comerciais', 'Passarela'],
-    featured: true,
-    bio: 'Ana Silva é uma atriz e modelo versátil com experiência em produções nacionais e internacionais. Formada em artes cênicas pela Escola de Arte Dramática da USP, ela tem se destacado em papéis dramáticos e trabalhos publicitários.',
-    experience: [
-      'Novela "Amor Eterno" - Papel: Júlia (2022)',
-      'Filme "Além do Horizonte" - Papel: Mariana (2021)',
-      'Campanha Renault - Protagonista (2020)',
-      'Desfile São Paulo Fashion Week - Marca: Osklen (2019)',
-    ],
-    gallery: [
-      '/images/talent-1-gallery-1.jpg',
-      '/images/talent-1-gallery-2.jpg',
-      '/images/talent-1-gallery-3.jpg',
-      '/images/talent-1-gallery-4.jpg',
-    ],
-    social: {
-      instagram: 'https://instagram.com/anasilva',
-      youtube: 'https://youtube.com/anasilva',
-      imdb: 'https://imdb.com/name/anasilva',
-    },
-    measurements: {
-      bust: '86cm',
-      waist: '62cm',
-      hips: '90cm',
-      shoes: '37',
-      eyes: 'Castanhos',
-      hair: 'Castanho escuro',
-    },
-  },
-  // Outros castings seriam adicionados aqui
-];
+// const castingsData: Casting[] = [
+//   {
+//     id: 1,
+//     name: 'Ana Silva',
+//     category: ['atrizes', 'modelos'],
+//     image: '/images/talent-1.jpg',
+//     age: 28,
+//     height: '1.75m',
+//     specialties: ['Drama', 'Comerciais', 'Passarela'],
+//     featured: true,
+//     bio: 'Ana Silva é uma atriz e modelo versátil com experiência em produções nacionais e internacionais. Formada em artes cênicas pela Escola de Arte Dramática da USP, ela tem se destacado em papéis dramáticos e trabalhos publicitários.',
+//     experience: [
+//       'Novela "Amor Eterno" - Papel: Júlia (2022)',
+//       'Filme "Além do Horizonte" - Papel: Mariana (2021)',
+//       'Campanha Renault - Protagonista (2020)',
+//       'Desfile São Paulo Fashion Week - Marca: Osklen (2019)',
+//     ],
+//     gallery: [
+//       '/images/talent-1-gallery-1.jpg',
+//       '/images/talent-1-gallery-2.jpg',
+//       '/images/talent-1-gallery-3.jpg',
+//       '/images/talent-1-gallery-4.jpg',
+//     ],
+//     social: {
+//       instagram: 'https://instagram.com/anasilva',
+//       youtube: 'https://youtube.com/anasilva',
+//       imdb: 'https://imdb.com/name/anasilva',
+//     },
+//     measurements: {
+//       bust: '86cm',
+//       waist: '62cm',
+//       hips: '90cm',
+//       shoes: '37',
+//       eyes: 'Castanhos',
+//       hair: 'Castanho escuro',
+//     },
+//   },
+//   // Outros castings seriam adicionados aqui
+// ];
 
 export default function CastingPage() {
   const params = useParams();
   const router = useRouter();
-  const [casting, setCasting] = useState<Casting | null>(null);
+  const [casting, setCasting] = useState<CastingDetalhado | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     // Simulando busca de dados
-    if (params.id) {
-      const id = parseInt(params.id as string);
-      const foundCasting = castingsData.find((c) => c.id === id) || castingsData[0]; // Fallback para o primeiro casting se não encontrar
-      setCasting(foundCasting);
-      setLoading(false);
+    const fetchCasts = async () => {
+      try {
+        setLoading(true);
+        const response = await CastingService.getCasting(String(params.id));
+        setCasting(response);
+        setApiError(false);
+      } catch (error) {
+        console.error('Erro ao carregar o casting: ', error);
+        setApiError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (String(params.id)) {
+      fetchCasts();
     }
   }, [params.id]);
 
@@ -133,25 +148,17 @@ export default function CastingPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 z-10"></div>
         <div className="absolute inset-0">
           <Image
-            src={casting.image}
-            alt={casting.name}
+            src={casting.foto_principal}
+            alt={casting.nome}
             fill
             className="object-cover object-center"
             priority
           />
         </div>
-        <div className="absolute top-8 left-8 z-20">
-          <button
-            onClick={handleGoBack}
-            className="flex items-center gap-2 bg-black/50 hover:bg-black text-white px-4 py-2 rounded-full transition-colors"
-          >
-            <FaArrowLeft /> Voltar
-          </button>
-        </div>
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
           <div className="container mx-auto">
             <AnimatedText
-              text={casting.name}
+              text={casting.nome}
               className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2"
               delay={0.2}
             />
@@ -160,7 +167,7 @@ export default function CastingPage() {
               delay={0.4}
               direction="up"
             >
-              {casting.category.map((cat, index) => (
+              {casting.categoria.map((cat, index) => (
                 <span
                   key={index}
                   className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
@@ -202,7 +209,9 @@ export default function CastingPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Idade</h3>
-                  <p className="text-black dark:text-white">{casting.age} anos</p>
+                  <p className="text-black dark:text-white">
+                    {casting.data_nascimento} anos
+                  </p>
                 </div>
 
                 <div>
@@ -210,7 +219,7 @@ export default function CastingPage() {
                   <p className="text-black dark:text-white">{casting.height}</p>
                 </div>
 
-                {casting.measurements && (
+                {/* {casting.measurements && (
                   <>
                     {casting.measurements.bust && (
                       <div>
@@ -278,21 +287,21 @@ export default function CastingPage() {
                       </div>
                     )}
                   </>
-                )}
+                )} */}
 
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Especialidades
                   </h3>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {casting.specialties.map((specialty: string, index: number) => (
+                    {/* {casting.specialties.map((specialty: string, index: number) => (
                       <span
                         key={index}
                         className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded text-xs"
                       >
                         {specialty}
                       </span>
-                    ))}
+                    ))} */}
                   </div>
                 </div>
 
@@ -463,13 +472,13 @@ export default function CastingPage() {
       </div>
 
       {/* CTA Banner */}
-      <CtaBanner
+      {/* <CtaBanner
         title="Procurando castings para seu projeto?"
         description="Entre em contato conosco para encontrar o casting ideal para sua produção."
         buttonText="Fale Conosco"
         buttonLink="/contato"
         bgColor="black"
-      />
+      /> */}
     </div>
   );
 }
