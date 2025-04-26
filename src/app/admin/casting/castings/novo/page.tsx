@@ -33,7 +33,7 @@ import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import { notifications } from '@mantine/notifications';
-import { corCabelo, errorToast, genderData, successToast } from '@/utils';
+import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 import {
   etny,
@@ -66,6 +66,13 @@ import {
   IconWorld,
   IconMap,
 } from '@tabler/icons-react';
+
+const habilidadesData = [
+  ...(habilidades || []),
+  ...(modalidadesCircenses || []),
+  ...(esportes || []),
+  ...(instrumentos || []),
+];
 
 export default function NovoCasting() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -189,8 +196,9 @@ export default function NovoCasting() {
         setCategorias(categoriasData.results || []);
 
         // Buscar funções da API
-        const habilidadesData = await CastingService.getHabilidades({ ordering: 'nome' });
-        setHabilidades(habilidadesData.results || []);
+        // const habilidadesData = await CastingService.getHabilidades({ ordering: 'nome' });
+        // setHabilidades(habilidadesData.results || []);
+        // setHabilidades([modalidadesCircenses, instrumentos, habilidades, esportes]);
 
         setPlataformasBusca([
           { id: '1', nome: 'Casting.com' },
@@ -598,11 +606,10 @@ export default function NovoCasting() {
 
                 <MultiSelect
                   label="Habilidades"
+                  searchable
+                  clearable
                   placeholder="Selecione uma ou mais habilidades"
-                  data={habilidades.map((habilidade) => ({
-                    value: habilidade.value.toString(),
-                    label: habilidade.nome,
-                  }))}
+                  data={habilidadesData}
                   {...form.getInputProps('habilidades')}
                 />
 
