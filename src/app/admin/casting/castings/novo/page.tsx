@@ -33,8 +33,17 @@ import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import { notifications } from '@mantine/notifications';
-import { errorToast, successToast } from '@/utils';
+import { corCabelo, errorToast, genderData, successToast } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
+import {
+  etny,
+  instrumentos,
+  esportes,
+  nationality,
+  modalidadesCircenses,
+  estados,
+} from '@/utils/index';
+
 import {
   IconUpload,
   IconPlus,
@@ -66,12 +75,10 @@ export default function NovoCasting() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [funcoes, setFuncoes] = useState<any[]>([]);
+  const [habilidades, setHabilidades] = useState<any[]>([]);
   const [esportes, setEsportes] = useState<any[]>([]);
   const [modalidadesCircenses, setModalidadesCircenses] = useState<any[]>([]);
   const [instrumentos, setInstrumentos] = useState<any[]>([]);
-  const [ritmosMusicais, setRitmosMusicais] = useState<any[]>([]);
-  const [estilosDanca, setEstilosDanca] = useState<any[]>([]);
   const [plataformasBusca, setPlataformasBusca] = useState<any[]>([]);
 
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
@@ -87,7 +94,7 @@ export default function NovoCasting() {
       nome_artistico: '',
       genero: 'masculino',
       categoria: '',
-      funcoes: [] as string[],
+      habilidades: [],
       natural_de: '',
       nacionalidade: 'Brasileira',
       etnia: '',
@@ -182,59 +189,8 @@ export default function NovoCasting() {
         setCategorias(categoriasData.results || []);
 
         // Buscar funções da API
-        const funcoesData = await CastingService.getFuncoes({ ordering: 'nome' });
-        setFuncoes(funcoesData.results || []);
-
-        setEsportes([
-          { id: '1', nome: 'Futebol' },
-          { id: '2', nome: 'Natação' },
-          { id: '3', nome: 'Vôlei' },
-          { id: '4', nome: 'Basquete' },
-          { id: '5', nome: 'Jiu-Jitsu' },
-          { id: '6', nome: 'Capoeira' },
-          { id: '7', nome: 'Boxe' },
-          { id: '8', nome: 'Tênis' },
-        ]);
-
-        setModalidadesCircenses([
-          { id: '1', nome: 'Acrobacia Aérea' },
-          { id: '2', nome: 'Trapézio' },
-          { id: '3', nome: 'Malabarismo' },
-          { id: '4', nome: 'Contorcionismo' },
-          { id: '5', nome: 'Palhaçaria' },
-        ]);
-
-        setInstrumentos([
-          { id: '1', nome: 'Violão' },
-          { id: '2', nome: 'Piano' },
-          { id: '3', nome: 'Bateria' },
-          { id: '4', nome: 'Guitarra' },
-          { id: '5', nome: 'Baixo' },
-          { id: '6', nome: 'Saxofone' },
-          { id: '7', nome: 'Flauta' },
-        ]);
-
-        setRitmosMusicais([
-          { id: '1', nome: 'MPB' },
-          { id: '2', nome: 'Rock' },
-          { id: '3', nome: 'Pop' },
-          { id: '4', nome: 'Samba' },
-          { id: '5', nome: 'Jazz' },
-          { id: '6', nome: 'Bossa Nova' },
-          { id: '7', nome: 'Funk' },
-          { id: '8', nome: 'Sertanejo' },
-          { id: '9', nome: 'Metal' },
-        ]);
-
-        setEstilosDanca([
-          { id: '1', nome: 'Ballet' },
-          { id: '2', nome: 'Jazz' },
-          { id: '3', nome: 'Contemporâneo' },
-          { id: '4', nome: 'Salsa' },
-          { id: '5', nome: 'Hip Hop' },
-          { id: '6', nome: 'Dança de Salão' },
-          { id: '7', nome: 'Sapateado' },
-        ]);
+        const habilidadesData = await CastingService.getHabilidades({ ordering: 'nome' });
+        setHabilidades(habilidadesData.results || []);
 
         setPlataformasBusca([
           { id: '1', nome: 'Casting.com' },
@@ -393,8 +349,8 @@ export default function NovoCasting() {
 
       // Tratar arrays
       if (values.funcoes && values.funcoes.length > 0) {
-        values.funcoes.forEach((funcao: string) => {
-          formData.append('funcoes', funcao);
+        values.funcoes.forEach((habilidade: string) => {
+          formData.append('funcoes', habilidade);
         });
       }
 
@@ -604,13 +560,12 @@ export default function NovoCasting() {
                   Informações Básicas
                 </Title>
 
-                <SimpleGrid cols={2}>
+                <SimpleGrid cols={3}>
                   <TextInput
                     label="Nome"
                     placeholder="Nome completo"
                     required
                     {...form.getInputProps('nome')}
-                    mb="md"
                   />
 
                   <TextInput
@@ -618,11 +573,8 @@ export default function NovoCasting() {
                     placeholder="Nome artístico"
                     required
                     {...form.getInputProps('nome_artistico')}
-                    mb="md"
                   />
-                </SimpleGrid>
 
-                <SimpleGrid cols={3} mb="md">
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
@@ -633,15 +585,13 @@ export default function NovoCasting() {
                     required
                     {...form.getInputProps('categoria')}
                   />
+                </SimpleGrid>
 
+                <SimpleGrid cols={3}>
                   <Select
                     label="Gênero"
                     placeholder="Selecione o gênero"
-                    data={[
-                      { value: 'masculino', label: 'Masculino' },
-                      { value: 'feminino', label: 'Feminino' },
-                      { value: 'nao_binario', label: 'Não-binário' },
-                    ]}
+                    data={genderData}
                     {...form.getInputProps('genero')}
                   />
                 </SimpleGrid>
@@ -649,46 +599,37 @@ export default function NovoCasting() {
                 <MultiSelect
                   label="Habilidades"
                   placeholder="Selecione uma ou mais habilidades"
-                  data={funcoes.map((funcao) => ({
-                    value: funcao.id.toString(),
-                    label: funcao.nome,
+                  data={habilidades.map((habilidade) => ({
+                    value: habilidade.value.toString(),
+                    label: habilidade.nome,
                   }))}
-                  {...form.getInputProps('funcoes')}
-                  mb="md"
+                  {...form.getInputProps('habilidades')}
                 />
 
-                <SimpleGrid cols={2}>
+                <SimpleGrid cols={3}>
                   <TextInput
                     label="Naturalidade"
                     placeholder="Natural de (município/estado)"
                     {...form.getInputProps('natural_de')}
                     mb="md"
                   />
-
-                  <TextInput
+                  <Select
                     label="Nacionalidade"
-                    placeholder="Ex: Brasileira"
+                    searchable
+                    placeholder="Nacionalidade"
+                    nothingFound="Não encontrado"
+                    clearable
+                    data={nationality}
                     {...form.getInputProps('nacionalidade')}
-                    mb="md"
+                  />
+
+                  <Select
+                    label="Etnia"
+                    placeholder="Selecione a etnia"
+                    data={etny}
+                    {...form.getInputProps('etnia')}
                   />
                 </SimpleGrid>
-
-                {/* <TextInput
-                  label="Etnia"
-                  placeholder="Etnia"
-                  {...form.getInputProps('etnia')}
-                  mb="md"
-                /> */}
-                <Select
-                  label="Etnia"
-                  placeholder="Selecione a etnia"
-                  data={[
-                    { value: 'masculino', label: 'Masculino' },
-                    { value: 'feminino', label: 'Feminino' },
-                    { value: 'nao_binario', label: 'Não-binário' },
-                  ]}
-                  {...form.getInputProps('etnia')}
-                />
 
                 <FileInput
                   label="Foto Principal"
@@ -815,18 +756,7 @@ export default function NovoCasting() {
                   <Select
                     label="Cor do Cabelo"
                     placeholder="Selecione a cor do cabelo"
-                    data={[
-                      { value: 'preto', label: 'Preto' },
-                      { value: 'castanho_escuro', label: 'Castanho Escuro' },
-                      { value: 'castanho_claro', label: 'Castanho Claro' },
-                      { value: 'loiro', label: 'Loiro' },
-                      { value: 'loiro_escuro', label: 'Loiro Escuro' },
-                      { value: 'ruivo', label: 'Ruivo' },
-                      { value: 'grisalho', label: 'Grisalho' },
-                      { value: 'branco', label: 'Branco' },
-                      { value: 'colorido', label: 'Colorido' },
-                      { value: 'outro', label: 'Outro' },
-                    ]}
+                    data={corCabelo}
                     {...form.getInputProps('cor_cabelo')}
                   />
                 </SimpleGrid>
@@ -1258,13 +1188,13 @@ export default function NovoCasting() {
                     { value: 'ingles', label: 'Inglês' },
                     { value: 'espanhol', label: 'Espanhol' },
                     { value: 'frances', label: 'Francês' },
+                    { value: 'italiano', label: 'Italiano' },
                     { value: 'alemao', label: 'Alemão' },
                     { value: 'mandarim', label: 'Mandarim' },
                     { value: 'japones', label: 'Japonês' },
-                    { value: 'italiano', label: 'Italiano' },
                     { value: 'russo', label: 'Russo' },
-                    { value: 'arabe', label: 'Arábe' },
-                    { value: 'hungaro', label: 'Hungaro' },
+                    { value: 'arabe', label: 'Árabe' },
+                    { value: 'hungaro', label: 'Húngaro' },
                     { value: 'outros', label: 'Outros' },
                   ]}
                   {...form.getInputProps('idiomas')}

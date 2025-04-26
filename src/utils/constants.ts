@@ -1,12 +1,4 @@
 /* eslint-disable camelcase */
-export const menuHeader = [
-  { link: '/galharufa', label: 'Sobre nós' },
-  { link: '/servicos', label: 'Serviços' },
-  { link: '/casting', label: 'Casting' },
-  // { link: '/blog', label: 'Blog/News' },
-  { link: '/contato', label: 'Contato' },
-];
-
 export const castingType = [
   { value: 'ator_exclusivo', label: 'Atores exclusivos' },
   { value: 'ator_nao_exclusivo', label: 'Atores não exclusivos' },
@@ -112,7 +104,21 @@ export const banknumbers = [
   { value: '999', label: 'Outros' },
 ];
 
+export const corCabelo = [
+  { value: 'preto', label: 'Preto' },
+  { value: 'castanho_escuro', label: 'Castanho Escuro' },
+  { value: 'castanho_claro', label: 'Castanho Claro' },
+  { value: 'loiro', label: 'Loiro' },
+  { value: 'loiro_escuro', label: 'Loiro Escuro' },
+  { value: 'ruivo', label: 'Ruivo' },
+  { value: 'grisalho', label: 'Grisalho' },
+  { value: 'branco', label: 'Branco' },
+  { value: 'colorido', label: 'Colorido' },
+  { value: 'outro', label: 'Outro' },
+];
+
 export const languages = [
+  //done
   { value: 'portugues', label: 'Português' },
   { value: 'ingles', label: 'Inglês' },
   { value: 'espanhol', label: 'Espanhol' },
@@ -206,23 +212,11 @@ export const shoeSize = [
   { value: '49', label: '49' },
 ];
 
-export const habilities = [
-  { value: 'none', label: 'Sem habilidade extra' },
-  { value: 'canto', label: 'Canto' },
-  { value: 'danca', label: 'Dança' },
-  { value: 'dublador', label: 'Dublador' },
-  { value: 'locutor', label: 'Locutor' },
-  { value: 'mestrecerimonia', label: 'Mestre de Cerimônia' },
-  { value: 'apresentador', label: 'Apresentador' },
-  { value: 'bartender', label: 'Bartender' },
-  { value: 'garcom', label: 'Garçom' },
-  { value: 'duble-de-acao', label: 'Dublê de Ação' },
-  { value: 'manuseio-arma-fogo', label: 'Manuseio de Arma de fogo' },
-  { value: 'audiodescricao', label: 'Audiodescrição' },
+export const modalidadesCircenses = [
   { value: 'crc-acb', label: 'Circo	-	Acrobacia coletiva base' },
   { value: 'crc-aci', label: 'Circo	-	Acrobacia coletiva Intermediário' },
   { value: 'crc-acv', label: 'Circo	-	Acrobacia coletiva Volante' },
-  { value: 'crc-lira', label: 'Circo	-	Lira' },
+  { value: 'crc-lra', label: 'Circo	-	Lira' },
   { value: 'crc-mdc', label: 'Circo	-	Malabarismo de contato' },
   { value: 'crc-mdl', label: 'Circo	-	Malabarismo de lançamento' },
   { value: 'crc-mag', label: 'Circo	-	Malabarismo giroscópico' },
@@ -230,6 +224,9 @@ export const habilities = [
   { value: 'crc-pdp', label: 'Circo	-	Perna de pau' },
   { value: 'crc-tac', label: 'Circo	-	Tecido Acrobático' },
   { value: 'crc-trf', label: 'Circo	-	Trapézio Fixo' },
+];
+
+export const instrumentos = [
   { value: 'ins-acordeom', label: 'Instrumentos - Acordeom' },
   { value: 'ins-afoxe', label: 'Instrumentos - Afoxé' },
   { value: 'ins-agogo', label: 'Instrumentos - Agogô' },
@@ -283,6 +280,24 @@ export const habilities = [
   { value: 'ins-violino', label: 'Instrumentos - Violino' },
   { value: 'ins-violoncelo', label: 'Instrumentos - Violoncelo' },
   { value: 'ins-xilofone', label: 'Instrumentos - Xilofone' },
+];
+
+export const habilidades = [
+  { value: 'none', label: 'Sem habilidade extra' },
+  { value: 'canto', label: 'Canto' },
+  { value: 'danca', label: 'Dança' },
+  { value: 'dublador', label: 'Dublador' },
+  { value: 'locutor', label: 'Locutor' },
+  { value: 'mestrecerimonia', label: 'Mestre de Cerimônia' },
+  { value: 'apresentador', label: 'Apresentador' },
+  { value: 'bartender', label: 'Bartender' },
+  { value: 'garcom', label: 'Garçom' },
+  { value: 'duble-de-acao', label: 'Dublê de Ação' },
+  { value: 'manuseio-arma-fogo', label: 'Manuseio de Arma de fogo' },
+  { value: 'audiodescricao', label: 'Audiodescrição' },
+];
+
+export const esportes = [
   { value: 'esp-aikido', label: 'Esportes - Aikido' },
   { value: 'esp-alpinismo', label: 'Esportes - Alpinismo' },
   { value: 'esp-arco-flecha', label: 'Esportes - Arco e Flecha' },

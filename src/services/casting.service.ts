@@ -66,8 +66,8 @@ export interface PaginatedResponse<T> {
 }
 
 export const CastingService = {
-  // Funções
-  async getFuncoes(params?: {
+  // Habilidades
+  async getHabilidades(params?: {
     search?: string;
     ordering?: string;
   }): Promise<PaginatedResponse<Funcao>> {
