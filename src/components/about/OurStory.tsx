@@ -63,8 +63,8 @@ const OurStory = () => {
                 <Image
                   src={
                     isDark
-                      ? '/images/LogoGalharufa_Antigo.png'
-                      : '/images/LogoGalharufa_Antigo.png'
+                      ? '/images/logos/LogoGalharufa_Antigo.png'
+                      : '/images/logos/LogoGalharufa_Antigo.png'
                   }
                   alt="Agência Galharufa"
                   width={426}
@@ -99,8 +99,8 @@ const OurStory = () => {
                 <Image
                   src={
                     isDark
-                      ? '/images/Iniciais_Transparente_LetrasBrancas.png'
-                      : '/images/Iniciais_Transparente_LetrasPretas.png'
+                      ? '/images/logos/Iniciais_Transparente_LetrasBrancas.png'
+                      : '/images/logos/Iniciais_Transparente_LetrasPretas.png'
                   }
                   alt="Agência Galharufa"
                   width={426}
@@ -131,8 +131,8 @@ const OurStory = () => {
                 <Image
                   src={
                     isDark
-                      ? '/images/LogoGalha_Atual_Transparente_LetrasBrancas.png'
-                      : '/images/LogoGalha_Atual_Transparente_LetrasPretas.png'
+                      ? '/images/logos/LogoGalha_Atual_Transparente_LetrasBrancas.png'
+                      : '/images/logos/LogoGalha_Atual_Transparente_LetrasPretas.png'
                   }
                   alt="Agência Galharufa"
                   width={426}
