@@ -92,6 +92,7 @@ export default function AdminNavbar() {
                 height={80}
                 alt="Logo"
                 style={{ objectFit: 'contain' }}
+                priority
               />
             </Anchor>
           </Center>

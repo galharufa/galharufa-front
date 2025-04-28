@@ -138,6 +138,7 @@ export default function Login() {
                   alt="Galharufa Logo"
                   width={300}
                   height={80}
+                  priority
                   style={{
                     width: 'auto',
                     height: 'auto',
