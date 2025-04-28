@@ -27,7 +27,7 @@ const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlig
   ssr: false,
 });
 
-const Partners = dynamic(() => import('@/components/home/Partners'), {
+const Partners = dynamic(() => import('@/components/home/Clientes'), {
   loading: () => <Loading message="Carregando parceiros..." />,
   ssr: false,
 });

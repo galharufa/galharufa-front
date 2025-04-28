@@ -8,50 +8,70 @@ import { Autoplay } from 'swiper/modules';
 import 'swiper/css';
 
 // Dados fictícios de parceiros e clientes
-const partners = [
+const clients = [
   {
     id: '1',
-    name: 'Globo',
-    logo: '/images/partners/partner1.png',
+    name: 'Boticario',
+    logo: '/images/clients/001-boticario.png',
   },
   {
     id: '2',
-    name: 'Netflix',
-    logo: '/images/partners/partner2.png',
+    name: 'Disney',
+    logo: '/images/clients/002-disney.png',
   },
   {
     id: '3',
-    name: 'HBO',
-    logo: '/images/partners/partner3.png',
+    name: 'Globo',
+    logo: '/images/clients/003-globo.png',
   },
   {
     id: '4',
-    name: 'Amazon Prime',
-    logo: '/images/partners/partner4.png',
+    name: 'Globo Play',
+    logo: '/images/clients/004-globoplay.png',
   },
   {
     id: '5',
-    name: 'Disney+',
-    logo: '/images/partners/partner5.png',
+    name: 'HBO Max+',
+    logo: '/images/clients/005-hbo.png',
   },
   {
     id: '6',
-    name: 'Canal Brasil',
-    logo: '/images/partners/partner6.png',
+    name: 'Paramount',
+    logo: '/images/clients/006-para.png',
   },
   {
     id: '7',
-    name: 'TV Cultura',
-    logo: '/images/partners/partner7.png',
+    name: 'Prime Video',
+    logo: '/images/clients/007-prime.png',
   },
   {
     id: '8',
-    name: 'SBT',
-    logo: '/images/partners/partner8.png',
+    name: 'Record',
+    logo: '/images/clients/008-record.png',
+  },
+  {
+    id: '9',
+    name: 'StarPlus',
+    logo: '/images/clients/009-star.png',
+  },
+  {
+    id: '11',
+    name: 'Record',
+    logo: '/images/clients/010-terra.png',
+  },
+  {
+    id: '12',
+    name: 'Vivo',
+    logo: '/images/clients/012-vivo.png',
+  },
+  {
+    id: '13',
+    name: 'Vedacity',
+    logo: '/images/clients/013-veda.png',
   },
 ];
 
-const Partners = () => {
+const Clients = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
@@ -97,7 +117,7 @@ const Partners = () => {
               },
             }}
           >
-            {partners.map((partner) => (
+            {clients.map((partner) => (
               <SwiperSlide key={partner.id}>
                 <div className="flex items-center justify-center p-4 h-32">
                   <div className="relative h-16 w-full opacity-70 hover:opacity-100 transition-opacity duration-300 grayscale hover:grayscale-0">
@@ -135,4 +155,4 @@ const Partners = () => {
   );
 };
 
-export default Partners;
+export default Clients;
