@@ -878,11 +878,19 @@ export default function NovoCasting() {
             <Tabs.Panel value="habilidades">
               <Card withBorder p="xl" radius="md" mb="md">
                 <Title order={3} mb="lg">
-                  Biografia e Experiência
+                  Sobre e Experiências
                 </Title>
 
+                <Textarea
+                  label="Sobre"
+                  placeholder="Sobre o casting"
+                  minRows={4}
+                  {...form.getInputProps('biografia')}
+                  mb="md"
+                />
+
                 <Text size="sm" fw={500} mb="xs">
-                  Mini Curriculo
+                  Experiências
                 </Text>
                 <RichTextEditor editor={editor}>
                   <RichTextEditor.Toolbar sticky stickyOffset={60}>
@@ -915,7 +923,7 @@ export default function NovoCasting() {
                     </RichTextEditor.ControlsGroup>
                   </RichTextEditor.Toolbar>
 
-                  <RichTextEditor.Content placeholder="Mini Curriculo" />
+                  <RichTextEditor.Content />
                 </RichTextEditor>
               </Card>
             </Tabs.Panel>
