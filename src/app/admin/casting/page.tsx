@@ -222,10 +222,10 @@ export default function CastingAdmin() {
     }
   };
 
-  // Contagem de castings por categoria
-  const getCastingsCountByCategoria = (categoriaId: number) => {
-    return castings.filter((casting) => casting.categoria === categoriaId).length;
-  };
+  // // Contagem de castings por categoria
+  // const getCastingsCountByCategoria = (categoriaId: number) => {
+  //   return castings.filter((casting) => casting.categoria === categoriaId).length;
+  // };
 
   if (authLoading) {
     return (
