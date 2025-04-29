@@ -192,7 +192,7 @@ export default function CastingAdmin() {
   };
 
   // Navegação para editar casting
-  const handleEditarCasting = (id: number) => {
+  const handleEditarCasting = (id: string) => {
     router.push(`/admin/casting/castings/editar/${id}`);
   };
 
@@ -419,7 +419,7 @@ export default function CastingAdmin() {
                             <Group spacing={8}>
                               <ActionIcon
                                 color="blue"
-                                onClick={() => handleEditarCasting(Number(casting.id))}
+                                onClick={() => handleEditarCasting(String(casting.id))}
                               >
                                 <IconEdit size={18} />
                               </ActionIcon>

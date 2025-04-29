@@ -27,7 +27,7 @@ const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlig
   ssr: false,
 });
 
-const Partners = dynamic(() => import('@/components/home/Partners'), {
+const Clients = dynamic(() => import('@/components/home/Clients'), {
   loading: () => <Loading message="Carregando parceiros..." />,
   ssr: false,
 });
@@ -60,7 +60,7 @@ export default function Home() {
         <AboutSection />
         <ServicesSection />
         <CastingHighlights />
-        <Partners />
+        <Clients />
         <ContactSection />
       </Suspense>
     </>

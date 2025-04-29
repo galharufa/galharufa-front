@@ -4,10 +4,13 @@ import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 
 const AboutSection = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.3 });
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,13 +46,16 @@ const AboutSection = () => {
           >
             <div className="absolute inset-0 z-10 rounded-lg"></div>
             <Image
-              src="/images/Iniciais_Transparente_LetrasPretas.png"
+              src={
+                isDark
+                  ? '/images/Iniciais_Transparente_LetrasBrancas.png'
+                  : '/images/Iniciais_Transparente_LetrasPretas.png'
+              }
               alt="Agência Galharufa"
               width={426}
               height={426}
               className="object-cover object-center"
               sizes="(max-width: 426px) 80vw, 426px"
-              priority
             />
           </motion.div>
 
