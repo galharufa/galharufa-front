@@ -58,7 +58,7 @@ export interface CastingResumido {
   id: string;
   nome: string;
   nome_artistico: string;
-  categoria: string[];
+  categoria?: string[];
   categoria_nome: string;
   foto_principal: string;
   ativo: boolean;
