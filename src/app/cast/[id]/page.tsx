@@ -3,80 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaArrowLeft, FaInstagram, FaYoutube, FaImdb } from 'react-icons/fa';
+import { FaArrowLeft } from 'react-icons/fa'; //FaInstagram, FaYoutube, FaImdb
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import CtaBanner from '@/components/shared/CtaBanner';
-
-// Tipo para os castings
-type Casting = {
-  id: number;
-  name: string;
-  category: string[];
-  image: string;
-  age: number;
-  height: string;
-  specialties: string[];
-  featured: boolean;
-  bio?: string;
-  experience?: string[];
-  gallery?: string[];
-  social?: {
-    instagram?: string;
-    youtube?: string;
-    imdb?: string;
-  };
-  measurements?: {
-    bust?: string;
-    waist?: string;
-    hips?: string;
-    shoes?: string;
-    eyes?: string;
-    hair?: string;
-  };
-};
-
-// Dados simulados detalhados de castings
-const castingsData: Casting[] = [
-  {
-    id: 1,
-    name: 'Ana Silva',
-    category: ['atrizes', 'modelos'],
-    image: '/images/talent-1.jpg',
-    age: 28,
-    height: '1.75m',
-    specialties: ['Drama', 'Comerciais', 'Passarela'],
-    featured: true,
-    bio: 'Ana Silva é uma atriz e modelo versátil com experiência em produções nacionais e internacionais. Formada em artes cênicas pela Escola de Arte Dramática da USP, ela tem se destacado em papéis dramáticos e trabalhos publicitários.',
-    experience: [
-      'Novela "Amor Eterno" - Papel: Júlia (2022)',
-      'Filme "Além do Horizonte" - Papel: Mariana (2021)',
-      'Campanha Renault - Protagonista (2020)',
-      'Desfile São Paulo Fashion Week - Marca: Osklen (2019)',
-    ],
-    gallery: [
-      '/images/talent-1-gallery-1.jpg',
-      '/images/talent-1-gallery-2.jpg',
-      '/images/talent-1-gallery-3.jpg',
-      '/images/talent-1-gallery-4.jpg',
-    ],
-    social: {
-      instagram: 'https://instagram.com/anasilva',
-      youtube: 'https://youtube.com/anasilva',
-      imdb: 'https://imdb.com/name/anasilva',
-    },
-    measurements: {
-      bust: '86cm',
-      waist: '62cm',
-      hips: '90cm',
-      shoes: '37',
-      eyes: 'Castanhos',
-      hair: 'Castanho escuro',
-    },
-  },
-  // Outros castings seriam adicionados aqui
-];
 
 export default function CastingPage() {
   const params = useParams();
@@ -84,6 +14,7 @@ export default function CastingPage() {
   const [casting, setCasting] = useState<Casting | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
+  const [apiError, setApiError] = useState(false);
 
   useEffect(() => {
     // Simulando busca de dados
@@ -201,16 +132,57 @@ export default function CastingPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Idade</h3>
-                  <p className="text-black dark:text-white">{casting.age} anos</p>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
+                  <p className="text-black dark:text-white">99999/SP</p>
+
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                    Ano de Nascimento
+                  </h3>
+                  <p className="text-black dark:text-white">
+                    {casting.data_nascimento
+                      ? new Date(casting.data_nascimento).getFullYear()
+                      : ''}{' '}
+                  </p>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
+                    <p className="text-black dark:text-white">{casting.altura} m</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
+                    <p className="text-black dark:text-white">manequim</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
+                    <p className="text-black dark:text-white">Sapato Tamanho</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Peso</h3>
+                    <p className="text-black dark:text-white">
+                      {Math.round(Number(casting.peso))} kg
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
+                    <p className="text-black dark:text-white">{casting.olhos}</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
+                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
+                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
-                  <p className="text-black dark:text-white">{casting.height}</p>
-                </div>
-
-                {casting.measurements && (
+                {/* {casting.measurements && (
                   <>
                     {casting.measurements.bust && (
                       <div>
@@ -231,17 +203,6 @@ export default function CastingPage() {
                         <p className="text-black dark:text-white">
                           {casting.measurements.waist}
                         </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.hips && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Quadril
-                        </h3>
-                        <div className="prose dark:prose-invert max-w-none">
-                          {casting.bio && <p>{casting.bio}</p>}
-                        </div>
                       </div>
                     )}
 
@@ -278,25 +239,25 @@ export default function CastingPage() {
                       </div>
                     )}
                   </>
-                )}
+                )} */}
 
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Especialidades
                   </h3>
                   <div className="flex flex-wrap gap-2 mt-1">
-                    {casting.specialties.map((specialty: string, index: number) => (
+                    {/* {casting.specialties.map((specialty: string, index: number) => (
                       <span
                         key={index}
                         className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded text-xs"
                       >
                         {specialty}
                       </span>
-                    ))}
+                    ))} */}
                   </div>
                 </div>
 
-                {casting.social && (
+                {/* {casting.social && (
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                       Redes Sociais
@@ -339,14 +300,14 @@ export default function CastingPage() {
                       )}
                     </div>
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="mt-8">
                 <button
-                  onClick={() =>
-                    (window.location.href = '/contato?casting=' + casting.name)
-                  }
+                  // onClick={() =>
+                  //   (window.location.href = '/contato?casting=' + casting.name)
+                  // }
                   className="btn-primary w-full"
                 >
                   Contratar este casting
@@ -461,15 +422,6 @@ export default function CastingPage() {
           </AnimatedSection>
         </div>
       </div>
-
-      {/* CTA Banner */}
-      <CtaBanner
-        title="Procurando castings para seu projeto?"
-        description="Entre em contato conosco para encontrar o casting ideal para sua produção."
-        buttonText="Fale Conosco"
-        buttonLink="/contato"
-        bgColor="black"
-      />
     </div>
   );
 }
