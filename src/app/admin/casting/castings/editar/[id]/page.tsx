@@ -102,7 +102,7 @@ export default function EditarCasting() {
 
         form.setValues({
           nome: castingResponse.nome,
-          categoria: castingResponse.categoria.toString(),
+          // categoria: castingResponse.categoria.toString(),
           biografia: castingResponse.biografia || '',
           experiencia: castingResponse.experiencia || '',
           data_nascimento: dataNascimento,
