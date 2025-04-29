@@ -31,14 +31,14 @@ import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
+// import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
-import { notifications } from '@mantine/notifications';
+// import { notifications } from '@mantine/notifications';
 import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 import {
@@ -186,14 +186,14 @@ export default function NovoCasting() {
       categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
       altura: (value) => (!value ? 'A altura é obrigatória' : null),
       peso: (value) => (!value ? 'O peso é obrigatório' : null),
-      biografia: (value) => (!value ? 'A biografia é obrigatória' : null),
-      experiencia: (value) => (!value ? 'A experiência é obrigatória' : null),
+      // biografia: (value) => (!value ? 'A biografia é obrigatória' : null),
+      // experiencia: (value) => (!value ? 'A experiência é obrigatória' : null),
       foto_principal: (value) => (!value ? 'A foto principal é obrigatória' : null),
     },
   });
 
   const editor = useEditor({
-    extensions: [StarterKit, Underline, Link, TextAlign, Highlight],
+    extensions: [StarterKit, Link, TextAlign, Highlight],
     content: form.getInputProps('curriculum_artistico').value,
     onUpdate: ({ editor }) =>
       form.getInputProps('curriculum_artistico').onChange(editor.getHTML()),
