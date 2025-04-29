@@ -103,12 +103,13 @@ const CastingHighlights = () => {
           >
             {highlightedTalents.map((talent) => (
               <SwiperSlide key={talent.id}>
-                <div className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-lg h-full transition-transform duration-300 hover:-translate-y-2">
+                <div className="bg-white dark:bg-black rounded-lg overflow-hidden shadow-lg h-full transition-transform duration-300 hover:-translate-y-2 opacity-70 hover:opacity-100 hover:cursor-pointer grayscale hover:grayscale-0">
                   <div className="relative h-80 w-full">
                     <Image
                       src={talent.image}
                       alt={talent.name}
                       fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                       className="object-cover"
                     />
                   </div>

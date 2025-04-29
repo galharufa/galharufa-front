@@ -1,28 +1,52 @@
+/* eslint-disable no-console */
 'use client';
 
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaArrowLeft } from 'react-icons/fa'; //FaInstagram, FaYoutube, FaImdb
+import { FaArrowLeft, FaInstagram, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
+import { CastingDetalhado, CastingService } from '@/services';
 
 export default function CastingPage() {
   const params = useParams();
   const router = useRouter();
-  const [casting, setCasting] = useState<Casting | null>(null);
+  const [casting, setCasting] = useState<CastingDetalhado | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
   const [apiError, setApiError] = useState(false);
 
+  // DRT
+  // Ano de nascimento
+  // Altura
+  // Manequim
+  // Sapato
+  // Peso
+  // Olhos
+  // Cabelos
+  // Idiomas
+  // Instagram
+  // IMDB
+
   useEffect(() => {
-    // Simulando busca de dados
-    if (params.id) {
-      const id = parseInt(params.id as string);
-      const foundCasting = castingsData.find((c) => c.id === id) || castingsData[0]; // Fallback para o primeiro casting se não encontrar
-      setCasting(foundCasting);
-      setLoading(false);
+    const fetchCasts = async () => {
+      try {
+        setLoading(true);
+        const response = await CastingService.getCasting(String(params.id));
+        setCasting(response);
+        setApiError(false);
+      } catch (error) {
+        console.error('Erro ao carregar o casting: ', error);
+        setApiError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (String(params.id)) {
+      fetchCasts();
     }
   }, [params.id]);
 
@@ -38,7 +62,7 @@ export default function CastingPage() {
     );
   }
 
-  if (!casting) {
+  if (!casting || apiError) {
     return (
       <div className="min-h-screen bg-white dark:bg-black flex flex-col items-center justify-center p-4">
         <h1 className="text-3xl font-bold text-black dark:text-white mb-4">
@@ -64,26 +88,18 @@ export default function CastingPage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/40 to-black/70 z-10"></div>
         <div className="absolute inset-0">
           <Image
-            src={casting.image}
-            alt={casting.name}
+            src={casting.foto_principal}
+            alt={casting.nome}
             fill
             className="object-cover object-center"
             priority
           />
         </div>
-        <div className="absolute top-8 left-8 z-20">
-          <button
-            onClick={handleGoBack}
-            className="flex items-center gap-2 bg-black/50 hover:bg-black text-white px-4 py-2 rounded-full transition-colors"
-          >
-            <FaArrowLeft /> Voltar
-          </button>
-        </div>
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
           <div className="container mx-auto">
             <AnimatedText
-              text={casting.name}
-              className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-2"
+              text={casting.nome}
+              className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2"
               delay={0.2}
             />
             <AnimatedSection
@@ -91,30 +107,9 @@ export default function CastingPage() {
               delay={0.4}
               direction="up"
             >
-              {casting.category.map((cat, index) => (
-                <span
-                  key={index}
-                  className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
-                >
-                  {cat === 'atores'
-                    ? 'Ator'
-                    : cat === 'atrizes'
-                      ? 'Atriz'
-                      : cat === 'modelos'
-                        ? 'Modelo'
-                        : cat === 'influenciadores'
-                          ? 'Influenciador'
-                          : cat === 'apresentadores'
-                            ? 'Apresentador'
-                            : cat === 'infantil'
-                              ? 'Infantil'
-                              : cat === 'plus-size'
-                                ? 'Plus Size'
-                                : cat === 'terceira-idade'
-                                  ? 'Terceira Idade'
-                                  : cat}
-                </span>
-              ))}
+              <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm">
+                {casting.categoria_nome}
+              </span>
             </AnimatedSection>
           </div>
         </div>
@@ -134,14 +129,13 @@ export default function CastingPage() {
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
                   <p className="text-black dark:text-white">99999/SP</p>
-
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Ano de Nascimento
                   </h3>
                   <p className="text-black dark:text-white">
                     {casting.data_nascimento
                       ? new Date(casting.data_nascimento).getFullYear()
-                      : ''}{' '}
+                      : 'Não informado'}
                   </p>
 
                   <div>
@@ -151,168 +145,96 @@ export default function CastingPage() {
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
-                    <p className="text-black dark:text-white">manequim</p>
+                    <p className="text-black dark:text-white">Não informado</p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
-                    <p className="text-black dark:text-white">Sapato Tamanho</p>
+                    <p className="text-black dark:text-white">Não informado</p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Peso</h3>
                     <p className="text-black dark:text-white">
-                      {Math.round(Number(casting.peso))} kg
+                      {Math.round(Number(casting.peso || 'Não informado'))} kg
                     </p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
-                    <p className="text-black dark:text-white">{casting.olhos}</p>
+                    <p className="text-black dark:text-white">
+                      {casting.olhos || 'Não informado'}
+                    </p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
-                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                    <p className="text-black dark:text-white">
+                      {casting.cor_cabelo || 'Não informado'}
+                    </p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
-                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                    <p className="text-black dark:text-white">
+                      {casting.cor_cabelo || 'Não informado'}
+                    </p>
                   </div>
-                </div>
-
-                {/* {casting.measurements && (
-                  <>
-                    {casting.measurements.bust && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Busto
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.bust}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.waist && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Cintura
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.waist}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.shoes && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Calçado
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.shoes}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.eyes && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Olhos
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.eyes}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.hair && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Cabelo
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.hair}
-                        </p>
-                      </div>
-                    )}
-                  </>
-                )} */}
-
-                <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                    Especialidades
-                  </h3>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {/* {casting.specialties.map((specialty: string, index: number) => (
-                      <span
-                        key={index}
-                        className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded text-xs"
-                      >
-                        {specialty}
-                      </span>
-                    ))} */}
-                  </div>
-                </div>
-
-                {/* {casting.social && (
-                  <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                      Redes Sociais
-                    </h3>
-                    <div className="flex space-x-3">
-                      {casting.social.instagram && (
+                  {casting.instagram && (
+                    <div>
+                      <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                        Instagram
+                      </h3>
+                      <p className="text-black dark:text-white flex items-center gap-2">
+                        <FaInstagram />
                         <a
-                          href={casting.social.instagram}
+                          href={
+                            casting.instagram.startsWith('http')
+                              ? casting.instagram
+                              : `https://${casting.instagram}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover-link text-black dark:text-white"
-                          aria-label="Instagram"
+                          className="underline"
                         >
-                          <FaInstagram className="w-5 h-5" />
+                          {casting.instagram}
                         </a>
-                      )}
-
-                      {casting.social.youtube && (
-                        <a
-                          href={casting.social.youtube}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover-link text-black dark:text-white"
-                          aria-label="YouTube"
-                        >
-                          <FaYoutube className="w-5 h-5" />
-                        </a>
-                      )}
-
-                      {casting.social.imdb && (
-                        <a
-                          href={casting.social.imdb}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover-link text-black dark:text-white"
-                          aria-label="IMDb"
-                        >
-                          <FaImdb className="w-5 h-5" />
-                        </a>
-                      )}
+                      </p>
                     </div>
-                  </div>
-                )} */}
+                  )}
+                  {casting.instagram && (
+                    <div>
+                      <h3 className="text-sm text-gray-500 dark:text-gray-400">IMDB</h3>
+                      <p className="text-black dark:text-white flex items-center gap-2">
+                        <FaImdb />
+                        <a
+                          href={
+                            casting.imdb.startsWith('http')
+                              ? casting.imdb
+                              : `https://${casting.imdb}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline"
+                        >
+                          {casting.imdb}
+                        </a>
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-8">
+              {/* <div className="mt-8">
                 <button
-                  // onClick={() =>
-                  //   (window.location.href = '/contato?casting=' + casting.name)
-                  // }
+                  onClick={() =>
+                    (window.location.href = '/contato?casting=' + casting.id)
+                  }
                   className="btn-primary w-full"
                 >
                   Contratar este casting
                 </button>
-              </div>
+              </div> */}
             </div>
           </AnimatedSection>
 
@@ -332,7 +254,7 @@ export default function CastingPage() {
                   Sobre
                 </button>
 
-                {casting.experience && casting.experience.length > 0 && (
+                {casting.experiencia && casting.experiencia.length > 0 && (
                   <button
                     onClick={() => setActiveTab('experiencia')}
                     className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
@@ -345,7 +267,7 @@ export default function CastingPage() {
                   </button>
                 )}
 
-                {casting.gallery && casting.gallery.length > 0 && (
+                {casting.fotos && casting.fotos.length > 0 && (
                   <button
                     onClick={() => setActiveTab('galeria')}
                     className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
@@ -363,61 +285,56 @@ export default function CastingPage() {
             {/* Conteúdo das tabs */}
             <div className="min-h-[400px]">
               {/* Sobre */}
-              {activeTab === 'sobre' && casting.bio && (
+              {activeTab === 'sobre' && casting.biografia && (
                 <AnimatedSection direction="up" delay={0.2}>
                   <h2 className="heading-tertiary text-black dark:text-white">
                     Biografia
                   </h2>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
-                    {casting.bio}
+                    {casting.biografia}
                   </p>
                 </AnimatedSection>
               )}
 
               {/* Experiência */}
               {activeTab === 'experiencia' &&
-                casting.experience &&
-                casting.experience.length > 0 && (
+                casting.experiencia &&
+                casting.experiencia.length > 0 && (
                   <AnimatedSection direction="up" delay={0.2}>
                     <h2 className="heading-tertiary text-black dark:text-white">
                       Experiência Profissional
                     </h2>
                     <ul className="space-y-4 mt-4">
-                      {casting.experience.map((exp: string, index: number) => (
-                        <li
-                          key={index}
-                          className="border-l-2 border-gray-300 dark:border-gray-700 pl-4 py-1"
-                        >
-                          <p className="text-gray-700 dark:text-gray-300">{exp}</p>
-                        </li>
-                      ))}
+                      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                        {casting.experiencia}
+                      </p>
                     </ul>
                   </AnimatedSection>
                 )}
 
               {/* Galeria */}
-              {activeTab === 'galeria' &&
-                casting.gallery &&
-                casting.gallery.length > 0 && (
-                  <AnimatedSection direction="up" delay={0.2}>
-                    <h2 className="heading-tertiary text-black dark:text-white">
-                      Galeria de Fotos
-                    </h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                      {casting.gallery.map((image: string, index: number) => (
-                        <AnimatedImage
-                          key={index}
-                          src={image}
-                          alt={`${casting.name} - Imagem ${index + 1}`}
-                          width={600}
-                          height={800}
-                          className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
-                          delay={index * 0.1}
-                        />
-                      ))}
-                    </div>
-                  </AnimatedSection>
-                )}
+              {activeTab === 'galeria' && casting.fotos && casting.fotos.length > 0 && (
+                <AnimatedSection direction="up" delay={0.2}>
+                  <h2 className="heading-tertiary text-black dark:text-white">
+                    Galeria de Fotos
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {casting.fotos.map((foto, index) => (
+                      <AnimatedImage
+                        key={foto.id}
+                        src={foto.imagem}
+                        alt={
+                          foto.legenda || `${casting.nome_artistico} - Foto ${index + 1}`
+                        }
+                        width={600}
+                        height={800}
+                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
+                        delay={index * 0.1}
+                      />
+                    ))}
+                  </div>
+                </AnimatedSection>
+              )}
             </div>
           </AnimatedSection>
         </div>

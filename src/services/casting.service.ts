@@ -13,15 +13,6 @@ export interface Categoria {
   descricao: string;
 }
 
-export interface CastingResumido {
-  id: string;
-  nome: string;
-  categoria: number;
-  categoria_nome: string;
-  foto_principal: string;
-  ativo: boolean;
-}
-
 export interface Foto {
   id: number;
   imagem: string;
@@ -66,23 +57,37 @@ export interface Idioma {
 export interface CastingResumido {
   id: string;
   nome: string;
+  nome_artistico: string;
+  categoria: string[];
   categoria_nome: string;
   foto_principal: string;
   ativo: boolean;
 }
 
 export interface CastingDetalhado extends CastingResumido {
-  data_nascimento: string;
+  nome_artistico: string;
+  tipo: string;
+  genero: string;
+  nacionalidade: string | null;
+  etnia: string | null;
   altura: string;
   peso: string;
-  biografia: string;
-  experiencia: string;
+  olhos: string | null;
+  cor_cabelo: string | null;
+  canta_profissionalmente: boolean;
+  danca_profissionalmente: boolean;
+  autoriza_imagem_site: boolean;
+  data_nascimento: string;
+  biografia?: string;
+  experiencia?: string;
   data_cadastro: string;
   data_atualizacao: string;
   fotos: Foto[];
   videos: Video[];
   habilidades: Funcao[];
   idiomas: Idioma[];
+  instagram: string;
+  imdb: string;
 }
 
 export interface PaginatedResponse<T> {
@@ -93,8 +98,8 @@ export interface PaginatedResponse<T> {
 }
 
 export const CastingService = {
-  // Funções
-  async getFuncoes(params?: {
+  // Habilidades
+  async getHabilidades(params?: {
     search?: string;
     ordering?: string;
   }): Promise<PaginatedResponse<Funcao>> {

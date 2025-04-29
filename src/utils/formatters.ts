@@ -28,3 +28,15 @@ export function formatarMoeda(valor: number): string {
     currency: 'BRL',
   });
 }
+
+export const validateEmail = (email?: string) => {
+  return /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(email ?? '');
+};
+
+export const validateUserName = (userName?: string) => {
+  return /^[a-zA-Z0-9@.+_-]{1,100}$/.test(userName ?? '');
+};
+
+export const validateOnlyNumbers = (value?: string) => {
+  return /^[0-9]{1,}$/.test(value ?? '');
+};

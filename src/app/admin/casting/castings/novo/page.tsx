@@ -27,14 +27,29 @@ import {
   Divider,
   SimpleGrid,
 } from '@mantine/core';
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import { notifications } from '@mantine/notifications';
-import { errorToast, successToast } from '@/utils';
+import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
+import {
+  etny,
+  instrumentos,
+  esportes,
+  nationality,
+  modalidadesCircenses,
+  estados,
+} from '@/utils/index';
+
 import {
   IconUpload,
   IconPlus,
@@ -51,12 +66,19 @@ import {
   IconAward,
   IconEdit,
   IconUser,
-  IconEPassport,
+  // IconEPassport,
   IconBrandWhatsapp,
   IconBrandTiktok,
   IconWorld,
   IconMap,
 } from '@tabler/icons-react';
+
+const habilidadesData = [
+  ...(habilidades || []),
+  ...(modalidadesCircenses || []),
+  ...(esportes || []),
+  ...(instrumentos || []),
+];
 
 export default function NovoCasting() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -66,12 +88,10 @@ export default function NovoCasting() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [funcoes, setFuncoes] = useState<any[]>([]);
+  const [habilidades, setHabilidades] = useState<any[]>([]);
   const [esportes, setEsportes] = useState<any[]>([]);
   const [modalidadesCircenses, setModalidadesCircenses] = useState<any[]>([]);
   const [instrumentos, setInstrumentos] = useState<any[]>([]);
-  const [ritmosMusicais, setRitmosMusicais] = useState<any[]>([]);
-  const [estilosDanca, setEstilosDanca] = useState<any[]>([]);
   const [plataformasBusca, setPlataformasBusca] = useState<any[]>([]);
 
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
@@ -87,7 +107,7 @@ export default function NovoCasting() {
       nome_artistico: '',
       genero: 'masculino',
       categoria: '',
-      funcoes: [] as string[],
+      habilidades: [],
       natural_de: '',
       nacionalidade: 'Brasileira',
       etnia: '',
@@ -122,8 +142,6 @@ export default function NovoCasting() {
       possui_nota_propria: false,
 
       // Biografia e Experiência
-      biografia: '',
-      experiencia: '',
       curriculum_artistico: '',
 
       // Mídia
@@ -174,6 +192,13 @@ export default function NovoCasting() {
     },
   });
 
+  const editor = useEditor({
+    extensions: [StarterKit, Underline, Link, TextAlign, Highlight],
+    content: form.getInputProps('curriculum_artistico').value,
+    onUpdate: ({ editor }) =>
+      form.getInputProps('curriculum_artistico').onChange(editor.getHTML()),
+  });
+
   // Carregar dados iniciais (categorias, funções, etc.)
   useEffect(() => {
     const carregarDados = async () => {
@@ -182,58 +207,9 @@ export default function NovoCasting() {
         setCategorias(categoriasData.results || []);
 
         // Buscar funções da API
-        const funcoesData = await CastingService.getFuncoes({ ordering: 'nome' });
-        setFuncoes(funcoesData.results || []);
-
-        setEsportes([
-          { id: '1', nome: 'Futebol' },
-          { id: '2', nome: 'Natação' },
-          { id: '3', nome: 'Vôlei' },
-          { id: '4', nome: 'Basquete' },
-          { id: '5', nome: 'Jiu-Jitsu' },
-          { id: '6', nome: 'Capoeira' },
-          { id: '7', nome: 'Boxe' },
-          { id: '8', nome: 'Tênis' },
-        ]);
-
-        setModalidadesCircenses([
-          { id: '1', nome: 'Acrobacia Aérea' },
-          { id: '2', nome: 'Trapézio' },
-          { id: '3', nome: 'Malabarismo' },
-          { id: '4', nome: 'Contorcionismo' },
-          { id: '5', nome: 'Palhaçaria' },
-        ]);
-
-        setInstrumentos([
-          { id: '1', nome: 'Violão' },
-          { id: '2', nome: 'Piano' },
-          { id: '3', nome: 'Bateria' },
-          { id: '4', nome: 'Guitarra' },
-          { id: '5', nome: 'Baixo' },
-          { id: '6', nome: 'Saxofone' },
-          { id: '7', nome: 'Flauta' },
-        ]);
-
-        setRitmosMusicais([
-          { id: '1', nome: 'MPB' },
-          { id: '2', nome: 'Rock' },
-          { id: '3', nome: 'Pop' },
-          { id: '4', nome: 'Samba' },
-          { id: '5', nome: 'Jazz' },
-          { id: '6', nome: 'Bossa Nova' },
-          { id: '7', nome: 'Funk' },
-          { id: '8', nome: 'Sertanejo' },
-        ]);
-
-        setEstilosDanca([
-          { id: '1', nome: 'Ballet' },
-          { id: '2', nome: 'Jazz' },
-          { id: '3', nome: 'Contemporâneo' },
-          { id: '4', nome: 'Salsa' },
-          { id: '5', nome: 'Hip Hop' },
-          { id: '6', nome: 'Dança de Salão' },
-          { id: '7', nome: 'Sapateado' },
-        ]);
+        // const habilidadesData = await CastingService.getHabilidades({ ordering: 'nome' });
+        // setHabilidades(habilidadesData.results || []);
+        // setHabilidades([modalidadesCircenses, instrumentos, habilidades, esportes]);
 
         setPlataformasBusca([
           { id: '1', nome: 'Casting.com' },
@@ -327,7 +303,7 @@ export default function NovoCasting() {
       if (values.foto_principal) {
         try {
           const compressedImage = await compressImage(values.foto_principal, {
-            maxSizeMB: 0.8, // 800KB
+            maxSizeMB: 0.8, // 1200KB
             maxWidthOrHeight: 1280,
           });
           values.foto_principal = compressedImage;
@@ -343,7 +319,7 @@ export default function NovoCasting() {
         if (compressedFotos[i]) {
           try {
             compressedFotos[i] = await compressImage(compressedFotos[i] as File, {
-              maxSizeMB: 0.8, // 800KB
+              maxSizeMB: 0.8, // 1000kb
               maxWidthOrHeight: 1280,
             });
           } catch (compressionError) {
@@ -392,8 +368,8 @@ export default function NovoCasting() {
 
       // Tratar arrays
       if (values.funcoes && values.funcoes.length > 0) {
-        values.funcoes.forEach((funcao: string) => {
-          formData.append('funcoes', funcao);
+        values.funcoes.forEach((habilidade: string) => {
+          formData.append('funcoes', habilidade);
         });
       }
 
@@ -603,24 +579,21 @@ export default function NovoCasting() {
                   Informações Básicas
                 </Title>
 
-                <SimpleGrid cols={2}>
+                <SimpleGrid cols={3}>
                   <TextInput
                     label="Nome"
                     placeholder="Nome completo"
                     required
                     {...form.getInputProps('nome')}
-                    mb="md"
                   />
 
                   <TextInput
                     label="Nome Artístico"
-                    placeholder="Nome artístico (opcional)"
+                    placeholder="Nome artístico"
+                    required
                     {...form.getInputProps('nome_artistico')}
-                    mb="md"
                   />
-                </SimpleGrid>
 
-                <SimpleGrid cols={3} mb="md">
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
@@ -631,56 +604,54 @@ export default function NovoCasting() {
                     required
                     {...form.getInputProps('categoria')}
                   />
+                </SimpleGrid>
 
+                <SimpleGrid cols={3}>
                   <Select
                     label="Gênero"
                     placeholder="Selecione o gênero"
-                    data={[
-                      { value: 'masculino', label: 'Masculino' },
-                      { value: 'feminino', label: 'Feminino' },
-                      { value: 'nao_binario', label: 'Não-binário' },
-                    ]}
+                    data={genderData}
                     {...form.getInputProps('genero')}
                   />
                 </SimpleGrid>
 
                 <MultiSelect
-                  label="Funções"
-                  placeholder="Selecione uma ou mais funções"
-                  data={funcoes.map((funcao) => ({
-                    value: funcao.id.toString(),
-                    label: funcao.nome,
-                  }))}
-                  {...form.getInputProps('funcoes')}
-                  mb="md"
+                  label="Habilidades"
+                  searchable
+                  clearable
+                  placeholder="Selecione uma ou mais habilidades"
+                  data={habilidadesData}
+                  {...form.getInputProps('habilidades')}
                 />
 
-                <SimpleGrid cols={2}>
+                <SimpleGrid cols={3}>
                   <TextInput
                     label="Naturalidade"
                     placeholder="Natural de (município/estado)"
                     {...form.getInputProps('natural_de')}
                     mb="md"
                   />
-
-                  <TextInput
+                  <Select
                     label="Nacionalidade"
-                    placeholder="Ex: Brasileira"
+                    searchable
+                    placeholder="Nacionalidade"
+                    nothingFound="Não encontrado"
+                    clearable
+                    data={nationality}
                     {...form.getInputProps('nacionalidade')}
-                    mb="md"
+                  />
+
+                  <Select
+                    label="Etnia"
+                    placeholder="Selecione a etnia"
+                    data={etny}
+                    {...form.getInputProps('etnia')}
                   />
                 </SimpleGrid>
 
-                <TextInput
-                  label="Etnia"
-                  placeholder="Etnia"
-                  {...form.getInputProps('etnia')}
-                  mb="md"
-                />
-
                 <FileInput
                   label="Foto Principal"
-                  description="Selecione uma imagem para a foto principal (formatos: JPG, PNG, WebP)"
+                  description="Selecione uma imagem para a foto principal - formato landscape(formatos: JPG, PNG, WebP)"
                   accept="image/png,image/jpeg,image/webp"
                   icon={<IconUpload size={14} />}
                   {...form.getInputProps('foto_principal')}
@@ -782,7 +753,6 @@ export default function NovoCasting() {
                       { value: 'mel', label: 'Mel' },
                       { value: 'cinza', label: 'Cinza' },
                       { value: 'castanho_esverdeado', label: 'Castanho Esverdeado' },
-                      { value: 'outro', label: 'Outro' },
                     ]}
                     {...form.getInputProps('olhos')}
                   />
@@ -795,6 +765,7 @@ export default function NovoCasting() {
                       { value: 'ondulado', label: 'Ondulado' },
                       { value: 'cacheado', label: 'Cacheado' },
                       { value: 'crespo', label: 'Crespo' },
+                      { value: 'careca', label: 'Careca' },
                       { value: 'outro', label: 'Outro' },
                     ]}
                     {...form.getInputProps('tipo_cabelo')}
@@ -803,17 +774,7 @@ export default function NovoCasting() {
                   <Select
                     label="Cor do Cabelo"
                     placeholder="Selecione a cor do cabelo"
-                    data={[
-                      { value: 'preto', label: 'Preto' },
-                      { value: 'castanho_escuro', label: 'Castanho Escuro' },
-                      { value: 'castanho_claro', label: 'Castanho Claro' },
-                      { value: 'loiro', label: 'Loiro' },
-                      { value: 'ruivo', label: 'Ruivo' },
-                      { value: 'grisalho', label: 'Grisalho' },
-                      { value: 'branco', label: 'Branco' },
-                      { value: 'colorido', label: 'Colorido' },
-                      { value: 'outro', label: 'Outro' },
-                    ]}
+                    data={corCabelo}
                     {...form.getInputProps('cor_cabelo')}
                   />
                 </SimpleGrid>
@@ -920,29 +881,42 @@ export default function NovoCasting() {
                   Biografia e Experiência
                 </Title>
 
-                <Textarea
-                  label="Biografia"
-                  placeholder="Biografia do casting"
-                  minRows={4}
-                  {...form.getInputProps('biografia')}
-                  mb="md"
-                />
+                <Text size="sm" fw={500} mb="xs">
+                  Mini Curriculo
+                </Text>
+                <RichTextEditor editor={editor}>
+                  <RichTextEditor.Toolbar sticky stickyOffset={60}>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Bold />
+                      <RichTextEditor.Italic />
+                      <RichTextEditor.Underline />
+                      <RichTextEditor.Strikethrough />
+                      <RichTextEditor.ClearFormatting />
+                      <RichTextEditor.Highlight />
+                      <RichTextEditor.Code />
+                    </RichTextEditor.ControlsGroup>
 
-                <Textarea
-                  label="Experiência"
-                  placeholder="Experiência profissional do casting"
-                  minRows={4}
-                  {...form.getInputProps('experiencia')}
-                  mb="md"
-                />
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.H1 />
+                      <RichTextEditor.H2 />
+                      <RichTextEditor.H3 />
+                      <RichTextEditor.H4 />
+                    </RichTextEditor.ControlsGroup>
 
-                <Textarea
-                  label="Curriculum Artístico"
-                  placeholder="Breve descrição de seu curriculum artístico"
-                  minRows={4}
-                  {...form.getInputProps('curriculum_artistico')}
-                  mb="md"
-                />
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Hr />
+                      <RichTextEditor.BulletList />
+                      <RichTextEditor.OrderedList />
+                    </RichTextEditor.ControlsGroup>
+
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Link />
+                      <RichTextEditor.Unlink />
+                    </RichTextEditor.ControlsGroup>
+                  </RichTextEditor.Toolbar>
+
+                  <RichTextEditor.Content placeholder="Mini Curriculo" />
+                </RichTextEditor>
               </Card>
             </Tabs.Panel>
 
@@ -1245,10 +1219,13 @@ export default function NovoCasting() {
                     { value: 'ingles', label: 'Inglês' },
                     { value: 'espanhol', label: 'Espanhol' },
                     { value: 'frances', label: 'Francês' },
-                    { value: 'alemao', label: 'Alemão' },
                     { value: 'italiano', label: 'Italiano' },
-                    { value: 'japones', label: 'Japonês' },
+                    { value: 'alemao', label: 'Alemão' },
                     { value: 'mandarim', label: 'Mandarim' },
+                    { value: 'japones', label: 'Japonês' },
+                    { value: 'russo', label: 'Russo' },
+                    { value: 'arabe', label: 'Árabe' },
+                    { value: 'hungaro', label: 'Húngaro' },
                     { value: 'outros', label: 'Outros' },
                   ]}
                   {...form.getInputProps('idiomas')}

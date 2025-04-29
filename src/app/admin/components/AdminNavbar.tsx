@@ -85,13 +85,14 @@ export default function AdminNavbar() {
               <Image
                 src={
                   dark
-                    ? '/images/logo_horizontal_black.jpg'
-                    : '/images/logo_horizontal_white.jpg'
+                    ? '/images/logos/logo_horizontal_black.jpg'
+                    : '/images/logos/logo_horizontal_white.jpg'
                 }
                 width={150}
                 height={80}
                 alt="Logo"
                 style={{ objectFit: 'contain' }}
+                priority
               />
             </Anchor>
           </Center>

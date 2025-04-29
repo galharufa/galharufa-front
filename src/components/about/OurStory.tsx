@@ -3,10 +3,13 @@
 import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
+import { useTheme } from 'next-themes';
 
 const OurStory = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === 'dark';
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -58,13 +61,16 @@ const OurStory = () => {
               </div>
               <div className="md:col-span-7 order-2 relative flex items-center justify-center h-[500px] overflow-hidden rounded-lg">
                 <Image
-                  src="/images/LogoGalharufa_Antigo.png"
+                  src={
+                    isDark
+                      ? '/images/logos/LogoGalharufa_Antigo.png'
+                      : '/images/logos/LogoGalharufa_Antigo.png'
+                  }
                   alt="Agência Galharufa"
                   width={426}
                   height={426}
                   className="object-cover object-center"
                   sizes="(max-width: 426px) 80vw, 426px"
-                  priority
                 />
               </div>
             </motion.div>
@@ -91,13 +97,16 @@ const OurStory = () => {
               </div>
               <div className="md:col-span-7 order-2 relative flex items-center justify-center h-[500px] overflow-hidden rounded-lg">
                 <Image
-                  src="/images/Iniciais_Transparente_LetrasPretas.png"
+                  src={
+                    isDark
+                      ? '/images/logos/Iniciais_Transparente_LetrasBrancas.png'
+                      : '/images/logos/Iniciais_Transparente_LetrasPretas.png'
+                  }
                   alt="Agência Galharufa"
                   width={426}
                   height={426}
                   className="object-cover object-center"
                   sizes="(max-width: 426px) 80vw, 426px"
-                  priority
                 />
               </div>
             </motion.div>
@@ -120,13 +129,16 @@ const OurStory = () => {
 
               <div className="md:col-span-7 order-2 relative flex items-center justify-center h-[500px] overflow-hidden rounded-lg">
                 <Image
-                  src="/images/LogoGalha_Atual_FundoBranco_Transparente_LetrasPretas.png"
+                  src={
+                    isDark
+                      ? '/images/logos/LogoGalha_Atual_Transparente_LetrasBrancas.png'
+                      : '/images/logos/LogoGalha_Atual_Transparente_LetrasPretas.png'
+                  }
                   alt="Agência Galharufa"
                   width={426}
                   height={426}
                   className="object-cover object-center"
                   sizes="(max-width: 426px) 80vw, 426px"
-                  priority
                 />
               </div>
             </motion.div>

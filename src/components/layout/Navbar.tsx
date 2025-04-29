@@ -17,6 +17,11 @@ const Navbar = () => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
+  const isActive = (href: string) => {
+    const basePath = `/${pathname.split('/')[1]}`;
+    return basePath === href;
+  };
+
   // Controla o estado de scroll da página
   useEffect(() => {
     const handleScroll = () => {
@@ -108,7 +113,7 @@ const Navbar = () => {
                 key={link.href}
                 href={link.href}
                 className={`hover-link ${getTextColor()} ${
-                  pathname.startsWith(link.href) ? 'font-bold' : 'font-light'
+                  isActive(link.href) ? 'font-bold' : 'font-light'
                 } ${!scrolled && pathname === '/' ? 'hover-link-light' : ''}`}
               >
                 {link.label}
