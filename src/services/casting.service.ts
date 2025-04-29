@@ -57,6 +57,7 @@ export interface Idioma {
 export interface CastingResumido {
   id: string;
   nome: string;
+  nome_artistico: string;
   categoria: string[];
   categoria_nome: string;
   foto_principal: string;
@@ -85,6 +86,8 @@ export interface CastingDetalhado extends CastingResumido {
   videos: Video[];
   habilidades: Funcao[];
   idiomas: Idioma[];
+  instagram: string;
+  imdb: string;
 }
 
 export interface PaginatedResponse<T> {

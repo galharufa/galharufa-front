@@ -4,7 +4,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { FaArrowLeft } from 'react-icons/fa'; //FaInstagram, FaYoutube, FaImdb
+import { FaArrowLeft, FaInstagram, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
@@ -17,15 +17,6 @@ export default function CastingPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
   const [apiError, setApiError] = useState(false);
-  // const categoriasMap: Record<string, string> = {
-  //   'e3977243-fd7e-4253-8246-eb0fb14256ea': 'Ator Exclusivo',
-  //   '58c73f56-df4c-4f41-86b7-89d234654c7c': 'Ator Mirim',
-  //   '7824be46-59c2-4035-b6fb-fb700a594868': 'Ator Não Exclusivo',
-  //   '0005742c-6fe3-45ec-b830-b5a5df55c3be': 'Criativos',
-  //   '0c59e94a-6ba0-4ac3-9b21-61436e33ae50': 'Desenvolvedor',
-  //   'd42b2a71-fde9-4521-ae80-283a076a99e0': 'Digital',
-  //   '032d43bb-4f87-4b5e-8079-6d71cfbd42fb': 'Talentos',
-  // };
 
   // DRT
   // Ano de nascimento
@@ -145,7 +136,7 @@ export default function CastingPage() {
                   <p className="text-black dark:text-white">
                     {casting.data_nascimento
                       ? new Date(casting.data_nascimento).getFullYear()
-                      : ''}{' '}
+                      : 'Não informado'}
                   </p>
 
                   <div>
@@ -155,168 +146,96 @@ export default function CastingPage() {
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
-                    <p className="text-black dark:text-white">manequim</p>
+                    <p className="text-black dark:text-white">Não informado</p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
-                    <p className="text-black dark:text-white">Sapato Tamanho</p>
+                    <p className="text-black dark:text-white">Não informado</p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Peso</h3>
                     <p className="text-black dark:text-white">
-                      {Math.round(Number(casting.peso))} kg
+                      {Math.round(Number(casting.peso || 'Não informado'))} kg
                     </p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
-                    <p className="text-black dark:text-white">{casting.olhos}</p>
+                    <p className="text-black dark:text-white">
+                      {casting.olhos || 'Não informado'}
+                    </p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
-                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                    <p className="text-black dark:text-white">
+                      {casting.cor_cabelo || 'Não informado'}
+                    </p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
-                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                    <p className="text-black dark:text-white">
+                      {casting.cor_cabelo || 'Não informado'}
+                    </p>
                   </div>
-                </div>
-
-                {/* {casting.measurements && (
-                  <>
-                    {casting.measurements.bust && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Busto
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.bust}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.waist && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Cintura
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.waist}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.shoes && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Calçado
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.shoes}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.eyes && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Olhos
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.eyes}
-                        </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.hair && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Cabelo
-                        </h3>
-                        <p className="text-black dark:text-white">
-                          {casting.measurements.hair}
-                        </p>
-                      </div>
-                    )}
-                  </>
-                )} */}
-
-                <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                    Especialidades
-                  </h3>
-                  <div className="flex flex-wrap gap-2 mt-1">
-                    {/* {casting.specialties.map((specialty: string, index: number) => (
-                      <span
-                        key={index}
-                        className="bg-gray-200 dark:bg-gray-800 text-black dark:text-white px-2 py-1 rounded text-xs"
-                      >
-                        {specialty}
-                      </span>
-                    ))} */}
-                  </div>
-                </div>
-
-                {/* {casting.social && (
-                  <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400 mb-2">
-                      Redes Sociais
-                    </h3>
-                    <div className="flex space-x-3">
-                      {casting.social.instagram && (
+                  {casting.instagram && (
+                    <div>
+                      <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                        Instagram
+                      </h3>
+                      <p className="text-black dark:text-white flex items-center gap-2">
+                        <FaInstagram />
                         <a
-                          href={casting.social.instagram}
+                          href={
+                            casting.instagram.startsWith('http')
+                              ? casting.instagram
+                              : `https://${casting.instagram}`
+                          }
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="hover-link text-black dark:text-white"
-                          aria-label="Instagram"
+                          className="underline"
                         >
-                          <FaInstagram className="w-5 h-5" />
+                          {casting.instagram}
                         </a>
-                      )}
-
-                      {casting.social.youtube && (
-                        <a
-                          href={casting.social.youtube}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover-link text-black dark:text-white"
-                          aria-label="YouTube"
-                        >
-                          <FaYoutube className="w-5 h-5" />
-                        </a>
-                      )}
-
-                      {casting.social.imdb && (
-                        <a
-                          href={casting.social.imdb}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="hover-link text-black dark:text-white"
-                          aria-label="IMDb"
-                        >
-                          <FaImdb className="w-5 h-5" />
-                        </a>
-                      )}
+                      </p>
                     </div>
-                  </div>
-                )} */}
+                  )}
+                  {casting.instagram && (
+                    <div>
+                      <h3 className="text-sm text-gray-500 dark:text-gray-400">IMDB</h3>
+                      <p className="text-black dark:text-white flex items-center gap-2">
+                        <FaImdb />
+                        <a
+                          href={
+                            casting.imdb.startsWith('http')
+                              ? casting.imdb
+                              : `https://${casting.imdb}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="underline"
+                        >
+                          {casting.imdb}
+                        </a>
+                      </p>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              <div className="mt-8">
+              {/* <div className="mt-8">
                 <button
-                  // onClick={() =>
-                  //   (window.location.href = '/contato?casting=' + casting.name)
-                  // }
+                  onClick={() =>
+                    (window.location.href = '/contato?casting=' + casting.id)
+                  }
                   className="btn-primary w-full"
                 >
                   Contratar este casting
                 </button>
-              </div>
+              </div> */}
             </div>
           </AnimatedSection>
 
@@ -421,15 +340,6 @@ export default function CastingPage() {
           </AnimatedSection>
         </div>
       </div>
-
-      {/* CTA Banner */}
-      {/* <CtaBanner
-        title="Procurando castings para seu projeto?"
-        description="Entre em contato conosco para encontrar o casting ideal para sua produção."
-        buttonText="Fale Conosco"
-        buttonLink="/contato"
-        bgColor="black"
-      /> */}
     </div>
   );
 }

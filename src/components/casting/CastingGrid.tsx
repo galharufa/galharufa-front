@@ -129,6 +129,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
                     className="group cursor-pointer opacity-70 hover:opacity-100 hover:cursor-pointer grayscale hover:grayscale-0"
                   >
                     <Link href={`/cast/${casting.id}`} passHref>
+                      {/* trocar aqui pelo nome artistico do calango */}
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                         <Image
                           src={casting.foto_principal || '/images/placeholder-talent.jpg'}

@@ -27,6 +27,12 @@ import {
   Divider,
   SimpleGrid,
 } from '@mantine/core';
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
@@ -60,7 +66,7 @@ import {
   IconAward,
   IconEdit,
   IconUser,
-  IconEPassport,
+  // IconEPassport,
   IconBrandWhatsapp,
   IconBrandTiktok,
   IconWorld,
@@ -136,8 +142,6 @@ export default function NovoCasting() {
       possui_nota_propria: false,
 
       // Biografia e Experiência
-      biografia: '',
-      experiencia: '',
       curriculum_artistico: '',
 
       // Mídia
@@ -186,6 +190,13 @@ export default function NovoCasting() {
       experiencia: (value) => (!value ? 'A experiência é obrigatória' : null),
       foto_principal: (value) => (!value ? 'A foto principal é obrigatória' : null),
     },
+  });
+
+  const editor = useEditor({
+    extensions: [StarterKit, Underline, Link, TextAlign, Highlight],
+    content: form.getInputProps('curriculum_artistico').value,
+    onUpdate: ({ editor }) =>
+      form.getInputProps('curriculum_artistico').onChange(editor.getHTML()),
   });
 
   // Carregar dados iniciais (categorias, funções, etc.)
@@ -870,29 +881,42 @@ export default function NovoCasting() {
                   Biografia e Experiência
                 </Title>
 
-                <Textarea
-                  label="Biografia"
-                  placeholder="Biografia do casting"
-                  minRows={4}
-                  {...form.getInputProps('biografia')}
-                  mb="md"
-                />
+                <Text size="sm" fw={500} mb="xs">
+                  Mini Curriculo
+                </Text>
+                <RichTextEditor editor={editor}>
+                  <RichTextEditor.Toolbar sticky stickyOffset={60}>
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Bold />
+                      <RichTextEditor.Italic />
+                      <RichTextEditor.Underline />
+                      <RichTextEditor.Strikethrough />
+                      <RichTextEditor.ClearFormatting />
+                      <RichTextEditor.Highlight />
+                      <RichTextEditor.Code />
+                    </RichTextEditor.ControlsGroup>
 
-                <Textarea
-                  label="Experiência"
-                  placeholder="Experiência profissional do casting"
-                  minRows={4}
-                  {...form.getInputProps('experiencia')}
-                  mb="md"
-                />
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.H1 />
+                      <RichTextEditor.H2 />
+                      <RichTextEditor.H3 />
+                      <RichTextEditor.H4 />
+                    </RichTextEditor.ControlsGroup>
 
-                <Textarea
-                  label="Curriculum Artístico"
-                  placeholder="Breve descrição de seu curriculum artístico"
-                  minRows={4}
-                  {...form.getInputProps('curriculum_artistico')}
-                  mb="md"
-                />
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Hr />
+                      <RichTextEditor.BulletList />
+                      <RichTextEditor.OrderedList />
+                    </RichTextEditor.ControlsGroup>
+
+                    <RichTextEditor.ControlsGroup>
+                      <RichTextEditor.Link />
+                      <RichTextEditor.Unlink />
+                    </RichTextEditor.ControlsGroup>
+                  </RichTextEditor.Toolbar>
+
+                  <RichTextEditor.Content placeholder="Mini Curriculo" />
+                </RichTextEditor>
               </Card>
             </Tabs.Panel>
 
