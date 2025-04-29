@@ -5,6 +5,7 @@ import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import Loading from '@/components/shared/Loading';
 import Script from 'next/script';
+import { Analytics } from '@vercel/analytics/next';
 
 // Carregamento dinâmico dos componentes (apenas do lado do cliente)
 const Hero = dynamic(() => import('@/components/home/Hero'), {
@@ -62,6 +63,7 @@ export default function Home() {
         <CastingHighlights />
         <Clients />
         <ContactSection />
+        <Analytics />
       </Suspense>
     </>
   );

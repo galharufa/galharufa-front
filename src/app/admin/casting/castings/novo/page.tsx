@@ -38,7 +38,7 @@ import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
-// import { notifications } from '@mantine/notifications';
+import { notifications } from '@mantine/notifications';
 import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 import {
