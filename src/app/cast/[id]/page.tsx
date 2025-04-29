@@ -27,6 +27,18 @@ export default function CastingPage() {
   //   '032d43bb-4f87-4b5e-8079-6d71cfbd42fb': 'Talentos',
   // };
 
+  // DRT
+  // Ano de nascimento
+  // Altura
+  // Manequim
+  // Sapato
+  // Peso
+  // Olhos
+  // Cabelos
+  // Idiomas
+  // Instagram
+  // IMDB
+
   useEffect(() => {
     const fetchCasts = async () => {
       try {
@@ -124,15 +136,54 @@ export default function CastingPage() {
 
               <div className="space-y-4">
                 <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Idade</h3>
-                  <p className="text-black dark:text-white">
-                    {casting.data_nascimento} anos
-                  </p>
-                </div>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
+                  <p className="text-black dark:text-white">99999/SP</p>
 
-                <div>
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
-                  <p className="text-black dark:text-white">{casting.altura}</p>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                    Ano de Nascimento
+                  </h3>
+                  <p className="text-black dark:text-white">
+                    {casting.data_nascimento
+                      ? new Date(casting.data_nascimento).getFullYear()
+                      : ''}{' '}
+                  </p>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
+                    <p className="text-black dark:text-white">{casting.altura} m</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
+                    <p className="text-black dark:text-white">manequim</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
+                    <p className="text-black dark:text-white">Sapato Tamanho</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Peso</h3>
+                    <p className="text-black dark:text-white">
+                      {Math.round(Number(casting.peso))} kg
+                    </p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
+                    <p className="text-black dark:text-white">{casting.olhos}</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
+                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                  </div>
+
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
+                    <p className="text-black dark:text-white">{casting.cor_cabelo}</p>
+                  </div>
                 </div>
 
                 {/* {casting.measurements && (
@@ -156,17 +207,6 @@ export default function CastingPage() {
                         <p className="text-black dark:text-white">
                           {casting.measurements.waist}
                         </p>
-                      </div>
-                    )}
-
-                    {casting.measurements.hips && (
-                      <div>
-                        <h3 className="text-sm text-gray-500 dark:text-gray-400">
-                          Quadril
-                        </h3>
-                        <div className="prose dark:prose-invert max-w-none">
-                          {casting.bio && <p>{casting.bio}</p>}
-                        </div>
                       </div>
                     )}
 

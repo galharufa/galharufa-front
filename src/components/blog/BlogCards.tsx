@@ -130,7 +130,7 @@ const BlogCards = ({ filter }: BlogCardsProps) => {
                     animate="visible"
                     exit="exit"
                     layoutId={`post-${post.id}`}
-                    className="group cursor-pointer"
+                    className="group cursor-pointer opacity-70 hover:opacity-100 hover:cursor-pointer grayscale hover:grayscale-0"
                   >
                     <Link href={`/blog/${post.id}`} passHref>
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">

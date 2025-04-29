@@ -13,15 +13,6 @@ export interface Categoria {
   descricao: string;
 }
 
-export interface CastingResumido {
-  id: string;
-  nome: string;
-  categoria: string[];
-  categoria_nome: string;
-  foto_principal: string;
-  ativo: boolean;
-}
-
 export interface Foto {
   id: number;
   imagem: string;
@@ -34,6 +25,42 @@ export interface Video {
   titulo: string;
   url: string;
   ordem: number;
+}
+
+type NivelIdioma = 'Básico' | 'Intermediário' | 'Avançado' | 'Fluente';
+
+export interface Idioma {
+  ingles: boolean;
+  nivel_ingles?: NivelIdioma;
+  portugues: boolean;
+  nivel_portugues?: NivelIdioma;
+  espanhol: boolean;
+  nivel_espanhol?: NivelIdioma;
+  frances: boolean;
+  nivel_frances?: NivelIdioma;
+  italiano: boolean;
+  nivel_italiano?: NivelIdioma;
+  alemao: boolean;
+  nivel_alemao?: NivelIdioma;
+  mandarin: boolean;
+  nivel_mandarin?: NivelIdioma;
+  japones: boolean;
+  nivel_japones?: NivelIdioma;
+  russo: boolean;
+  nivel_russo?: NivelIdioma;
+  arabe: boolean;
+  nivel_arabe?: NivelIdioma;
+  hungaro: boolean;
+  nivel_hungaro?: NivelIdioma;
+}
+
+export interface CastingResumido {
+  id: string;
+  nome: string;
+  categoria: string[];
+  categoria_nome: string;
+  foto_principal: string;
+  ativo: boolean;
 }
 
 export interface CastingDetalhado extends CastingResumido {
@@ -56,6 +83,8 @@ export interface CastingDetalhado extends CastingResumido {
   data_atualizacao: string;
   fotos: Foto[];
   videos: Video[];
+  habilidades: Funcao[];
+  idiomas: Idioma[];
 }
 
 export interface PaginatedResponse<T> {
