@@ -1,6 +1,6 @@
 import React from 'react';
-import ServicesHero from '@/components/services/ServicesHero';
-import ServicesList from '@/components/services/ServicesList';
+import ServicesHero from '@/components/servicos/ServicesHero';
+import ServicesList from '@/components/servicos/ServicesList';
 import CtaBanner from '@/components/shared/CtaBanner';
 import Script from 'next/script';
 

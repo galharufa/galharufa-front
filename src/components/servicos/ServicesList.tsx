@@ -1,9 +1,12 @@
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
 'use client';
 
-import { useRef } from 'react';
+import { useRef, useState, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
 import { FaUserTie, FaCamera, FaFilm } from 'react-icons/fa';
+import { ServicosService, ServicoResumido } from '@/services';
 
 // Dados detalhados dos serviços
 const services = [
@@ -11,7 +14,6 @@ const services = [
     id: 1,
     icon: <FaUserTie className="text-5xl mb-6" />,
     title: 'Agenciamento Artístico',
-    // description: 'Representação completa para atores, modelos e influenciadores, conectando-os com as melhores oportunidades do mercado.',
     details: [
       'Representação exclusiva para atores, criativos e influenciadores',
       'Negociação de contratos e cachês',
@@ -24,7 +26,6 @@ const services = [
     id: 2,
     icon: <FaCamera className="text-5xl mb-6" />,
     title: 'Material para Atores',
-    // description: 'Sessões fotográficas profissionais para compor e atualizar o material de divulgação dos nossos talentos.',
     details: [
       'Produção de material fotográfico',
       'Videobook',
@@ -37,7 +38,6 @@ const services = [
     id: 3,
     icon: <FaFilm className="text-5xl mb-6" />,
     title: 'Casting On Screen e Off Screen para Audiovisual',
-    // description: 'Seleção de talentos para produções audiovisuais, desde comerciais até longas-metragens e séries.',
     details: [
       'Fornecimento de elenco criativos para filmes, séries e novelas',
       'Casting para campanhas publicitárias',
@@ -47,81 +47,90 @@ const services = [
     ],
     image: '/images/service-3.jpg',
   },
-  // {
-  //   id: 4,
-  //   icon: <FaAd className="text-5xl mb-6" />,
-  //   title: 'Campanhas Publicitárias',
-  //   description: 'Conexão entre marcas e talentos para campanhas publicitárias impactantes e autênticas.',
-  //   details: [
-  //     'Seleção de talentos para campanhas de marcas',
-  //     'Negociação de contratos de imagem',
-  //     'Gestão de direitos autorais e de imagem',
-  //     'Acompanhamento durante as produções',
-  //     'Assessoria para aprovações e ajustes',
-  //   ],
-  //   image: '/images/service-4.jpg',
-  // },
-  // {
-  //   id: 5,
-  //   icon: <FaTheaterMasks className="text-5xl mb-6" />,
-  //   title: 'Produção de Eventos',
-  //   description: 'Organização e produção de eventos corporativos, desfiles e apresentações artísticas.',
-  //   details: [
-  //     'Produção completa de desfiles de moda',
-  //     'Organização de eventos corporativos',
-  //     'Casting para eventos especiais',
-  //     'Coordenação de backstage',
-  //     'Produção de showcases para novos talentos',
-  //   ],
-  //   image: '/images/service-5.jpg',
-  // },
-  // {
-  //   id: 6,
-  //   icon: <FaGlobe className="text-5xl mb-6" />,
-  //   title: 'Carreira Internacional',
-  //   description: 'Suporte para desenvolvimento de carreira internacional, com parcerias em diversos países.',
-  //   details: [
-  //     'Parcerias com agências internacionais',
-  //     'Preparação para o mercado global',
-  //     'Tradução e adaptação de material promocional',
-  //     'Assessoria para vistos de trabalho',
-  //     'Acompanhamento remoto durante trabalhos no exterior',
-  //   ],
-  //   image: '/images/service-6.jpg',
-  // },
-  // {
-  //   id: 7,
-  //   icon: <FaGraduationCap className="text-5xl mb-6" />,
-  //   title: 'Workshops e Treinamentos',
-  //   description: 'Capacitação contínua para nossos talentos através de workshops, cursos e treinamentos especializados.',
-  //   details: [
-  //     'Workshops de interpretação e técnicas de atuação',
-  //     'Treinamento de passarela para modelos',
-  //     'Cursos de oratória e expressão corporal',
-  //     'Workshops de marketing pessoal para influenciadores',
-  //     'Treinamentos de postura para fotografia',
-  //   ],
-  //   image: '/images/service-7.jpg',
-  // },
-  // {
-  //   id: 8,
-  //   icon: <FaHandshake className="text-5xl mb-6" />,
-  //   title: 'Consultoria para Empresas',
-  //   description: 'Serviços de consultoria para empresas que desejam trabalhar com influenciadores e talentos em suas estratégias de marketing.',
-  //   details: [
-  //     'Análise de perfil de marca e público-alvo',
-  //     'Seleção estratégica de talentos alinhados com valores da marca',
-  //     'Desenvolvimento de campanhas com influenciadores',
-  //     'Mensuração de resultados e ROI',
-  //     'Gestão de relacionamento com talentos',
-  //   ],
-  //   image: '/images/service-8.jpg',
-  // },
 ];
 
 const ServicesList = () => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.1 });
+  const [isLoading, setIsLoading] = useState(true);
+  const [apiError, setApiError] = useState(true);
+  const [servicos, setServicos] = useState<ServicoResumido[]>([]);
+
+  useEffect(() => {
+    const fetchServicos = async () => {
+      try {
+        setIsLoading(true);
+        setApiError(false);
+
+        const params = {
+          ativo: true, // ou false, conforme desejado
+          search: '', // se quiser incluir
+          ordering: 'preco', // ou outro campo
+          page: 1,
+          page_size: 10,
+        };
+
+        const response = await ServicosService.getServicos(params);
+        setServicos(response.results);
+      } catch (error) {
+        console.error(error);
+        setApiError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchServicos(); // Aqui é onde você chama a função!
+  }, []); // substitua [] por qualquer dependência que você quiser usar
+
+  // Animação para card
+  const cardVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: {
+        delay: i * 0.1,
+        duration: 0.5,
+        ease: 'easeOut',
+      },
+    }),
+    exit: { opacity: 0, scale: 0.9, transition: { duration: 0.3 } },
+  };
+
+  if (isLoading) {
+    return (
+      <div className="container-section py-16">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+          {[...Array(8)].map((_, index) => (
+            <div
+              key={index}
+              className="bg-gray-200 dark:bg-gray-800 rounded-xl w-full aspect-[3/4] animate-pulse"
+            />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  // Componente de mensagem quando a API está indisponível
+  const ErrorMessage = () => (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
+    >
+      <div className="p-8 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+        <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+          Ainda não temos Posts selecionados
+        </h3>
+        <p className="text-gray-600 dark:text-gray-400">
+          No momento, nosso arsenal de posts está indisponível. Por favor, tente novamente
+          mais tarde ou entre em contato conosco para mais informações.
+        </p>
+      </div>
+    </motion.div>
+  );
 
   return (
     <section ref={ref} className="py-20 bg-white dark:bg-black">

@@ -19,7 +19,6 @@ const BlogCards = ({ filter }: BlogCardsProps) => {
   const [displayCount, setDisplayCount] = useState(8);
   const [posts, setPosts] = useState<PostResumido[]>([]);
   const loadMoreRef = useRef(null);
-  // const isInView = useInView(loadMoreRef);
 
   useEffect(() => {
     const fetchPosts = async () => {

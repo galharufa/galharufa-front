@@ -65,6 +65,14 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, authLoading, router]);
 
+  const slugify = (str: string) =>
+    str
+      .normalize('NFD') // separa letras de acentos
+      .replace(/[\u0300-\u036f]/g, '') // remove acentos
+      .replace(/ç/g, 'c') // substitui cedilha
+      .replace(/[^a-zA-Z0-9]/g, '-') // substitui espaços e outros caracteres por hífen (opcional)
+      .toLowerCase();
+
   useEffect(() => {
     const carregarDados = async () => {
       if (!isAuthenticated || authLoading) return;
@@ -272,7 +280,7 @@ export default function Dashboard() {
                 }}
                 fullWidth
                 mt="md"
-                onClick={() => router.push(`/admin/${stat.title.toLowerCase()}`)}
+                onClick={() => router.push(`/admin/${slugify(stat.title)}`)}
               >
                 Gerenciar
               </Button>
