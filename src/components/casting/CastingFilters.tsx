@@ -8,9 +8,16 @@ import { CastingService } from '@/services/casting.service';
 type FilterProps = {
   activeFilter: string;
   setActiveFilter: (filter: string) => void;
+  activeGeneroFilter: string;
+  setActiveGeneroFilter: (filter: string) => void;
 };
 
-const CastingFilters = ({ activeFilter, setActiveFilter }: FilterProps) => {
+const CastingFilters = ({
+  activeFilter,
+  setActiveFilter,
+  activeGeneroFilter,
+  setActiveGeneroFilter,
+}: FilterProps) => {
   const [categories, setCategories] = useState<Array<{ id: string; label: string }>>([
     { id: 'todos', label: 'Todos' },
   ]);
@@ -38,10 +45,19 @@ const CastingFilters = ({ activeFilter, setActiveFilter }: FilterProps) => {
     fetchCategories();
   }, []);
 
+  // Opções de gênero disponíveis
+  const generos = [
+    { id: 'todos', label: 'Todos' },
+    { id: 'masculino', label: 'Masculino' },
+    { id: 'feminino', label: 'Feminino' },
+    { id: 'nao_binario', label: 'Não-Binário' },
+  ];
+
   return (
     <div className="py-10 bg-white dark:bg-black">
       <div className="container-section">
-        <div className="text-center mb-8">
+        {/* Filtro por Categoria */}
+        <div className="text-center mb-12">
           <h2 className="text-2xl font-semibold text-black dark:text-white mb-6">
             Filtrar por Categoria
           </h2>
@@ -59,7 +75,37 @@ const CastingFilters = ({ activeFilter, setActiveFilter }: FilterProps) => {
                 {category.label}
                 {activeFilter === category.id && (
                   <motion.span
-                    layoutId="activeFilterIndicator"
+                    layoutId="activeFilterCategoryIndicator"
+                    className="absolute inset-0 rounded-full bg-black dark:bg-white -z-10"
+                    initial={false}
+                    transition={{ type: 'spring', duration: 0.5 }}
+                  />
+                )}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Filtro por Gênero */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-semibold text-black dark:text-white mb-6">
+            Filtrar por Gênero
+          </h2>
+          <div className="flex flex-wrap justify-center gap-3">
+            {generos.map((genero) => (
+              <button
+                key={genero.id}
+                onClick={() => setActiveGeneroFilter(genero.id)}
+                className={`relative px-6 py-2 rounded-full transition-all duration-300 ${
+                  activeGeneroFilter === genero.id
+                    ? 'bg-black text-white dark:bg-white dark:text-black'
+                    : 'bg-gray-200 text-gray-800 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-700'
+                }`}
+              >
+                {genero.label}
+                {activeGeneroFilter === genero.id && (
+                  <motion.span
+                    layoutId="activeFilterGeneroIndicator"
                     className="absolute inset-0 rounded-full bg-black dark:bg-white -z-10"
                     initial={false}
                     transition={{ type: 'spring', duration: 0.5 }}

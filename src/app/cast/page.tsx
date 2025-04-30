@@ -8,6 +8,7 @@ import Script from 'next/script';
 
 export default function CastingPage() {
   const [activeFilter, setActiveFilter] = useState('todos');
+  const [activeGeneroFilter, setActiveGeneroFilter] = useState('todos');
 
   return (
     <div className="bg-white dark:bg-gray-900">
@@ -26,8 +27,13 @@ export default function CastingPage() {
          `}
       </Script>
       <CastingHero />
-      <CastingFilters activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
-      <CastingGrid filter={activeFilter} />
+      <CastingFilters
+        activeFilter={activeFilter}
+        setActiveFilter={setActiveFilter}
+        activeGeneroFilter={activeGeneroFilter}
+        setActiveGeneroFilter={setActiveGeneroFilter}
+      />
+      <CastingGrid filter={activeFilter} generoFilter={activeGeneroFilter} />
     </div>
   );
 }

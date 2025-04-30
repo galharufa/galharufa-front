@@ -7,13 +7,22 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useInView } from 'framer-motion';
 
+// Função para gerar uma URL amigável a partir do nome artístico
+const slugify = (text: string | undefined | null): string => {
+  if (!text) return '';
+
+  // Converter para texto em minúsculas e remover acentos
+  return encodeURIComponent(text);
+};
+
 import { CastingService, CastingResumido } from '@/services/casting.service';
 
 interface CastingGridProps {
   filter: string;
+  generoFilter: string;
 }
 
-const CastingGrid = ({ filter }: CastingGridProps) => {
+const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
   const [castings, setCastings] = useState<CastingResumido[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [displayCount, setDisplayCount] = useState(8);
@@ -26,7 +35,12 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
       try {
         setIsLoading(true);
         setApiError(false);
-        const params: { ordering: string; ativo: boolean; categoria?: number } = {
+        const params: {
+          ordering: string;
+          ativo: boolean;
+          categoria?: number;
+          genero?: string;
+        } = {
           ordering: 'nome',
           ativo: true,
         };
@@ -37,6 +51,11 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
           if (!isNaN(categoriaId)) {
             params.categoria = categoriaId;
           }
+        }
+
+        // Se o filtro de gênero não for "todos", adicionar filtro
+        if (generoFilter !== 'todos') {
+          params.genero = generoFilter;
         }
 
         const response = await CastingService.getCastings(params);
@@ -51,7 +70,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
     };
 
     fetchCastings();
-  }, [filter]);
+  }, [filter, generoFilter]);
 
   // Incrementar o número de castings exibidos quando o elemento de referência estiver visível
   useEffect(() => {
@@ -109,6 +128,9 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
     </motion.div>
   );
 
+  // Filtrar os castings visíveis
+  const visibleCastings = castings.slice(0, displayCount);
+
   return (
     <div className="container-section py-16">
       <AnimatePresence>
@@ -117,7 +139,7 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             {castings.length > 0
-              ? castings.slice(0, displayCount).map((casting, index) => (
+              ? visibleCastings.map((casting, index) => (
                   <motion.div
                     key={casting.id}
                     custom={index}
@@ -128,8 +150,10 @@ const CastingGrid = ({ filter }: CastingGridProps) => {
                     layoutId={`casting-${casting.id}`}
                     className="group cursor-pointer opacity-70 hover:opacity-100 hover:cursor-pointer grayscale hover:grayscale-0"
                   >
-                    <Link href={`/cast/${casting.id}`} passHref>
-                      {/* trocar aqui pelo nome artistico do calango */}
+                    <Link
+                      href={`/cast/${slugify(casting.nome_artistico) || casting.id}`}
+                      passHref
+                    >
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                         <Image
                           src={casting.foto_principal || '/images/placeholder-talent.jpg'}
