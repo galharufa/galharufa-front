@@ -370,11 +370,93 @@ export default function NovoCasting() {
       formData.set('genero', values.genero || 'masculino');
       formData.set('categoria', values.categoria);
 
+      // Tipo (categoria)
+      if (values.tipo) formData.set('tipo', values.tipo);
+
+      // Naturalidade e informações de origem
+      if (values.natural_de) formData.set('natural_de', values.natural_de);
+      if (values.nacionalidade) formData.set('nacionalidade', values.nacionalidade);
+      if (values.etnia) formData.set('etnia', values.etnia);
+      if (values.data_nascimento)
+        formData.set(
+          'data_nascimento',
+          values.data_nascimento instanceof Date
+            ? values.data_nascimento.toISOString().split('T')[0]
+            : values.data_nascimento,
+        );
+      if (values.ano) formData.set('ano', String(values.ano));
+
       // Características físicas - campos obrigatórios
       formData.set('altura', values.altura);
       formData.set('peso', values.peso);
       if (values.manequim) formData.set('manequim', String(values.manequim));
       if (values.sapato) formData.set('sapato', String(values.sapato));
+      if (values.olhos) formData.set('olhos', values.olhos);
+      if (values.tipo_cabelo) formData.set('tipo_cabelo', values.tipo_cabelo);
+      if (values.cor_cabelo) formData.set('cor_cabelo', values.cor_cabelo);
+
+      // Tatuagens
+      formData.set('tem_tatuagens', values.tem_tatuagens ? 'true' : 'false');
+      if (values.locais_tatuagens)
+        formData.set('locais_tatuagens', values.locais_tatuagens);
+
+      // Documentos
+      if (values.DRT) formData.set('DRT', values.DRT);
+      if (values.RG) formData.set('RG', values.RG);
+      if (values.CPF) formData.set('CPF', values.CPF);
+      formData.set('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
+      if (values.cnpj) formData.set('cnpj', values.cnpj);
+      if (values.razao_social) formData.set('razao_social', values.razao_social);
+      if (values.inscricao_estadual)
+        formData.set('inscricao_estadual', values.inscricao_estadual);
+      formData.set('possui_nota_propria', values.possui_nota_propria ? 'true' : 'false');
+      if (values.cnh) formData.set('cnh', values.cnh);
+
+      // Currículo e habilidades
+      if (values.curriculum_artistico)
+        formData.set('curriculum_artistico', values.curriculum_artistico);
+      if (values.habilidades)
+        formData.set('habilidades', JSON.stringify(values.habilidades));
+      if (values.habilidade_especifica)
+        formData.set('habilidade_especifica', values.habilidade_especifica);
+      if (values.outros_esportes) formData.set('outros_esportes', values.outros_esportes);
+      if (values.outras_modalidades_circenses)
+        formData.set('outras_modalidades_circenses', values.outras_modalidades_circenses);
+      if (values.outros_instrumentos)
+        formData.set('outros_instrumentos', values.outros_instrumentos);
+      if (values.terno) formData.set('terno', values.terno);
+      if (values.camisa) formData.set('camisa', values.camisa);
+
+      // Links de mídia
+      if (values.link_monologo) formData.set('link_monologo', values.link_monologo);
+      if (values.link_trabalho_1) formData.set('link_trabalho_1', values.link_trabalho_1);
+      if (values.link_trabalho_2) formData.set('link_trabalho_2', values.link_trabalho_2);
+
+      // Contato
+      if (values.telefone) formData.set('telefone', values.telefone);
+      if (values.email) formData.set('email', values.email);
+      if (values.link_imdb) formData.set('link_imdb', values.link_imdb);
+      if (values.link_instagram) formData.set('link_instagram', values.link_instagram);
+
+      // Exclusividade e informações adicionais
+      if (values.info_exclusividade)
+        formData.set('info_exclusividade', values.info_exclusividade);
+      formData.set(
+        'exclusividade_outro_age',
+        values.exclusividade_outro_age ? 'true' : 'false',
+      );
+
+      // Informações bancárias
+      if (values.pix_tipo) formData.set('pix_tipo', values.pix_tipo);
+      if (values.pix_chave) formData.set('pix_chave', values.pix_chave);
+      if (values.dados_bancarios_id)
+        formData.set('dados_bancarios_id', values.dados_bancarios_id);
+
+      // IDs relacionados
+      if (values.endereco_id) formData.set('endereco_id', values.endereco_id);
+      if (values.idiomas_id) formData.set('idiomas_id', values.idiomas_id);
+      if (values.usuario_id) formData.set('usuario_id', values.usuario_id);
+      if (values.veiculos_id) formData.set('veiculos_id', values.veiculos_id);
 
       // Adicionar biografia - campos obrigatórios
       formData.set('biografia', values.biografia);
@@ -462,7 +544,8 @@ export default function NovoCasting() {
           const casting = response.data;
 
           // Adicionar fotos adicionais
-          if (compressedFotos.length > 0) {
+          if (compressedFotos.length > 0 && casting && casting.id) {
+            console.log('Adicionando fotos adicionais para o casting ID:', casting.id);
             const fotosPromises = compressedFotos.map(async (foto, index) => {
               if (!foto) return null;
 
@@ -472,6 +555,11 @@ export default function NovoCasting() {
               fotoFormData.append('ordem', index.toString());
 
               try {
+                // Verificar se o ID do casting está definido
+                if (!casting.id) {
+                  console.error('ID do casting indefinido ao adicionar foto');
+                  return null;
+                }
                 return await CastingService.adicionarFoto(casting.id, fotoFormData);
               } catch (error) {
                 console.error('Erro ao adicionar foto:', error);
@@ -480,14 +568,22 @@ export default function NovoCasting() {
             });
 
             await Promise.all(fotosPromises.filter(Boolean));
+          } else if (compressedFotos.length > 0) {
+            console.error('Não foi possível adicionar fotos: ID do casting indefinido');
           }
 
           // Adicionar vídeos
-          if (videos.length > 0) {
+          if (videos.length > 0 && casting && casting.id) {
+            console.log('Adicionando vídeos para o casting ID:', casting.id);
             const videosPromises = videos.map(async (url, index) => {
               if (!url) return null;
 
               try {
+                // Verificar se o ID do casting está definido
+                if (!casting.id) {
+                  console.error('ID do casting indefinido ao adicionar vídeo');
+                  return null;
+                }
                 return await CastingService.adicionarVideo(casting.id, {
                   titulo: descricaoVideos[index] || 'Vídeo ' + (index + 1),
                   url,
@@ -500,6 +596,8 @@ export default function NovoCasting() {
             });
 
             await Promise.all(videosPromises.filter(Boolean));
+          } else if (videos.length > 0) {
+            console.error('Não foi possível adicionar vídeos: ID do casting indefinido');
           }
 
           successToast('Casting cadastrado com sucesso!');

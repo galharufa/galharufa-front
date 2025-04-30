@@ -230,12 +230,24 @@ export const CastingService = {
 
   // Fotos
   async adicionarFoto(castingId: string, formData: FormData): Promise<Foto> {
+    // Obter o token de autenticação
+    const token = localStorage.getItem('accessToken');
+
+    // Log para debug
+    // eslint-disable-next-line no-console
+    console.log(`Enviando foto adicional para casting ${castingId}`);
+    for (const pair of formData.entries()) {
+      // eslint-disable-next-line no-console
+      console.log(`${pair[0]}: ${pair[1]}`);
+    }
+
     const response = await api.post<Foto>(
       `/api/casting/castings/${castingId}/add_foto/`,
       formData,
       {
         headers: {
           'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
         },
       },
     );
@@ -248,9 +260,21 @@ export const CastingService = {
 
   // Vídeos
   async adicionarVideo(castingId: string, video: Omit<Video, 'id'>): Promise<Video> {
+    // Obter o token de autenticação
+    const token = localStorage.getItem('accessToken');
+
+    // Log para debug
+    // eslint-disable-next-line no-console
+    console.log(`Enviando vídeo para casting ${castingId}`, video);
+
     const response = await api.post<Video>(
       `/api/casting/castings/${castingId}/videos/`,
       video,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     return response.data;
   },
