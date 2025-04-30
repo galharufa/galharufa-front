@@ -41,7 +41,15 @@ export default function AdminNavbar() {
 
   const closeMenu = () => {};
 
-  const menuItems = [
+  // Definição do tipo para items do menu
+  interface MenuItem {
+    icon: (props: any) => JSX.Element;
+    label: string;
+    link: string;
+    otherLink?: string;
+  }
+
+  const menuItems: MenuItem[] = [
     {
       icon: IconUsers,
       label: 'Casting',
@@ -57,12 +65,12 @@ export default function AdminNavbar() {
       label: 'Blog',
       link: '/admin/blog',
     },
-    {
-      icon: IconSettings,
-      label: 'Configurações',
-      link: '/admin/configuracoes',
-      otherLink: '/admin/usuario',
-    },
+    // {
+    //   icon: IconSettings,
+    //   label: 'Configurações',
+    //   link: '/admin/configuracoes',
+    //   otherLink: '/admin/usuario',
+    // },
   ];
 
   return (
@@ -81,18 +89,22 @@ export default function AdminNavbar() {
       >
         <Navbar.Section grow>
           <Center my={24}>
-            <Anchor component={Link} href="/" passHref>
+            <Anchor component={Link} href="/admin/dashboard" passHref>
               <Image
                 src={
                   dark
                     ? '/images/logos/logo_horizontal_black.jpg'
                     : '/images/logos/logo_horizontal_white.jpg'
                 }
-                width={150}
-                height={80}
+                width={230}
+                height={100}
                 alt="Logo"
-                style={{ objectFit: 'contain' }}
-                priority
+                style={{ 
+                  objectFit: 'contain',
+                  maxWidth: '100%',
+                  margin: '0 auto'
+                }}
+                fit="contain"
               />
             </Anchor>
           </Center>

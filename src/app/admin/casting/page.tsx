@@ -63,6 +63,13 @@ export default function CastingAdmin() {
     },
   });
 
+  // Função para contar castings por categoria
+  const getCastingsCountByCategoria = (categoriaId: number): number => {
+    return castings.filter(casting => 
+      casting.categoria?.includes(categoriaId.toString())
+    ).length;
+  };
+
   // Carregar categorias e talentos
   useEffect(() => {
     const carregarDados = async () => {

@@ -362,6 +362,7 @@ export default function BlogAdmin() {
             required
             {...form.getInputProps('titulo')}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <Textarea
@@ -371,6 +372,7 @@ export default function BlogAdmin() {
             minRows={2}
             {...form.getInputProps('resumo')}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <Textarea
@@ -380,6 +382,7 @@ export default function BlogAdmin() {
             minRows={6}
             {...form.getInputProps('conteudo')}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <Select
@@ -392,6 +395,7 @@ export default function BlogAdmin() {
             }))}
             {...form.getInputProps('categoria')}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <MultiSelect
@@ -400,6 +404,7 @@ export default function BlogAdmin() {
             data={tags.map((tag) => ({ value: tag.id.toString(), label: tag.nome }))}
             {...form.getInputProps('tags')}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <DatePickerInput
@@ -408,6 +413,7 @@ export default function BlogAdmin() {
             {...form.getInputProps('data_publicacao')}
             mb="md"
             icon={<IconCalendar size={14} />}
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <FileInput
@@ -417,12 +423,14 @@ export default function BlogAdmin() {
             icon={<IconUpload size={14} />}
             {...form.getInputProps('imagem_destaque')}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <Switch
             label="Publicado"
             {...form.getInputProps('publicado', { type: 'checkbox' })}
             mb="md"
+            ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
           <Group position="right" mt="md">

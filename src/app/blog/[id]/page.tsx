@@ -129,7 +129,7 @@ export default function BlogPost() {
               {post.tags.map((cat, index) => (
                 <span
                   key={index}
-                  className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
+                  className="bg-black/20 dark:bg-white/20 text-white px-3 py-1 rounded-full text-sm"
                 >
                   {cat.nome}
                 </span>
@@ -146,7 +146,7 @@ export default function BlogPost() {
           <AnimatedSection className="lg:col-span-2" direction="right" delay={0.4}>
             {/* Titulo */}
             <div className="border-b border-gray-200 dark:border-gray-800 mb-8">
-              <h1>{post.titulo}</h1>
+              <h1 className="text-black dark:text-white">{post.titulo}</h1>
             </div>
             {/* Resumo e Data */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
@@ -154,13 +154,13 @@ export default function BlogPost() {
                 {/* Espaço em branco para criar coluna vazia e alinhar data a direita */}
                 <small></small>
               </div>
-              <div className="order-2 text-right text-sm text-gray-500">
+              <div className="order-2 text-right text-sm text-gray-500 dark:text-gray-400">
                 {formatarData(post.data_publicacao)}
               </div>
             </div>
             {/* Conteúdo do Blog */}
             <div>
-              <p>{post.conteudo}</p>
+              <p className="text-black dark:text-white">{post.conteudo}</p>
             </div>
             <div className="align-right"></div>
           </AnimatedSection>
@@ -175,25 +175,27 @@ export default function BlogPost() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Tags:</h3>
-                  {post.tags.map((cat, index) => (
-                    <span
-                      key={index}
-                      className="bg-white/20 text-white px-3 py-1 rounded-full text-sm"
-                    >
-                      {cat.nome}
-                    </span>
-                  ))}
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {post.tags.map((cat, index) => (
+                      <span
+                        key={index}
+                        className="bg-gray-200 dark:bg-gray-700 text-black dark:text-white px-3 py-1 rounded-full text-sm"
+                      >
+                        {cat.nome}
+                      </span>
+                    ))}
+                  </div>
                 </div>
 
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Resumo:</h3>
-                  <p className="flex flex-wrap gap-2 mt-1">{post.resumo}</p>
+                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.resumo}</p>
 
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Autor:</h3>
-                  <p className="flex flex-wrap gap-2 mt-1">{post.autor_nome}</p>
+                  {/* <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">Autor:</h3>
+                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.autor_nome}</p> */}
 
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Categoria:</h3>
-                  <p className="flex flex-wrap gap-2 mt-1">{post.categoria_nome}</p>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">Categoria:</h3>
+                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.categoria_nome}</p>
                 </div>
               </div>
 

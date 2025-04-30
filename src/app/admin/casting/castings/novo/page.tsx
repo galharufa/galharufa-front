@@ -31,7 +31,7 @@ import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
 import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
-// import Underline from '@tiptap/extension-underline';
+import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
@@ -193,10 +193,11 @@ export default function NovoCasting() {
   });
 
   const editor = useEditor({
-    extensions: [StarterKit, Link, TextAlign, Highlight],
-    content: form.getInputProps('curriculum_artistico').value,
+    extensions: [StarterKit, Link, TextAlign, Highlight, Underline],
+    content: form.getInputProps('experiencia').value,
     onUpdate: ({ editor }) =>
-      form.getInputProps('curriculum_artistico').onChange(editor.getHTML()),
+      form.getInputProps('experiencia').onChange(editor.getHTML()),
+    immediatelyRender: false, // Corrige o problema de hidratação SSR
   });
 
   // Carregar dados iniciais (categorias, funções, etc.)
@@ -298,6 +299,7 @@ export default function NovoCasting() {
   // Função para salvar o casting
   const handleSubmit = async (values: any) => {
     setIsSubmitting(true);
+    console.log('Iniciando salvamento de casting com valores:', values);
     try {
       // Comprimir a foto principal se existir
       if (values.foto_principal) {
@@ -329,16 +331,33 @@ export default function NovoCasting() {
         }
       }
       // Verificar se os campos obrigatórios estão preenchidos
-      if (
-        !values.altura ||
-        !values.peso ||
-        !values.biografia ||
-        !values.experiencia ||
-        !values.foto_principal
-      ) {
-        errorToast('Por favor, preencha todos os campos obrigatórios');
+      console.log('Verificando campos obrigatórios...');
+      const camposObrigatorios = {
+        nome: values.nome,
+        categoria: values.categoria,
+        altura: values.altura,
+        peso: values.peso,
+        biografia: values.biografia,
+        experiencia: values.experiencia,
+        foto_principal: values.foto_principal
+      };
+      
+      // Garantir que o conteúdo do editor seja utilizado para experiencia
+      if (editor && !values.experiencia) {
+        values.experiencia = editor.getHTML();
+        camposObrigatorios.experiencia = editor.getHTML();
+      }
+      
+      const camposFaltantes = Object.entries(camposObrigatorios)
+        .filter(([_, value]) => !value)
+        .map(([key]) => key);
+      
+      if (camposFaltantes.length > 0) {
+        console.error('Campos obrigatórios faltando:', camposFaltantes);
+        errorToast(`Por favor, preencha os campos obrigatórios: ${camposFaltantes.join(', ')}`);
         return;
       }
+      console.log('Todos os campos obrigatórios estão preenchidos.');
 
       // Criar FormData para envio de arquivos
       const formData = new FormData();
@@ -426,18 +445,21 @@ export default function NovoCasting() {
         }
 
         // Usar a URL relativa para aproveitar o proxy configurado no next.config.ts
-        const response = await api.post('/api/casting/castings/', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-            Authorization: `Bearer ${token}`,
-          },
-          // Aumentar o timeout para uploads grandes
-          timeout: 60000, // 60 segundos
-        });
+        console.log('Enviando dados para o backend...');
+        try {
+          const response = await api.post('/api/casting/castings/', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+              Authorization: `Bearer ${token}`,
+            },
+            // Aumentar o timeout para uploads grandes
+            timeout: 60000, // 60 segundos
+          });
 
-        const casting = response.data;
-
-        // Adicionar fotos adicionais
+          console.log('Resposta do servidor:', response.data);
+          const casting = response.data;
+          
+          // Adicionar fotos adicionais
         if (compressedFotos.length > 0) {
           const fotosPromises = compressedFotos.map(async (foto, index) => {
             if (!foto) return null;
@@ -478,10 +500,21 @@ export default function NovoCasting() {
           await Promise.all(videosPromises.filter(Boolean));
         }
 
-        successToast('Casting cadastrado com sucesso!');
-        router.push('/admin/casting');
+          successToast('Casting cadastrado com sucesso!');
+          router.push('/admin/casting');
+        } catch (apiError: any) {
+          console.error('Erro na chamada da API:', apiError);
+          
+          if (apiError.response) {
+            console.error('Resposta de erro do servidor:', apiError.response.data);
+            throw apiError;
+          } else {
+            throw apiError;
+          }
+        }
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
+        console.error('Stack de erro:', error.stack);
 
         // Log detalhado dos erros
         if (error.response) {
@@ -510,10 +543,14 @@ export default function NovoCasting() {
           );
         }
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Erro ao processar formulário:', error);
+      if (error instanceof Error) {
+        console.error('Detalhes do erro:', error.stack);
+      }
       errorToast('Falha ao processar formulário. Tente novamente.');
     } finally {
+      console.log('Finalizando processo de salvamento');
       setIsSubmitting(false);
     }
   };
@@ -603,6 +640,7 @@ export default function NovoCasting() {
                     }))}
                     required
                     {...form.getInputProps('categoria')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -612,6 +650,7 @@ export default function NovoCasting() {
                     placeholder="Selecione o gênero"
                     data={genderData}
                     {...form.getInputProps('genero')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -622,6 +661,7 @@ export default function NovoCasting() {
                   placeholder="Selecione uma ou mais habilidades"
                   data={habilidadesData}
                   {...form.getInputProps('habilidades')}
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <SimpleGrid cols={3}>
@@ -630,6 +670,7 @@ export default function NovoCasting() {
                     placeholder="Natural de (município/estado)"
                     {...form.getInputProps('natural_de')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <Select
                     label="Nacionalidade"
@@ -639,6 +680,7 @@ export default function NovoCasting() {
                     clearable
                     data={nationality}
                     {...form.getInputProps('nacionalidade')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <Select
@@ -646,6 +688,7 @@ export default function NovoCasting() {
                     placeholder="Selecione a etnia"
                     data={etny}
                     {...form.getInputProps('etnia')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -656,17 +699,20 @@ export default function NovoCasting() {
                   icon={<IconUpload size={14} />}
                   {...form.getInputProps('foto_principal')}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Switch
                   label="Ativo"
                   {...form.getInputProps('ativo', { type: 'checkbox' })}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Switch
                   label="Autoriza imagem no site"
                   {...form.getInputProps('autoriza_imagem_site', { type: 'checkbox' })}
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
               </Card>
             </Tabs.Panel>
@@ -683,14 +729,11 @@ export default function NovoCasting() {
                     placeholder="Selecione a data"
                     valueFormat="DD/MM/YYYY"
                     {...form.getInputProps('data_nascimento')}
-                  />
-
-                  <NumberInput
-                    label="Ano"
-                    placeholder="Ano de nascimento"
-                    min={1900}
-                    max={new Date().getFullYear()}
-                    {...form.getInputProps('ano')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    popoverProps={{
+                      zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
+                      withinPortal: true // Renderiza o calendário dentro de um portal para evitar problemas de z-index
+                    }}
                   />
 
                   <NumberInput
@@ -699,6 +742,7 @@ export default function NovoCasting() {
                     precision={2}
                     min={0.5}
                     max={2.5}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     step={0.01}
                     {...form.getInputProps('altura')}
                   />
@@ -712,18 +756,21 @@ export default function NovoCasting() {
                     min={20}
                     max={200}
                     {...form.getInputProps('peso')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <NumberInput
                     label="Manequim"
                     placeholder="Tamanho do manequim"
                     {...form.getInputProps('manequim')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <NumberInput
                     label="Sapato"
                     placeholder="Número do sapato"
                     {...form.getInputProps('sapato')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -732,12 +779,14 @@ export default function NovoCasting() {
                     label="Terno"
                     placeholder="Tamanho do terno"
                     {...form.getInputProps('terno')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <NumberInput
                     label="Camisa"
                     placeholder="Tamanho da camisa"
                     {...form.getInputProps('camisa')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -755,6 +804,7 @@ export default function NovoCasting() {
                       { value: 'castanho_esverdeado', label: 'Castanho Esverdeado' },
                     ]}
                     {...form.getInputProps('olhos')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <Select
@@ -769,6 +819,7 @@ export default function NovoCasting() {
                       { value: 'outro', label: 'Outro' },
                     ]}
                     {...form.getInputProps('tipo_cabelo')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <Select
@@ -776,6 +827,7 @@ export default function NovoCasting() {
                     placeholder="Selecione a cor do cabelo"
                     data={corCabelo}
                     {...form.getInputProps('cor_cabelo')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -783,6 +835,7 @@ export default function NovoCasting() {
                   label="Possui Tatuagens"
                   {...form.getInputProps('tem_tatuagens', { type: 'checkbox' })}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 {form.values.tem_tatuagens && (
@@ -791,6 +844,7 @@ export default function NovoCasting() {
                     placeholder="Descreva onde estão localizadas as tatuagens"
                     {...form.getInputProps('locais_tatuagens')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 )}
               </Card>
@@ -808,6 +862,7 @@ export default function NovoCasting() {
                     placeholder="Número do DRT e Estado de emissão"
                     icon={<IconId size={14} />}
                     {...form.getInputProps('DRT')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -815,6 +870,7 @@ export default function NovoCasting() {
                     placeholder="Número do RG"
                     icon={<IconId size={14} />}
                     {...form.getInputProps('RG')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -822,6 +878,7 @@ export default function NovoCasting() {
                     placeholder="Número do CPF"
                     icon={<IconId size={14} />}
                     {...form.getInputProps('CPF')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -830,6 +887,7 @@ export default function NovoCasting() {
                     <Switch
                       label="Possui Passaporte"
                       {...form.getInputProps('tem_passaporte', { type: 'checkbox' })}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     />
                   </Group>
 
@@ -837,6 +895,7 @@ export default function NovoCasting() {
                     label="CNH"
                     placeholder="Número da CNH"
                     {...form.getInputProps('CNH')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -852,18 +911,21 @@ export default function NovoCasting() {
                     placeholder="Número do CNPJ"
                     icon={<IconCreditCard size={14} />}
                     {...form.getInputProps('CNPJ')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Razão Social"
                     placeholder="Razão Social da empresa"
                     {...form.getInputProps('razao_social')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Inscrição Estadual"
                     placeholder="Número da Inscrição Estadual"
                     {...form.getInputProps('inscricao_estadual')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -871,6 +933,7 @@ export default function NovoCasting() {
                   label="Possui Nota Própria"
                   {...form.getInputProps('possui_nota_propria', { type: 'checkbox' })}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
               </Card>
             </Tabs.Panel>
@@ -887,6 +950,7 @@ export default function NovoCasting() {
                   minRows={4}
                   {...form.getInputProps('biografia')}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Text size="sm" fw={500} mb="xs">
@@ -895,31 +959,31 @@ export default function NovoCasting() {
                 <RichTextEditor editor={editor}>
                   <RichTextEditor.Toolbar sticky stickyOffset={60}>
                     <RichTextEditor.ControlsGroup>
-                      <RichTextEditor.Bold />
-                      <RichTextEditor.Italic />
-                      <RichTextEditor.Underline />
-                      <RichTextEditor.Strikethrough />
-                      <RichTextEditor.ClearFormatting />
-                      <RichTextEditor.Highlight />
-                      <RichTextEditor.Code />
+                      <RichTextEditor.Bold ref={undefined} />
+                      <RichTextEditor.Italic ref={undefined} />
+                      <RichTextEditor.Underline ref={undefined} />
+                      <RichTextEditor.Strikethrough ref={undefined} />
+                      <RichTextEditor.ClearFormatting ref={undefined} />
+                      <RichTextEditor.Highlight ref={undefined} />
+                      <RichTextEditor.Code ref={undefined} />
                     </RichTextEditor.ControlsGroup>
 
                     <RichTextEditor.ControlsGroup>
-                      <RichTextEditor.H1 />
-                      <RichTextEditor.H2 />
-                      <RichTextEditor.H3 />
-                      <RichTextEditor.H4 />
+                      <RichTextEditor.H1 ref={undefined} />
+                      <RichTextEditor.H2 ref={undefined} />
+                      <RichTextEditor.H3 ref={undefined} />
+                      <RichTextEditor.H4 ref={undefined} />
                     </RichTextEditor.ControlsGroup>
 
                     <RichTextEditor.ControlsGroup>
-                      <RichTextEditor.Hr />
-                      <RichTextEditor.BulletList />
-                      <RichTextEditor.OrderedList />
+                      <RichTextEditor.Hr ref={undefined} />
+                      <RichTextEditor.BulletList ref={undefined} />
+                      <RichTextEditor.OrderedList ref={undefined} />
                     </RichTextEditor.ControlsGroup>
 
                     <RichTextEditor.ControlsGroup>
-                      <RichTextEditor.Link />
-                      <RichTextEditor.Unlink />
+                      <RichTextEditor.Link ref={undefined} />
+                      <RichTextEditor.Unlink ref={undefined} />
                     </RichTextEditor.ControlsGroup>
                   </RichTextEditor.Toolbar>
 
@@ -975,6 +1039,7 @@ export default function NovoCasting() {
                         value={foto}
                         onChange={(file) => atualizarFoto(file, index)}
                         mb="md"
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       />
 
                       <TextInput
@@ -982,6 +1047,7 @@ export default function NovoCasting() {
                         placeholder="Legenda da foto"
                         value={legendasFotos[index] || ''}
                         onChange={(e) => atualizarLegenda(e.target.value, index)}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       />
                     </Card>
                   ))
@@ -999,6 +1065,7 @@ export default function NovoCasting() {
                     placeholder="URL do monólogo ou apresentação"
                     icon={<IconMovie size={14} />}
                     {...form.getInputProps('link_monologo')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1006,6 +1073,7 @@ export default function NovoCasting() {
                     placeholder="URL de algum trabalho realizado"
                     icon={<IconMovie size={14} />}
                     {...form.getInputProps('link_trabalho_1')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1015,6 +1083,7 @@ export default function NovoCasting() {
                   icon={<IconMovie size={14} />}
                   {...form.getInputProps('link_trabalho_2')}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
               </Card>
             </Tabs.Panel>
@@ -1031,6 +1100,7 @@ export default function NovoCasting() {
                     placeholder="Endereço de email para contato"
                     icon={<IconMail size={14} />}
                     {...form.getInputProps('email')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1038,6 +1108,7 @@ export default function NovoCasting() {
                     placeholder="Número de telefone com DDD"
                     icon={<IconPhone size={14} />}
                     {...form.getInputProps('telefone')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1047,6 +1118,7 @@ export default function NovoCasting() {
                     placeholder="Número de celular com DDD"
                     icon={<IconPhone size={14} />}
                     {...form.getInputProps('celular')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1054,6 +1126,7 @@ export default function NovoCasting() {
                     placeholder="Número de WhatsApp (se diferente do celular)"
                     icon={<IconBrandWhatsapp size={14} />}
                     {...form.getInputProps('whatsapp')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1063,6 +1136,7 @@ export default function NovoCasting() {
                     placeholder="@usuario"
                     icon={<IconBrandInstagram size={14} />}
                     {...form.getInputProps('instagram')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1070,6 +1144,7 @@ export default function NovoCasting() {
                     placeholder="@usuario"
                     icon={<IconBrandTiktok size={14} />}
                     {...form.getInputProps('tiktok')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1077,6 +1152,7 @@ export default function NovoCasting() {
                     placeholder="URL do canal ou vídeo"
                     icon={<IconBrandYoutube size={14} />}
                     {...form.getInputProps('youtube')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1086,6 +1162,7 @@ export default function NovoCasting() {
                   icon={<IconWorld size={14} />}
                   {...form.getInputProps('website')}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Divider my="md" label="Contato de Emergência" labelPosition="center" />
@@ -1095,6 +1172,7 @@ export default function NovoCasting() {
                     label="Nome do Contato de Emergência"
                     placeholder="Nome completo"
                     {...form.getInputProps('emergencia_nome')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1102,6 +1180,7 @@ export default function NovoCasting() {
                     placeholder="Número de telefone com DDD"
                     icon={<IconPhone size={14} />}
                     {...form.getInputProps('emergencia_telefone')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
               </Card>
@@ -1119,12 +1198,14 @@ export default function NovoCasting() {
                     placeholder="Formato: 00000-000"
                     icon={<IconMap size={14} />}
                     {...form.getInputProps('CEP')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Rua/Avenida"
                     placeholder="Nome da rua ou avenida"
                     {...form.getInputProps('rua')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1133,18 +1214,21 @@ export default function NovoCasting() {
                     label="Número"
                     placeholder="Número do endereço"
                     {...form.getInputProps('numero')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Complemento"
                     placeholder="Apto, bloco, etc (se houver)"
                     {...form.getInputProps('complemento')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Bairro"
                     placeholder="Nome do bairro"
                     {...form.getInputProps('bairro')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1153,6 +1237,7 @@ export default function NovoCasting() {
                     label="Cidade"
                     placeholder="Nome da cidade"
                     {...form.getInputProps('cidade')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1160,12 +1245,14 @@ export default function NovoCasting() {
                     placeholder="UF"
                     maxLength={2}
                     {...form.getInputProps('estado')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="País"
                     placeholder="País"
                     {...form.getInputProps('pais')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1176,18 +1263,21 @@ export default function NovoCasting() {
                     label="Banco"
                     placeholder="Número ou nome do banco"
                     {...form.getInputProps('banco')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Agência"
                     placeholder="Número da agência"
                     {...form.getInputProps('agencia')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Conta"
                     placeholder="Número da conta com dígito"
                     {...form.getInputProps('conta')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1202,12 +1292,14 @@ export default function NovoCasting() {
                       { value: 'pagamento', label: 'Pagamento' },
                     ]}
                     {...form.getInputProps('tipo_conta')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="PIX"
                     placeholder="Chave PIX"
                     {...form.getInputProps('pix')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
               </Card>
@@ -1238,6 +1330,7 @@ export default function NovoCasting() {
                   ]}
                   {...form.getInputProps('idiomas')}
                   mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Divider my="md" label="Veículos" labelPosition="center" />
@@ -1262,6 +1355,7 @@ export default function NovoCasting() {
                     ]}
                     {...form.getInputProps('habilitacao_categorias')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <DateInput
@@ -1270,6 +1364,11 @@ export default function NovoCasting() {
                     valueFormat="DD/MM/YYYY"
                     {...form.getInputProps('habilitacao_validade')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    popoverProps={{
+                      zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
+                      withinPortal: true // Renderiza o calendário dentro de um portal para evitar problemas de z-index
+                    }}
                   />
                 </Card>
 
@@ -1317,6 +1416,7 @@ export default function NovoCasting() {
                         onChange={(e) => atualizarVideo(e.target.value, index)}
                         icon={<IconCar size={14} />}
                         mb="md"
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       />
 
                       <TextInput
@@ -1324,6 +1424,7 @@ export default function NovoCasting() {
                         placeholder="Ano do veículo"
                         value={descricaoVideos[index] || ''}
                         onChange={(e) => atualizarDescricaoVideo(e.target.value, index)}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       />
                     </Card>
                   ))
