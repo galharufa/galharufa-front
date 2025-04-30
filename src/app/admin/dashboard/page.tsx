@@ -97,11 +97,28 @@ export default function Dashboard() {
 
         // Contar castings por categoria
         todosCastings.results.forEach((casting) => {
-          const categoriaId = casting.categoria;
-          castingsPorCategoria.set(
-            categoriaId,
-            (castingsPorCategoria.get(categoriaId) || 0) + 1,
-          );
+          // Verificar se categoria existe e obter o primeiro item como ID (se for array)
+          let categoriaId: number | undefined;
+
+          if (
+            casting.categoria &&
+            Array.isArray(casting.categoria) &&
+            casting.categoria.length > 0
+          ) {
+            // Se for array, pega o primeiro item e converte para número
+            categoriaId = Number(casting.categoria[0]);
+          } else if (typeof casting.categoria === 'string') {
+            // Se for string simples, converte para número
+            categoriaId = Number(casting.categoria);
+          }
+
+          // Só adiciona se conseguiu obter um ID válido
+          if (categoriaId && !isNaN(categoriaId) && categoriasMap.has(categoriaId)) {
+            castingsPorCategoria.set(
+              categoriaId,
+              (castingsPorCategoria.get(categoriaId) || 0) + 1,
+            );
+          }
         });
 
         // Formatar dados para o gráfico
