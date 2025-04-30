@@ -189,13 +189,19 @@ export default function BlogPost() {
 
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Resumo:</h3>
-                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.resumo}</p>
+                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">
+                    {post.resumo}
+                  </p>
 
                   {/* <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">Autor:</h3>
                   <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.autor_nome}</p> */}
 
-                  <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">Categoria:</h3>
-                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.categoria_nome}</p>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                    Categoria:
+                  </h3>
+                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">
+                    {post.categoria_nome}
+                  </p>
                 </div>
               </div>
 

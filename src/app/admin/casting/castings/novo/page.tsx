@@ -339,22 +339,24 @@ export default function NovoCasting() {
         peso: values.peso,
         biografia: values.biografia,
         experiencia: values.experiencia,
-        foto_principal: values.foto_principal
+        foto_principal: values.foto_principal,
       };
-      
+
       // Garantir que o conteúdo do editor seja utilizado para experiencia
       if (editor && !values.experiencia) {
         values.experiencia = editor.getHTML();
         camposObrigatorios.experiencia = editor.getHTML();
       }
-      
+
       const camposFaltantes = Object.entries(camposObrigatorios)
         .filter(([_, value]) => !value)
         .map(([key]) => key);
-      
+
       if (camposFaltantes.length > 0) {
         console.error('Campos obrigatórios faltando:', camposFaltantes);
-        errorToast(`Por favor, preencha os campos obrigatórios: ${camposFaltantes.join(', ')}`);
+        errorToast(
+          `Por favor, preencha os campos obrigatórios: ${camposFaltantes.join(', ')}`,
+        );
         return;
       }
       console.log('Todos os campos obrigatórios estão preenchidos.');
@@ -458,53 +460,53 @@ export default function NovoCasting() {
 
           console.log('Resposta do servidor:', response.data);
           const casting = response.data;
-          
+
           // Adicionar fotos adicionais
-        if (compressedFotos.length > 0) {
-          const fotosPromises = compressedFotos.map(async (foto, index) => {
-            if (!foto) return null;
+          if (compressedFotos.length > 0) {
+            const fotosPromises = compressedFotos.map(async (foto, index) => {
+              if (!foto) return null;
 
-            const fotoFormData = new FormData();
-            fotoFormData.append('imagem', foto);
-            fotoFormData.append('legenda', legendasFotos[index] || '');
-            fotoFormData.append('ordem', index.toString());
+              const fotoFormData = new FormData();
+              fotoFormData.append('imagem', foto);
+              fotoFormData.append('legenda', legendasFotos[index] || '');
+              fotoFormData.append('ordem', index.toString());
 
-            try {
-              return await CastingService.adicionarFoto(casting.id, fotoFormData);
-            } catch (error) {
-              console.error('Erro ao adicionar foto:', error);
-              return null;
-            }
-          });
+              try {
+                return await CastingService.adicionarFoto(casting.id, fotoFormData);
+              } catch (error) {
+                console.error('Erro ao adicionar foto:', error);
+                return null;
+              }
+            });
 
-          await Promise.all(fotosPromises.filter(Boolean));
-        }
+            await Promise.all(fotosPromises.filter(Boolean));
+          }
 
-        // Adicionar vídeos
-        if (videos.length > 0) {
-          const videosPromises = videos.map(async (url, index) => {
-            if (!url) return null;
+          // Adicionar vídeos
+          if (videos.length > 0) {
+            const videosPromises = videos.map(async (url, index) => {
+              if (!url) return null;
 
-            try {
-              return await CastingService.adicionarVideo(casting.id, {
-                titulo: descricaoVideos[index] || 'Vídeo ' + (index + 1),
-                url,
-                ordem: index,
-              });
-            } catch (error) {
-              console.error('Erro ao adicionar vídeo:', error);
-              return null;
-            }
-          });
+              try {
+                return await CastingService.adicionarVideo(casting.id, {
+                  titulo: descricaoVideos[index] || 'Vídeo ' + (index + 1),
+                  url,
+                  ordem: index,
+                });
+              } catch (error) {
+                console.error('Erro ao adicionar vídeo:', error);
+                return null;
+              }
+            });
 
-          await Promise.all(videosPromises.filter(Boolean));
-        }
+            await Promise.all(videosPromises.filter(Boolean));
+          }
 
           successToast('Casting cadastrado com sucesso!');
           router.push('/admin/casting');
         } catch (apiError: any) {
           console.error('Erro na chamada da API:', apiError);
-          
+
           if (apiError.response) {
             console.error('Resposta de erro do servidor:', apiError.response.data);
             throw apiError;
@@ -732,7 +734,7 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     popoverProps={{
                       zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
-                      withinPortal: true // Renderiza o calendário dentro de um portal para evitar problemas de z-index
+                      withinPortal: true, // Renderiza o calendário dentro de um portal para evitar problemas de z-index
                     }}
                   />
 
@@ -1367,7 +1369,7 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     popoverProps={{
                       zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
-                      withinPortal: true // Renderiza o calendário dentro de um portal para evitar problemas de z-index
+                      withinPortal: true, // Renderiza o calendário dentro de um portal para evitar problemas de z-index
                     }}
                   />
                 </Card>

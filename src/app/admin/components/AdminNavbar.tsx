@@ -20,7 +20,6 @@ import {
   IconNews,
   IconReceipt,
   IconLogout,
-  IconSettings,
   IconSun,
   IconMoon,
 } from '@tabler/icons-react';
@@ -41,9 +40,17 @@ export default function AdminNavbar() {
 
   const closeMenu = () => {};
 
+  // Definição do tipo para props dos ícones do Tabler
+  interface TablerIconProps {
+    size?: string | number;
+    stroke?: string | number;
+    color?: string;
+    className?: string;
+  }
+
   // Definição do tipo para items do menu
   interface MenuItem {
-    icon: (props: any) => JSX.Element;
+    icon: React.ComponentType<TablerIconProps>;
     label: string;
     link: string;
     otherLink?: string;
@@ -99,10 +106,10 @@ export default function AdminNavbar() {
                 width={230}
                 height={100}
                 alt="Logo"
-                style={{ 
+                style={{
                   objectFit: 'contain',
                   maxWidth: '100%',
-                  margin: '0 auto'
+                  margin: '0 auto',
                 }}
                 fit="contain"
               />
@@ -113,7 +120,7 @@ export default function AdminNavbar() {
             <NavLink
               key={item.label}
               label={item.label}
-              icon={<item.icon size={16} stroke={1.5} />}
+              icon={<item.icon size="16" stroke="1.5" />}
               variant="filled"
               className="admin-nav-link"
               active={
