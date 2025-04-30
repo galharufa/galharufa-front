@@ -223,7 +223,19 @@ export default function Dashboard() {
         <Title order={2} mb="xl">
           Bem-vindo, {user?.name || 'Administrador'}!
         </Title>
-
+        <Card withBorder p="xl" radius="md" mb="xl">
+          <Title order={3} mb="md">
+            Painel Administrativo Galharufa
+          </Title>
+          <Text mb="xl">
+            Este é o painel administrativo da Galharufa, onde você pode gerenciar o
+            casting, serviços, blog e outras configurações do site.
+          </Text>
+          <Text size="sm" color="dimmed">
+            Utilize o menu lateral para navegar entre as diferentes seções do painel
+            administrativo.
+          </Text>
+        </Card>
         <SimpleGrid
           cols={3}
           breakpoints={[{ maxWidth: 'sm', cols: 1 }]}
@@ -354,20 +366,6 @@ export default function Dashboard() {
             )}
           </Card>
         </SimpleGrid>
-
-        <Card withBorder p="xl" radius="md">
-          <Title order={3} mb="md">
-            Painel Administrativo Galharufa
-          </Title>
-          <Text mb="xl">
-            Este é o painel administrativo da Galharufa, onde você pode gerenciar o
-            casting, serviços, blog e outras configurações do site.
-          </Text>
-          <Text size="sm" color="dimmed">
-            Utilize o menu lateral para navegar entre as diferentes seções do painel
-            administrativo.
-          </Text>
-        </Card>
       </Container>
     </>
   );

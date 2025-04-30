@@ -1,5 +1,9 @@
 export const nationality = [
   {
+    value: 'br',
+    label: 'Brasil',
+  },
+  {
     value: 'af',
     label: 'Afeganistão',
   },
@@ -111,10 +115,7 @@ export const nationality = [
     value: 'bw',
     label: 'Botswana',
   },
-  {
-    value: 'br',
-    label: 'Brasil',
-  },
+
   {
     value: 'bn',
     label: 'Brunei',

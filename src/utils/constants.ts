@@ -104,6 +104,15 @@ export const banknumbers = [
   { value: '999', label: 'Outros' },
 ];
 
+export const tipoCabelo = [
+  { value: 'liso', label: 'Liso' },
+  { value: 'ondulado', label: 'Ondulado' },
+  { value: 'cacheado', label: 'Cacheado' },
+  { value: 'crespo', label: 'Crespo' },
+  { value: 'careca', label: 'Careca' },
+  { value: 'outro', label: 'Outro' },
+];
+
 export const corCabelo = [
   { value: 'preto', label: 'Preto' },
   { value: 'castanho_escuro', label: 'Castanho Escuro' },
