@@ -338,6 +338,18 @@ export default function CastingPage() {
                     Galeria
                   </button>
                 )}
+                {casting.videos && casting.videos.length > 0 && (
+                  <button
+                    onClick={() => setActiveTab('galeria')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
+                      activeTab === 'galeria'
+                        ? 'border-black dark:border-white text-black dark:text-white'
+                        : 'border-transparent text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    Videos
+                  </button>
+                )}
               </nav>
             </div>
 
@@ -364,9 +376,9 @@ export default function CastingPage() {
                       Experiência Profissional
                     </h2>
                     <ul className="space-y-4 mt-4">
-                      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                      <span className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
                         {parse(casting.experiencia)}
-                      </p>
+                      </span>
                     </ul>
                   </AnimatedSection>
                 )}
@@ -385,6 +397,26 @@ export default function CastingPage() {
                         alt={
                           foto.legenda || `${casting.nome_artistico} - Foto ${index + 1}`
                         }
+                        width={600}
+                        height={800}
+                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
+                        delay={index * 0.1}
+                      />
+                    ))}
+                  </div>
+                </AnimatedSection>
+              )}
+              {activeTab === 'videos' && casting.videos && casting.videos.length > 0 && (
+                <AnimatedSection direction="up" delay={0.2}>
+                  <h2 className="heading-tertiary text-black dark:text-white">
+                    Galeria de Fotos
+                  </h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {casting.videos.map((video, index) => (
+                      <AnimatedImage
+                        key={video.id}
+                        src={video.url}
+                        alt={video.titulo}
                         width={600}
                         height={800}
                         className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"

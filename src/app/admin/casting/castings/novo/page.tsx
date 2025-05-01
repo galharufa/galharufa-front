@@ -919,7 +919,7 @@ export default function NovoCasting() {
 
                   <Select
                     label="Cor do Cabelo"
-                    placeholder="Selecione a cor do cabelo"
+                    placeholder="Selecione a cor do cawbelo"
                     data={corCabelo}
                     disabled={form.values.tipo_cabelo === 'careca'}
                     {...form.getInputProps('cor_cabelo')}
