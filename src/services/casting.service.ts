@@ -77,6 +77,7 @@ export interface CastingDetalhado extends CastingResumido {
   manequim: string;
   peso: string;
   olhos: string | null;
+  tipo_cabelo: string | null;
   cor_cabelo: string | null;
   canta_profissionalmente: boolean;
   danca_profissionalmente: boolean;

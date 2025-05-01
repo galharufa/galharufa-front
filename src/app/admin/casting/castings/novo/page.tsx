@@ -55,6 +55,7 @@ import {
   nationality,
   modalidadesCircenses,
   estados,
+  corOlhos,
 } from '@/utils/index';
 
 import {
@@ -903,15 +904,7 @@ export default function NovoCasting() {
                   <Select
                     label="Cor dos Olhos"
                     placeholder="Selecione a cor dos olhos"
-                    data={[
-                      { value: 'castanho', label: 'Castanho' },
-                      { value: 'azul', label: 'Azul' },
-                      { value: 'verde', label: 'Verde' },
-                      { value: 'preto', label: 'Preto' },
-                      { value: 'mel', label: 'Mel' },
-                      { value: 'cinza', label: 'Cinza' },
-                      { value: 'castanho_esverdeado', label: 'Castanho Esverdeado' },
-                    ]}
+                    data={corOlhos}
                     {...form.getInputProps('olhos')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />

@@ -8,12 +8,7 @@ export const castingType = [
   { value: 'criativo', label: 'Criativos' },
 ];
 
-//Tipo Map
-export type TipoMap = {
-  [key: string]: string;
-};
-
-export const tipoMap: TipoMap = {
+export const tipoMap: Record<string, string> = {
   ator_exclusivo: 'Ator Exclusivo',
   ator_nao_exclusivo: 'Ator Não Exclusivo',
   influencer: 'Influencer',
@@ -31,12 +26,7 @@ export const etny = [
   { value: 'parda', label: 'Parda' },
 ];
 
-//Etnia Map
-export type EtniaMap = {
-  [key: string]: string;
-};
-
-export const etniaMap: EtniaMap = {
+export const etniaMap: Record<string, string> = {
   albina: 'Albina',
   amarela: 'Asiática / Amarela',
   branca: 'Branca / Caucasiana',
@@ -113,12 +103,7 @@ export const tipoCabelo = [
   { value: 'outro', label: 'Outro' },
 ];
 
-//tipoCabeloMap Map
-export type tipoCabeloMap = {
-  [key: string]: string;
-};
-
-export const tipoCabeloMap: tipoCabeloMap = {
+export const tipoCabeloMap: Record<string, string> = {
   liso: 'Liso',
   ondulado: 'Ondulado',
   cacheado: 'Cacheado',
@@ -140,6 +125,39 @@ export const corCabelo = [
   { value: 'outro', label: 'Outro' },
 ];
 
+export const corCabeloMap: Record<string, string> = {
+  preto: 'Preto',
+  castanho_escuro: 'Castanho Escuro',
+  castanho_claro: 'Castanho Claro',
+  loiro: 'Loiro',
+  loiro_escuro: 'Loiro Escuro',
+  ruivo: 'Ruivo',
+  grisalho: 'Grisalho',
+  branco: 'Branco',
+  colorido: 'Colorido',
+  outro: 'Outro',
+};
+
+export const corOlhos = [
+  { value: 'castanho', label: 'Castanho' },
+  { value: 'azul', label: 'Azul' },
+  { value: 'verde', label: 'Verde' },
+  { value: 'preto', label: 'Preto' },
+  { value: 'mel', label: 'Mel' },
+  { value: 'cinza', label: 'Cinza' },
+  { value: 'castanho_esverdeado', label: 'Castanho Esverdeado' },
+];
+
+export const corOlhosMap: Record<string, string> = {
+  castanho: 'Castanho',
+  azul: 'Azul',
+  verde: 'Verde',
+  preto: 'Preto',
+  mel: 'Mel',
+  cinza: 'Cinza',
+  castanho_esverdeado: 'Castanho Esverdeado',
+};
+
 export const languages = [
   { value: 'portugues', label: 'Português' },
   { value: 'ingles', label: 'Inglês' },
@@ -153,6 +171,20 @@ export const languages = [
   { value: 'arabe', label: 'Árabe' },
   { value: 'hungaro', label: 'Húngaro' },
 ];
+
+export const languagesMap: Record<string, string> = {
+  portugues: 'Português',
+  ingles: 'Inglês',
+  espanhol: 'Espanhol',
+  frances: 'Francês',
+  italiano: 'Italiano',
+  alemao: 'Alemão',
+  mandarim: 'Mandarim',
+  japones: 'Japonês',
+  russo: 'Russo',
+  arabe: 'Árabe',
+  hungaro: 'Húngaro',
+};
 
 export const vehicles = [
   { value: 'carro', label: 'Carro' },
@@ -170,12 +202,7 @@ export const genderData = [
   { value: 'nao_binario', label: 'Não Binário' },
 ];
 
-//Gender Map
-export type GenderMap = {
-  [key: string]: string;
-};
-
-export const genderMap: GenderMap = {
+export const genderMap: Record<string, string> = {
   masculino: 'Masculino',
   feminino: 'Feminino',
   nao_binario: 'Não Binário',

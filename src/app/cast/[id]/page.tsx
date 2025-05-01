@@ -10,7 +10,16 @@ import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
 import { CastingDetalhado, CastingService } from '@/services';
 import parse from 'html-react-parser';
-import { genderMap } from '../../../utils';
+import {
+  tipoMap,
+  etniaMap,
+  tipoCabeloMap,
+  genderMap,
+  languagesMap,
+  corCabeloMap,
+  nacionalidadeMap,
+  corOlhosMap,
+} from '@/utils';
 
 export default function CastingPage() {
   const params = useParams();
@@ -89,6 +98,30 @@ export default function CastingPage() {
     );
   }
 
+  const tipoCasting = casting.tipo
+    ? tipoMap[casting.tipo] || casting.tipo
+    : 'Não informado';
+  const nacionalidadeCasting = casting.nacionalidade
+    ? nacionalidadeMap[casting.nacionalidade] || casting.nacionalidade
+    : 'Não informado';
+
+  const generoCasting = casting.genero
+    ? genderMap[casting?.genero] || casting.genero
+    : 'Não informado';
+  const etniaCasting = casting.etnia
+    ? etniaMap[casting?.etnia] || casting.etnia
+    : 'Não informado';
+  const tipoCabeloCasting = casting.tipo_cabelo
+    ? tipoCabeloMap[casting.tipo_cabelo] || casting.tipo_cabelo
+    : 'Não informado';
+  const corCabeloCasting = casting.cor_cabelo
+    ? corCabeloMap[casting.cor_cabelo] || casting.cor_cabelo
+    : 'Não informado';
+
+  const corOlhosCasting = casting.olhos
+    ? corOlhosMap[casting.olhos] || casting.olhos
+    : 'Não informado';
+
   return (
     <div className="bg-white dark:bg-black min-h-screen">
       {/* Hero Section */}
@@ -135,18 +168,20 @@ export default function CastingPage() {
 
               <div className="space-y-4">
                 <div>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Tipo</h3>
+                  <p className="text-black dark:text-white">{tipoCasting}</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
                   <p className="text-black dark:text-white">{casting.DRT}</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Nacionalidade
                   </h3>
-                  <p className="text-black dark:text-white">{casting.nacionalidade}</p>
+                  <p className="text-black dark:text-white">{nacionalidadeCasting}</p>
 
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Gênero</h3>
-                  <p className="text-black dark:text-white">{casting.genero}</p>
+                  <p className="text-black dark:text-white">{generoCasting}</p>
 
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Etnia</h3>
-                  <p className="text-black dark:text-white">{casting.etnia}</p>
+                  <p className="text-black dark:text-white">{etniaCasting}</p>
 
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Ano de Nascimento
@@ -181,16 +216,18 @@ export default function CastingPage() {
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
-                    <p className="text-black dark:text-white">
-                      {casting.olhos || 'Não informado'}
-                    </p>
+                    <p className="text-black dark:text-white">{corOlhosCasting}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                      Tipo de Cabelo
+                    </h3>
+                    <p className="text-black dark:text-white">{tipoCabeloCasting}</p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
-                    <p className="text-black dark:text-white">
-                      {casting.cor_cabelo || 'Não informado'}
-                    </p>
+                    <p className="text-black dark:text-white">{corCabeloCasting}</p>
                   </div>
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
