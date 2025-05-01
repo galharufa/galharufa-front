@@ -83,8 +83,8 @@ const Navbar = () => {
                   <Image
                     src={
                       isDark
-                        ? '/images/logo_horizontal_black.jpg'
-                        : '/images/logo_horizontal_white.jpg'
+                        ? '/images/logos/logo_horizontal_black.jpg'
+                        : '/images/logos/logo_horizontal_white.jpg'
                     }
                     alt="Galharufa Logo"
                     width={140}
