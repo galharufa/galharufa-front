@@ -9,6 +9,8 @@ import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
 import { CastingDetalhado, CastingService } from '@/services';
+import parse from 'html-react-parser';
+import { genderMap } from '../../../utils';
 
 export default function CastingPage() {
   const params = useParams();
@@ -17,18 +19,6 @@ export default function CastingPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
   const [apiError, setApiError] = useState(false);
-
-  // DRT
-  // Ano de nascimento
-  // Altura
-  // Manequim
-  // Sapato
-  // Peso
-  // Olhos
-  // Cabelos
-  // Idiomas
-  // Instagram
-  // IMDB
 
   useEffect(() => {
     const fetchCasts = async () => {
@@ -146,7 +136,18 @@ export default function CastingPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
-                  <p className="text-black dark:text-white">99999/SP</p>
+                  <p className="text-black dark:text-white">{casting.DRT}</p>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                    Nacionalidade
+                  </h3>
+                  <p className="text-black dark:text-white">{casting.nacionalidade}</p>
+
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Gênero</h3>
+                  <p className="text-black dark:text-white">{casting.genero}</p>
+
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Etnia</h3>
+                  <p className="text-black dark:text-white">{casting.etnia}</p>
+
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Ano de Nascimento
                   </h3>
@@ -155,20 +156,20 @@ export default function CastingPage() {
                       ? new Date(casting.data_nascimento).getFullYear()
                       : 'Não informado'}
                   </p>
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
+                    <p className="text-black dark:text-white">{casting.manequim}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
+                    <p className="text-black dark:text-white">
+                      {casting.sapato || 'Não informado'}
+                    </p>
+                  </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
                     <p className="text-black dark:text-white">{casting.altura} m</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
-                    <p className="text-black dark:text-white">Não informado</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
-                    <p className="text-black dark:text-white">Não informado</p>
                   </div>
 
                   <div>
@@ -191,51 +192,54 @@ export default function CastingPage() {
                       {casting.cor_cabelo || 'Não informado'}
                     </p>
                   </div>
-
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
-                    <p className="text-black dark:text-white">
-                      {casting.cor_cabelo || 'Não informado'}
-                    </p>
+                    {casting.idiomas &&
+                      Object.entries(casting.idiomas)
+                        .filter(([_, valor]) => valor)
+                        .map(([idioma], index) => (
+                          <p key={index} className="text-black dark:text-white">
+                            {idioma.charAt(0).toUpperCase() + idioma.slice(1)}
+                          </p>
+                        ))}
                   </div>
-                  {casting.instagram && (
+
+                  {casting.link_instagram && (
                     <div>
                       <h3 className="text-sm text-gray-500 dark:text-gray-400">
                         Instagram
                       </h3>
                       <p className="text-black dark:text-white flex items-center gap-2">
-                        <FaInstagram />
                         <a
                           href={
-                            casting.instagram.startsWith('http')
-                              ? casting.instagram
-                              : `https://${casting.instagram}`
+                            casting.link_instagram.startsWith('http')
+                              ? casting.link_instagram
+                              : `https://${casting.link_instagram}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="underline"
                         >
-                          {casting.instagram}
+                          <FaInstagram />
                         </a>
                       </p>
                     </div>
                   )}
-                  {casting.instagram && (
+                  {casting.link_imdb && (
                     <div>
                       <h3 className="text-sm text-gray-500 dark:text-gray-400">IMDB</h3>
                       <p className="text-black dark:text-white flex items-center gap-2">
-                        <FaImdb />
                         <a
                           href={
-                            casting.imdb.startsWith('http')
-                              ? casting.imdb
-                              : `https://${casting.imdb}`
+                            casting.link_imdb.startsWith('http')
+                              ? casting.link_imdb
+                              : `https://${casting.link_imdb}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="underline"
                         >
-                          {casting.imdb}
+                          <FaImdb />
                         </a>
                       </p>
                     </div>
@@ -324,7 +328,7 @@ export default function CastingPage() {
                     </h2>
                     <ul className="space-y-4 mt-4">
                       <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
-                        {casting.experiencia}
+                        {parse(casting.experiencia)}
                       </p>
                     </ul>
                   </AnimatedSection>

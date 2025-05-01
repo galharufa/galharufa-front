@@ -113,6 +113,20 @@ export const tipoCabelo = [
   { value: 'outro', label: 'Outro' },
 ];
 
+//tipoCabeloMap Map
+export type tipoCabeloMap = {
+  [key: string]: string;
+};
+
+export const tipoCabeloMap: tipoCabeloMap = {
+  liso: 'Liso',
+  ondulado: 'Ondulado',
+  cacheado: 'Cacheado',
+  crespo: 'Crespo',
+  careca: 'Careca',
+  outro: 'Outro',
+};
+
 export const corCabelo = [
   { value: 'preto', label: 'Preto' },
   { value: 'castanho_escuro', label: 'Castanho Escuro' },
@@ -127,7 +141,6 @@ export const corCabelo = [
 ];
 
 export const languages = [
-  //done
   { value: 'portugues', label: 'Português' },
   { value: 'ingles', label: 'Inglês' },
   { value: 'espanhol', label: 'Espanhol' },

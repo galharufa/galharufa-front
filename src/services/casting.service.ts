@@ -72,6 +72,9 @@ export interface CastingDetalhado extends CastingResumido {
   nacionalidade: string | null;
   etnia: string | null;
   altura: string;
+  sapato: number;
+  DRT: string;
+  manequim: string;
   peso: string;
   olhos: string | null;
   cor_cabelo: string | null;
@@ -87,8 +90,11 @@ export interface CastingDetalhado extends CastingResumido {
   videos: Video[];
   habilidades: Funcao[];
   idiomas: Idioma[];
-  instagram: string;
-  imdb: string;
+  link_instagram: string;
+  link_imdb: string;
+  link_monologo: string;
+  link_trabalho_1: string;
+  link_trabalho_2: string;
 }
 
 export interface PaginatedResponse<T> {
