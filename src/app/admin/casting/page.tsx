@@ -264,10 +264,10 @@ export default function CastingAdmin() {
               onClick={handleCriarCategoria}
               styles={{
                 root: {
-                  backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                   color: '#FFFFFF !important',
                   '&:hover': {
-                    backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
                   },
                 },
               }}
@@ -278,10 +278,10 @@ export default function CastingAdmin() {
               onClick={handleCriarCasting}
               styles={{
                 root: {
-                  backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                   color: '#FFFFFF !important',
                   '&:hover': {
-                    backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
                   },
                 },
               }}
@@ -475,7 +475,19 @@ export default function CastingAdmin() {
           />
 
           <Group position="right">
-            <Button type="button" variant="outline" onClick={fecharCategoriaModal}>
+            <Button
+              type="button"
+              onClick={fecharCategoriaModal}
+              styles={{
+                root: {
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
+                  color: '#FFFFFF !important',
+                  '&:hover': {
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
+                  },
+                },
+              }}
+            >
               Cancelar
             </Button>
             <Button
@@ -483,10 +495,10 @@ export default function CastingAdmin() {
               loading={isLoading}
               styles={{
                 root: {
-                  backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                   color: '#FFFFFF !important',
                   '&:hover': {
-                    backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
                   },
                 },
               }}

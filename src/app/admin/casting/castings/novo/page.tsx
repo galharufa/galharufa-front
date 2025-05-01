@@ -1537,7 +1537,18 @@ export default function NovoCasting() {
           </Tabs>
 
           <Group position="right" mt="xl">
-            <Button variant="outline" onClick={() => router.push('/admin/casting')}>
+            <Button
+              onClick={() => router.push('/admin/casting')}
+              styles={{
+                root: {
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
+                  color: '#FFFFFF !important',
+                  '&:hover': {
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
+                  },
+                },
+              }}
+            >
               Cancelar
             </Button>
             <Button
@@ -1546,10 +1557,10 @@ export default function NovoCasting() {
               loading={isSubmitting}
               styles={{
                 root: {
-                  backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                   color: '#FFFFFF !important',
                   '&:hover': {
-                    backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
                   },
                 },
               }}

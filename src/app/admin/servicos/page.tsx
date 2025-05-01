@@ -226,10 +226,10 @@ export default function ServicoAdmin() {
             onClick={handleCriarServico}
             styles={{
               root: {
-                backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                 color: '#FFFFFF !important',
                 '&:hover': {
-                  backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                  backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
                 },
               },
             }}
@@ -290,13 +290,13 @@ export default function ServicoAdmin() {
                         styles={{
                           root: {
                             backgroundColor: isDark
-                              ? '#9333ea !important'
-                              : '#7e22ce !important',
+                              ? '#404040 !important'
+                              : '#737373 !important',
                             color: '#FFFFFF !important',
                             '&:hover': {
                               backgroundColor: isDark
-                                ? '#a855f7 !important'
-                                : '#6b21a8 !important',
+                                ? '#525252 !important'
+                                : '#a3a3a3 !important',
                             },
                           },
                         }}
@@ -375,7 +375,19 @@ export default function ServicoAdmin() {
           />
 
           <Group position="right">
-            <Button type="button" variant="outline" onClick={fecharModal}>
+            <Button
+              type="button"
+              onClick={fecharModal}
+              styles={{
+                root: {
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
+                  color: '#FFFFFF !important',
+                  '&:hover': {
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
+                  },
+                },
+              }}
+            >
               Cancelar
             </Button>
             <Button
@@ -383,10 +395,10 @@ export default function ServicoAdmin() {
               loading={isLoading}
               styles={{
                 root: {
-                  backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                  backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                   color: '#FFFFFF !important',
                   '&:hover': {
-                    backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                    backgroundColor: isDark ? '#525252 !important' : '#a3a3a3 !important',
                   },
                 },
               }}

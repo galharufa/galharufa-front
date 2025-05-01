@@ -200,7 +200,7 @@ export default function Dashboard() {
     return null;
   }
 
-  const corPrimaria = isDark ? '#9333ea' : '#7e22ce';
+  const corPrimaria = isDark ? 'gray-700' : 'gray-500';
   const corSecundaria = isDark ? '#a855f7' : '#6b21a8';
 
   const stats = [
@@ -269,12 +269,12 @@ export default function Dashboard() {
               <Button
                 styles={{
                   root: {
-                    backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                    backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                     color: '#FFFFFF !important',
                     '&:hover': {
                       backgroundColor: isDark
-                        ? '#a855f7 !important'
-                        : '#6b21a8 !important',
+                        ? '#525252 !important'
+                        : '#a3a3a3 !important',
                     },
                   },
                 }}
