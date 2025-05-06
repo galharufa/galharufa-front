@@ -200,8 +200,8 @@ export default function Dashboard() {
     return null;
   }
 
-  const corPrimaria = isDark ? 'gray-700' : 'gray-500';
-  const corSecundaria = isDark ? '#a855f7' : '#6b21a8';
+  const corPrimaria = isDark ? 'oklch(50.5% 0.213 27.518)' : 'oklch(70.4% 0.191 22.216)';
+  const corSecundaria = isDark ? 'oklch(55.3% 0.195 38.402)' : 'oklch(83.7% 0.128 66.29)';
 
   const stats = [
     {
