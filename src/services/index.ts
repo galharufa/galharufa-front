@@ -17,7 +17,13 @@ import type {
 } from './blog.service';
 import type { Configuracoes } from './configuracoes.service';
 import type { Servico, ServicoResumido } from './servicos.service';
-import type { CastingResumido, CastingDetalhado, Foto, Video, Funcao } from './casting.service';
+import type {
+  CastingResumido,
+  CastingDetalhado,
+  Foto,
+  Video,
+  Funcao,
+} from './casting.service';
 
 export {
   AuthService,

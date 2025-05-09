@@ -39,7 +39,15 @@ import { useDisclosure, useUncontrolled } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../../components/AdminNavbar';
-import { CastingService, api, type CategoriasCasting, type CastingDetalhado, type Foto, type Video, type Funcao } from '@/services';
+import {
+  CastingService,
+  api,
+  type CategoriasCasting,
+  type CastingDetalhado,
+  type Foto,
+  type Video,
+  type Funcao,
+} from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
 import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
@@ -102,29 +110,26 @@ export default function EditarCasting() {
   const [instrumentosState, setInstrumentosState] = useState<any[]>([]);
   const [plataformasBusca, setPlataformasBusca] = useState<any[]>([]);
   const [casting, setCasting] = useState<CastingDetalhado | null>(null);
-  
+
   // Fotos
   const [fotosExistentes, setFotosExistentes] = useState<Foto[]>([]);
   const [fotosParaExcluir, setFotosParaExcluir] = useState<number[]>([]);
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
-  
+
   // Vídeos
   const [videosExistentes, setVideosExistentes] = useState<Video[]>([]);
   const [videosParaExcluir, setVideosParaExcluir] = useState<number[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
   const [videosNovos, setVideosNovos] = useState<{ titulo: string; url: string }[]>([]);
-  
+
   // Estado para os links de trabalho dinâmicos
   const [linksTrabalho, setLinksTrabalho] = useState<string[]>([]);
 
   // Funções para gerenciar links de trabalho
   const adicionarLinkTrabalho = () => {
-    setLinksTrabalho([
-      ...linksTrabalho,
-      ''
-    ]);
+    setLinksTrabalho([...linksTrabalho, '']);
   };
 
   const atualizarLinkTrabalho = (valor: string, index: number) => {
@@ -236,7 +241,7 @@ export default function EditarCasting() {
       peso: (value) => (!value ? 'O peso é obrigatório' : null),
     },
   });
-  
+
   const editor = useEditor({
     extensions: [StarterKit, Link, TextAlign, Highlight, Underline],
     content: form.getInputProps('experiencia').value,
@@ -288,29 +293,36 @@ export default function EditarCasting() {
         setCasting(castingResponse);
         setFotosExistentes(castingResponse.fotos || []);
         setVideosExistentes(castingResponse.videos || []);
-        
+
         // Configurar links de trabalho existentes
         const linksDeTrabalho = [];
-        if (castingResponse.link_trabalho_1) linksDeTrabalho.push(castingResponse.link_trabalho_1);
-        if (castingResponse.link_trabalho_2) linksDeTrabalho.push(castingResponse.link_trabalho_2);
-        if (castingResponse.link_trabalho_3) linksDeTrabalho.push(castingResponse.link_trabalho_3);
-        if (castingResponse.link_trabalho_4) linksDeTrabalho.push(castingResponse.link_trabalho_4);
-        if (castingResponse.link_trabalho_5) linksDeTrabalho.push(castingResponse.link_trabalho_5);
-        if (castingResponse.link_trabalho_6) linksDeTrabalho.push(castingResponse.link_trabalho_6);
-        if (castingResponse.link_trabalho_7) linksDeTrabalho.push(castingResponse.link_trabalho_7);
-        
+        if (castingResponse.link_trabalho_1)
+          linksDeTrabalho.push(castingResponse.link_trabalho_1);
+        if (castingResponse.link_trabalho_2)
+          linksDeTrabalho.push(castingResponse.link_trabalho_2);
+        if (castingResponse.link_trabalho_3)
+          linksDeTrabalho.push(castingResponse.link_trabalho_3);
+        if (castingResponse.link_trabalho_4)
+          linksDeTrabalho.push(castingResponse.link_trabalho_4);
+        if (castingResponse.link_trabalho_5)
+          linksDeTrabalho.push(castingResponse.link_trabalho_5);
+        if (castingResponse.link_trabalho_6)
+          linksDeTrabalho.push(castingResponse.link_trabalho_6);
+        if (castingResponse.link_trabalho_7)
+          linksDeTrabalho.push(castingResponse.link_trabalho_7);
+
         // Garantir que sempre tenha pelo menos dois slots (pode estar vazio)
         while (linksDeTrabalho.length < 2) {
           linksDeTrabalho.push('');
         }
-        
+
         setLinksTrabalho(linksDeTrabalho);
 
         // Preencher o formulário com os dados do casting
         const dataNascimento = castingResponse.data_nascimento
           ? new Date(castingResponse.data_nascimento)
           : null;
-          
+
         const habilitacaoValidade = castingResponse.habilitacao_validade
           ? new Date(castingResponse.habilitacao_validade)
           : null;
@@ -326,11 +338,13 @@ export default function EditarCasting() {
           nome_artistico: castingResponse.nome_artistico || '',
           genero: castingResponse.genero || 'masculino',
           // Se o casting possuir mais de uma categoria, usamos a primeira; caso contrário, string vazia
-          categoria: Array.isArray(castingResponse.categoria) && castingResponse.categoria.length > 0
-            ? String(castingResponse.categoria[0])
-            : castingResponse.categoria
-            ? String(castingResponse.categoria)
-            : '',
+          categoria:
+            Array.isArray(castingResponse.categoria) &&
+            castingResponse.categoria.length > 0
+              ? String(castingResponse.categoria[0])
+              : castingResponse.categoria
+                ? String(castingResponse.categoria)
+                : '',
           // Converter o array de objetos "Funcao" em um array de nomes (string)
           habilidades: Array.isArray(castingResponse.habilidades)
             ? (castingResponse.habilidades as Funcao[]).map((h) => h.nome)
@@ -344,7 +358,9 @@ export default function EditarCasting() {
 
           // Características Físicas
           data_nascimento: dataNascimento,
-          ano: castingResponse.ano ? Number(castingResponse.ano) : new Date().getFullYear() - 20,
+          ano: castingResponse.ano
+            ? Number(castingResponse.ano)
+            : new Date().getFullYear() - 20,
           altura: castingResponse.altura ? Number(castingResponse.altura) || 0 : 0,
           peso: castingResponse.peso ? Number(castingResponse.peso) || 0 : 0,
           manequim: castingResponse.manequim ? Number(castingResponse.manequim) || 0 : 0,
@@ -400,7 +416,7 @@ export default function EditarCasting() {
           pix: castingResponse.pix || '',
 
           // Idiomas e Veículos
-          idiomas: castingResponse.idiomas as string[] || [],
+          idiomas: (castingResponse.idiomas as string[]) || [],
           habilitacao_categorias: castingResponse.habilitacao_categorias || [],
           habilitacao_validade: habilitacaoValidade,
         });
@@ -416,7 +432,7 @@ export default function EditarCasting() {
     if (isAuthenticated) {
       carregarDados();
     }
-  }, [isAuthenticated, id, form, router]);
+  }, [isAuthenticated, id, form, router, editor]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -552,18 +568,18 @@ export default function EditarCasting() {
 
       // Criar FormData para envio de arquivos
       const formData = new FormData();
-      
+
       // Adicionar campos básicos
       formData.append('nome', values.nome);
       if (values.nome_artistico) formData.append('nome_artistico', values.nome_artistico);
       formData.append('genero', values.genero || 'masculino');
       formData.append('categoria', values.categoria);
-      
+
       // Naturalidade e informações de origem
       if (values.natural_de) formData.append('natural_de', values.natural_de);
       if (values.nacionalidade) formData.append('nacionalidade', values.nacionalidade);
       if (values.etnia) formData.append('etnia', values.etnia);
-      
+
       // Data de nascimento e ano
       if (values.data_nascimento) {
         formData.append(
@@ -578,7 +594,8 @@ export default function EditarCasting() {
       // Características físicas
       if (values.altura) formData.append('altura', String(values.altura));
       if (values.peso) formData.append('peso', String(values.peso));
-      if (values.manequim !== undefined) formData.append('manequim', String(values.manequim));
+      if (values.manequim !== undefined)
+        formData.append('manequim', String(values.manequim));
       if (values.sapato !== undefined) formData.append('sapato', String(values.sapato));
       if (values.olhos) formData.append('olhos', values.olhos);
       if (values.tipo_cabelo) formData.append('tipo_cabelo', values.tipo_cabelo);
@@ -588,7 +605,8 @@ export default function EditarCasting() {
 
       // Tatuagens
       formData.append('tem_tatuagens', values.tem_tatuagens ? 'true' : 'false');
-      if (values.locais_tatuagens) formData.append('locais_tatuagens', values.locais_tatuagens);
+      if (values.locais_tatuagens)
+        formData.append('locais_tatuagens', values.locais_tatuagens);
 
       // Documentos
       if (values.DRT) formData.append('DRT', values.DRT);
@@ -597,16 +615,23 @@ export default function EditarCasting() {
       formData.append('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
       if (values.CNPJ) formData.append('CNPJ', values.CNPJ);
       if (values.razao_social) formData.append('razao_social', values.razao_social);
-      if (values.inscricao_estadual) formData.append('inscricao_estadual', values.inscricao_estadual);
-      formData.append('possui_nota_propria', values.possui_nota_propria ? 'true' : 'false');
+      if (values.inscricao_estadual)
+        formData.append('inscricao_estadual', values.inscricao_estadual);
+      formData.append(
+        'possui_nota_propria',
+        values.possui_nota_propria ? 'true' : 'false',
+      );
       if (values.CNH) formData.append('CNH', values.CNH);
 
       // Currículo e habilidades
-      if (values.habilidades) formData.append('habilidades', JSON.stringify(values.habilidades));
+      if (values.habilidades)
+        formData.append('habilidades', JSON.stringify(values.habilidades));
 
       // Links de mídia
-      if (values.link_trabalho_1) formData.append('link_trabalho_1', values.link_trabalho_1);
-      if (values.link_trabalho_2) formData.append('link_trabalho_2', values.link_trabalho_2);
+      if (values.link_trabalho_1)
+        formData.append('link_trabalho_1', values.link_trabalho_1);
+      if (values.link_trabalho_2)
+        formData.append('link_trabalho_2', values.link_trabalho_2);
 
       // Links de trabalho adicionais
       linksTrabalho.forEach((link, index) => {
@@ -627,8 +652,10 @@ export default function EditarCasting() {
       if (values.website) formData.append('website', values.website);
       if (values.facebook) formData.append('facebook', values.facebook);
       if (values.twitter) formData.append('twitter', values.twitter);
-      if (values.emergencia_nome) formData.append('emergencia_nome', values.emergencia_nome);
-      if (values.emergencia_telefone) formData.append('emergencia_telefone', values.emergencia_telefone);
+      if (values.emergencia_nome)
+        formData.append('emergencia_nome', values.emergencia_nome);
+      if (values.emergencia_telefone)
+        formData.append('emergencia_telefone', values.emergencia_telefone);
 
       // Endereço
       if (values.cep) formData.append('cep', values.cep);
@@ -649,7 +676,11 @@ export default function EditarCasting() {
 
       // Idiomas e veículos
       if (values.idiomas) formData.append('idiomas', JSON.stringify(values.idiomas));
-      if (values.habilitacao_categorias) formData.append('habilitacao_categorias', JSON.stringify(values.habilitacao_categorias));
+      if (values.habilitacao_categorias)
+        formData.append(
+          'habilitacao_categorias',
+          JSON.stringify(values.habilitacao_categorias),
+        );
       if (values.habilitacao_validade) {
         formData.append(
           'habilitacao_validade',
@@ -665,7 +696,10 @@ export default function EditarCasting() {
 
       // Adicionar campos booleanos
       formData.append('ativo', values.ativo ? 'true' : 'false');
-      formData.append('autoriza_imagem_site', values.autoriza_imagem_site ? 'true' : 'false');
+      formData.append(
+        'autoriza_imagem_site',
+        values.autoriza_imagem_site ? 'true' : 'false',
+      );
 
       // Adicionar foto principal se existir
       if (values.foto_principal) {
@@ -740,7 +774,7 @@ export default function EditarCasting() {
       </div>
     );
   }
-  
+
   if (!isAuthenticated || !casting) {
     return null;
   }
@@ -915,7 +949,7 @@ export default function EditarCasting() {
                 />
               </Card>
             </Tabs.Panel>
-                    
+
             <Tabs.Panel value="caracteristicas">
               <Card withBorder p="xl" radius="md" mb="md">
                 <Title order={3} mb="lg">
@@ -1116,7 +1150,7 @@ export default function EditarCasting() {
 
                   <TextInput
                     label="Passaporte"
-                    placeholder="Número do passaporte" 
+                    placeholder="Número do passaporte"
                     {...form.getInputProps('passaporte')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1212,547 +1246,563 @@ export default function EditarCasting() {
                   </Button>
                 </Group>
 
-            {/* Fotos existentes */}
-            {fotosExistentes.length > 0 && (
-              <>
-                <Title order={4} mb="md">
-                  Fotos Existentes
-                </Title>
-                <Group mb="xl">
-                  {fotosExistentes.map((foto) => (
-                    <Card
-                      key={foto.id}
-                      withBorder
-                      p="md"
-                      radius="md"
-                      style={{ width: 200 }}
-                    >
-                      <div style={{ position: 'relative' }}>
-                        <div
-                          style={{
-                            width: '100%',
-                            height: 150,
-                            position: 'relative',
-                            overflow: 'hidden',
-                            borderRadius: '4px',
-                            marginBottom: 10,
-                          }}
+                {/* Fotos existentes */}
+                {fotosExistentes.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Fotos Existentes
+                    </Title>
+                    <Group mb="xl">
+                      {fotosExistentes.map((foto) => (
+                        <Card
+                          key={foto.id}
+                          withBorder
+                          p="md"
+                          radius="md"
+                          style={{ width: 200 }}
                         >
-                          <Image
-                            src={foto.imagem}
-                            alt={foto.legenda || 'Foto do casting'}
-                            style={{ objectFit: 'cover' }}
-                            fill
-                            sizes="200px"
-                          />
-                        </div>
+                          <div style={{ position: 'relative' }}>
+                            <div
+                              style={{
+                                width: '100%',
+                                height: 150,
+                                position: 'relative',
+                                overflow: 'hidden',
+                                borderRadius: '4px',
+                                marginBottom: 10,
+                              }}
+                            >
+                              <Image
+                                src={foto.imagem}
+                                alt={foto.legenda || 'Foto do casting'}
+                                style={{ objectFit: 'cover' }}
+                                fill
+                                sizes="200px"
+                              />
+                            </div>
+                            <ActionIcon
+                              color="red"
+                              style={{
+                                position: 'absolute',
+                                top: 5,
+                                right: 5,
+                                backgroundColor: 'rgba(255,255,255,0.8)',
+                              }}
+                              onClick={() => marcarFotoParaExcluir(foto.id)}
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </div>
+                          <Text size="sm" align="center">
+                            {foto.legenda || 'Sem legenda'}
+                          </Text>
+                        </Card>
+                      ))}
+                    </Group>
+                  </>
+                )}
+
+                {/* Novas fotos */}
+                {fotosAdicionais.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Novas Fotos
+                    </Title>
+                    {fotosAdicionais.map((foto, index) => (
+                      <Card key={index} withBorder p="md" radius="md" mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Foto Nova {index + 1}</Text>
+                          <ActionIcon color="red" onClick={() => removerFoto(index)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+
+                        <FileInput
+                          label="Imagem"
+                          description="Selecione uma imagem"
+                          accept="image/png,image/jpeg,image/webp"
+                          icon={<IconUpload size={14} />}
+                          value={foto}
+                          onChange={(file) => atualizarFoto(file, index)}
+                          mb="md"
+                        />
+
+                        <TextInput
+                          label="Legenda"
+                          placeholder="Legenda da foto"
+                          value={legendasFotos[index] || ''}
+                          onChange={(e) => atualizarLegenda(e.target.value, index)}
+                        />
+                      </Card>
+                    ))}
+                  </>
+                )}
+
+                {fotosExistentes.length === 0 && fotosAdicionais.length === 0 && (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhuma foto adicionada. Clique em &quot;Adicionar Foto&quot; para
+                    incluir fotos.
+                  </Text>
+                )}
+              </Card>
+
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Vídeos</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarVideo}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Vídeo
+                  </Button>
+                </Group>
+
+                {/* Vídeos existentes */}
+                {videosExistentes.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Vídeos Existentes
+                    </Title>
+                    {videosExistentes.map((video) => (
+                      <Card key={video.id} withBorder p="md" radius="md" mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>{video.titulo}</Text>
+                          <ActionIcon
+                            color="red"
+                            onClick={() => marcarVideoParaExcluir(video.id)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                        <Text
+                          component="a"
+                          href={video.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          size="sm"
+                          color="blue"
+                        >
+                          {video.url}
+                        </Text>
+                      </Card>
+                    ))}
+                  </>
+                )}
+
+                {/* Novos vídeos */}
+                {videosNovos.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Novos Vídeos
+                    </Title>
+                    {videosNovos.map((video, index) => (
+                      <Card key={index} withBorder p="md" radius="md" mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Vídeo Novo {index + 1}</Text>
+                          <ActionIcon color="red" onClick={() => removerVideo(index)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+
+                        <TextInput
+                          label="Título"
+                          placeholder="Título do vídeo"
+                          value={video.titulo}
+                          onChange={(e) =>
+                            atualizarVideo('titulo', e.target.value, index)
+                          }
+                          mb="md"
+                        />
+
+                        <TextInput
+                          label="URL"
+                          placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
+                          value={video.url}
+                          onChange={(e) => atualizarVideo('url', e.target.value, index)}
+                        />
+                      </Card>
+                    ))}
+                  </>
+                )}
+
+                {videosExistentes.length === 0 && videosNovos.length === 0 && (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhum vídeo adicionado. Clique em &quot;Adicionar Vídeo&quot; para
+                    incluir vídeos.
+                  </Text>
+                )}
+              </Card>
+
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Links de Trabalho</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarLinkTrabalho}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Link
+                  </Button>
+                </Group>
+
+                <TextInput
+                  label="Link de Trabalho 1"
+                  placeholder="https://exemplo.com"
+                  {...form.getInputProps('link_trabalho_1')}
+                  mb="md"
+                />
+
+                <TextInput
+                  label="Link de Trabalho 2"
+                  placeholder="https://exemplo.com"
+                  {...form.getInputProps('link_trabalho_2')}
+                  mb="md"
+                />
+
+                {linksTrabalho.map((link, index) => (
+                  <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
+                    <TextInput
+                      label={`Link de Trabalho ${index + 3}`}
+                      placeholder="https://exemplo.com"
+                      value={link}
+                      onChange={(e) => atualizarLinkTrabalho(e.target.value, index)}
+                      rightSection={
                         <ActionIcon
                           color="red"
-                          style={{
-                            position: 'absolute',
-                            top: 5,
-                            right: 5,
-                            backgroundColor: 'rgba(255,255,255,0.8)',
-                          }}
-                          onClick={() => marcarFotoParaExcluir(foto.id)}
+                          onClick={() => removerLinkTrabalho(index)}
                         >
                           <IconTrash size={16} />
                         </ActionIcon>
-                      </div>
-                      <Text size="sm" align="center">
-                        {foto.legenda || 'Sem legenda'}
-                      </Text>
-                    </Card>
-                  ))}
-                </Group>
-              </>
-            )}
-
-            {/* Novas fotos */}
-            {fotosAdicionais.length > 0 && (
-              <>
-                <Title order={4} mb="md">
-                  Novas Fotos
-                </Title>
-                {fotosAdicionais.map((foto, index) => (
-                  <Card key={index} withBorder p="md" radius="md" mb="md">
-                    <Group position="apart" mb="xs">
-                      <Text weight={500}>Foto Nova {index + 1}</Text>
-                      <ActionIcon color="red" onClick={() => removerFoto(index)}>
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
-
-                    <FileInput
-                      label="Imagem"
-                      description="Selecione uma imagem"
-                      accept="image/png,image/jpeg,image/webp"
-                      icon={<IconUpload size={14} />}
-                      value={foto}
-                      onChange={(file) => atualizarFoto(file, index)}
-                      mb="md"
+                      }
                     />
-
-                    <TextInput
-                      label="Legenda"
-                      placeholder="Legenda da foto"
-                      value={legendasFotos[index] || ''}
-                      onChange={(e) => atualizarLegenda(e.target.value, index)}
-                    />
-                  </Card>
+                  </div>
                 ))}
-              </>
-            )}
+              </Card>
+            </Tabs.Panel>
 
-            {fotosExistentes.length === 0 && fotosAdicionais.length === 0 && (
-              <Text color="dimmed" align="center" py="lg">
-                Nenhuma foto adicionada. Clique em &quot;Adicionar Foto&quot; para incluir
-                fotos.
-              </Text>
-            )}
-          </Card>
-
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Group position="apart" mb="lg">
-              <Title order={3}>Vídeos</Title>
-              <Button
-                leftIcon={<IconPlus size={16} />}
-                variant="outline"
-                onClick={adicionarVideo}
-                styles={{
-                  root: {
-                    borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                    color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                    transition: 'transform 0.3s, box-shadow 0.3s',
-                    '&:hover': {
-                      transform: 'translateY(-3px)',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                    },
-                  },
-                }}
-              >
-                Adicionar Vídeo
-              </Button>
-            </Group>
-
-            {/* Vídeos existentes */}
-            {videosExistentes.length > 0 && (
-              <>
-                <Title order={4} mb="md">
-                  Vídeos Existentes
+            <Tabs.Panel value="contato">
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Informações de Contato
                 </Title>
-                {videosExistentes.map((video) => (
-                  <Card key={video.id} withBorder p="md" radius="md" mb="md">
-                    <Group position="apart" mb="xs">
-                      <Text weight={500}>{video.titulo}</Text>
-                      <ActionIcon
-                        color="red"
-                        onClick={() => marcarVideoParaExcluir(video.id)}
-                      >
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
-                    <Text
-                      component="a"
-                      href={video.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      size="sm"
-                      color="blue"
-                    >
-                      {video.url}
-                    </Text>
-                  </Card>
-                ))}
-              </>
-            )}
 
-            {/* Novos vídeos */}
-            {videosNovos.length > 0 && (
-              <>
-                <Title order={4} mb="md">
-                  Novos Vídeos
-                </Title>
-                {videosNovos.map((video, index) => (
-                  <Card key={index} withBorder p="md" radius="md" mb="md">
-                    <Group position="apart" mb="xs">
-                      <Text weight={500}>Vídeo Novo {index + 1}</Text>
-                      <ActionIcon color="red" onClick={() => removerVideo(index)}>
-                        <IconTrash size={16} />
-                      </ActionIcon>
-                    </Group>
-
-                    <TextInput
-                      label="Título"
-                      placeholder="Título do vídeo"
-                      value={video.titulo}
-                      onChange={(e) => atualizarVideo('titulo', e.target.value, index)}
-                      mb="md"
-                    />
-
-                    <TextInput
-                      label="URL"
-                      placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
-                      value={video.url}
-                      onChange={(e) => atualizarVideo('url', e.target.value, index)}
-                    />
-                  </Card>
-                ))}
-              </>
-            )}
-
-            {videosExistentes.length === 0 && videosNovos.length === 0 && (
-              <Text color="dimmed" align="center" py="lg">
-                Nenhum vídeo adicionado. Clique em &quot;Adicionar Vídeo&quot; para
-                incluir vídeos.
-              </Text>
-            )}
-          </Card>
-
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Group position="apart" mb="lg">
-              <Title order={3}>Links de Trabalho</Title>
-              <Button
-                leftIcon={<IconPlus size={16} />}
-                variant="outline"
-                onClick={adicionarLinkTrabalho}
-                styles={{
-                  root: {
-                    borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                    color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                    transition: 'transform 0.3s, box-shadow 0.3s',
-                    '&:hover': {
-                      transform: 'translateY(-3px)',
-                      boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                    },
-                  },
-                }}
-              >
-                Adicionar Link
-              </Button>
-            </Group>
-
-            <TextInput
-              label="Link de Trabalho 1"
-              placeholder="https://exemplo.com"
-              {...form.getInputProps('link_trabalho_1')}
-              mb="md"
-            />
-
-            <TextInput
-              label="Link de Trabalho 2"
-              placeholder="https://exemplo.com"
-              {...form.getInputProps('link_trabalho_2')}
-              mb="md"
-            />
-
-            {linksTrabalho.map((link, index) => (
-              <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
                 <TextInput
-                  label={`Link de Trabalho ${index + 3}`}
-                  placeholder="https://exemplo.com"
-                  value={link}
-                  onChange={(e) => atualizarLinkTrabalho(e.target.value, index)}
-                  rightSection={
-                    <ActionIcon color="red" onClick={() => removerLinkTrabalho(index)}>
-                      <IconTrash size={16} />
-                    </ActionIcon>
-                  }
+                  icon={<IconMail size={16} />}
+                  label="E-mail"
+                  placeholder="E-mail de contato"
+                  type="email"
+                  {...form.getInputProps('email')}
+                  mb="md"
                 />
-              </div>
-            ))}
-          </Card>
-        </Tabs.Panel>
 
-        <Tabs.Panel value="contato">
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Informações de Contato</Title>
+                <TextInput
+                  icon={<IconPhone size={16} />}
+                  label="Telefone"
+                  placeholder="(00) 0000-0000"
+                  {...form.getInputProps('telefone_1')}
+                  mb="md"
+                />
 
-            <TextInput
-              icon={<IconMail size={16} />}
-              label="E-mail"
-              placeholder="E-mail de contato"
-              type="email"
-              {...form.getInputProps('email')}
-              mb="md"
-            />
+                <TextInput
+                  label="Telefone 2"
+                  placeholder="(00) 00000-0000"
+                  icon={<IconPhone size={16} />}
+                  {...form.getInputProps('telefone_2')}
+                  mb="md"
+                />
+              </Card>
 
-            <TextInput
-              icon={<IconPhone size={16} />}
-              label="Telefone"
-              placeholder="(00) 0000-0000"
-              {...form.getInputProps('telefone_1')}
-              mb="md"
-            />
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Redes Sociais
+                </Title>
 
-            <TextInput
-              label="Telefone 2"
-              placeholder="(00) 00000-0000"
-              icon={<IconPhone size={16} />}
-              {...form.getInputProps('telefone_2')}
-              mb="md"
-            />
-          </Card>
+                <TextInput
+                  label="Instagram"
+                  placeholder="@usuario"
+                  icon={<IconBrandInstagram size={16} />}
+                  {...form.getInputProps('instagram')}
+                  mb="md"
+                />
 
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Redes Sociais</Title>
+                <TextInput
+                  label="TikTok"
+                  placeholder="@usuario"
+                  icon={<IconBrandTiktok size={16} />}
+                  {...form.getInputProps('tiktok')}
+                  mb="md"
+                />
 
-            <TextInput
-              label="Instagram"
-              placeholder="@usuario"
-              icon={<IconBrandInstagram size={16} />}
-              {...form.getInputProps('instagram')}
-              mb="md"
-            />
+                <TextInput
+                  label="YouTube"
+                  placeholder="URL do canal ou usuário"
+                  icon={<IconBrandYoutube size={16} />}
+                  {...form.getInputProps('youtube')}
+                  mb="md"
+                />
 
-            <TextInput
-              label="TikTok"
-              placeholder="@usuario"
-              icon={<IconBrandTiktok size={16} />}
-              {...form.getInputProps('tiktok')}
-              mb="md"
-            />
+                <TextInput
+                  label="Facebook"
+                  placeholder="@usuario"
+                  icon={<IconBrandInstagram size={16} />}
+                  {...form.getInputProps('facebook')}
+                  mb="md"
+                />
 
-            <TextInput
-              label="YouTube"
-              placeholder="URL do canal ou usuário"
-              icon={<IconBrandYoutube size={16} />}
-              {...form.getInputProps('youtube')}
-              mb="md"
-            />
+                <TextInput
+                  label="Twitter"
+                  placeholder="@usuario"
+                  icon={<IconBrandInstagram size={16} />}
+                  {...form.getInputProps('twitter')}
+                  mb="md"
+                />
+              </Card>
 
-            <TextInput
-              label="Facebook"
-              placeholder="@usuario"
-              icon={<IconBrandInstagram size={16} />}
-              {...form.getInputProps('facebook')}
-              mb="md"
-            />
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Contato de Emergência
+                </Title>
 
-            <TextInput
-              label="Twitter"
-              placeholder="@usuario"
-              icon={<IconBrandInstagram size={16} />}
-              {...form.getInputProps('twitter')}
-              mb="md"
-            />
-          </Card>
+                <TextInput
+                  label="Nome"
+                  placeholder="Nome da pessoa para contato"
+                  icon={<IconUser size={16} />}
+                  {...form.getInputProps('contato_emergencia_nome')}
+                  mb="md"
+                />
 
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Contato de Emergência</Title>
+                <TextInput
+                  label="Telefone"
+                  placeholder="(00) 00000-0000"
+                  icon={<IconPhone size={16} />}
+                  {...form.getInputProps('contato_emergencia_telefone')}
+                  mb="md"
+                />
+              </Card>
+            </Tabs.Panel>
 
-            <TextInput
-              label="Nome"
-              placeholder="Nome da pessoa para contato"
-              icon={<IconUser size={16} />}
-              {...form.getInputProps('contato_emergencia_nome')}
-              mb="md"
-            />
+            <Tabs.Panel value="endereco">
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Endereço
+                </Title>
 
-            <TextInput
-              label="Telefone"
-              placeholder="(00) 00000-0000"
-              icon={<IconPhone size={16} />}
-              {...form.getInputProps('contato_emergencia_telefone')}
-              mb="md"
-            />
-          </Card>
-        </Tabs.Panel>
+                <TextInput
+                  label="CEP"
+                  placeholder="00000-000"
+                  {...form.getInputProps('cep')}
+                  mb="md"
+                />
 
-        <Tabs.Panel value="endereco">
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Endereço</Title>
+                <SimpleGrid cols={2} spacing="md" mb="md">
+                  <TextInput
+                    label="Endereço"
+                    placeholder="Rua, Avenida, etc."
+                    {...form.getInputProps('endereco')}
+                  />
 
-            <TextInput
-              label="CEP"
-              placeholder="00000-000"
-              {...form.getInputProps('cep')}
-              mb="md"
-            />
+                  <TextInput
+                    label="Número"
+                    placeholder="123"
+                    {...form.getInputProps('numero')}
+                  />
+                </SimpleGrid>
 
-            <SimpleGrid cols={2} spacing="md" mb="md">
-              <TextInput
-                label="Endereço"
-                placeholder="Rua, Avenida, etc."
-                {...form.getInputProps('endereco')}
-              />
+                <TextInput
+                  label="Complemento"
+                  placeholder="Apto, Bloco, etc."
+                  {...form.getInputProps('complemento')}
+                  mb="md"
+                />
 
-              <TextInput
-                label="Número"
-                placeholder="123"
-                {...form.getInputProps('numero')}
-              />
-            </SimpleGrid>
+                <SimpleGrid cols={2} spacing="md" mb="md">
+                  <TextInput
+                    label="Bairro"
+                    placeholder="Bairro"
+                    {...form.getInputProps('bairro')}
+                  />
 
-            <TextInput
-              label="Complemento"
-              placeholder="Apto, Bloco, etc."
-              {...form.getInputProps('complemento')}
-              mb="md"
-            />
+                  <TextInput
+                    label="Cidade"
+                    placeholder="Cidade"
+                    {...form.getInputProps('cidade')}
+                  />
+                </SimpleGrid>
 
-            <SimpleGrid cols={2} spacing="md" mb="md">
-              <TextInput
-                label="Bairro"
-                placeholder="Bairro"
-                {...form.getInputProps('bairro')}
-              />
+                <SimpleGrid cols={2} spacing="md">
+                  <Select
+                    label="Estado"
+                    placeholder="Selecione o estado"
+                    data={estados}
+                    searchable
+                    {...form.getInputProps('estado')}
+                  />
 
-              <TextInput
-                label="Cidade"
-                placeholder="Cidade"
-                {...form.getInputProps('cidade')}
-              />
-            </SimpleGrid>
+                  <TextInput label="País" placeholder="País" value="Brasil" disabled />
+                </SimpleGrid>
+              </Card>
 
-            <SimpleGrid cols={2} spacing="md">
-              <Select
-                label="Estado"
-                placeholder="Selecione o estado"
-                data={estados}
-                searchable
-                {...form.getInputProps('estado')}
-              />
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Informações Bancárias
+                </Title>
 
-              <TextInput
-                label="País"
-                placeholder="País"
-                value="Brasil"
-                disabled
-              />
-            </SimpleGrid>
-          </Card>
+                <TextInput
+                  label="Banco"
+                  placeholder="Nome do banco"
+                  {...form.getInputProps('banco')}
+                  mb="md"
+                />
 
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Informações Bancárias</Title>
+                <SimpleGrid cols={2} spacing="md" mb="md">
+                  <TextInput
+                    label="Agência"
+                    placeholder="Número da agência"
+                    {...form.getInputProps('agencia')}
+                  />
 
-            <TextInput
-              label="Banco"
-              placeholder="Nome do banco"
-              {...form.getInputProps('banco')}
-              mb="md"
-            />
+                  <TextInput
+                    label="Conta"
+                    placeholder="Número da conta"
+                    {...form.getInputProps('conta')}
+                  />
+                </SimpleGrid>
 
-            <SimpleGrid cols={2} spacing="md" mb="md">
-              <TextInput
-                label="Agência"
-                placeholder="Número da agência"
-                {...form.getInputProps('agencia')}
-              />
+                <Select
+                  label="Tipo de Conta"
+                  placeholder="Selecione o tipo de conta"
+                  data={[
+                    { value: 'corrente', label: 'Corrente' },
+                    { value: 'poupanca', label: 'Poupança' },
+                  ]}
+                  {...form.getInputProps('tipo_conta')}
+                  mb="md"
+                />
 
-              <TextInput
-                label="Conta"
-                placeholder="Número da conta"
-                {...form.getInputProps('conta')}
-              />
-            </SimpleGrid>
+                <TextInput
+                  label="Chave PIX"
+                  placeholder="CPF, telefone, email ou chave aleatória"
+                  {...form.getInputProps('pix')}
+                />
+              </Card>
+            </Tabs.Panel>
 
-            <Select
-              label="Tipo de Conta"
-              placeholder="Selecione o tipo de conta"
-              data={[
-                { value: 'corrente', label: 'Corrente' },
-                { value: 'poupanca', label: 'Poupança' },
-              ]}
-              {...form.getInputProps('tipo_conta')}
-              mb="md"
-            />
+            <Tabs.Panel value="idiomas-veiculos">
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Idiomas
+                </Title>
 
-            <TextInput
-              label="Chave PIX"
-              placeholder="CPF, telefone, email ou chave aleatória"
-              {...form.getInputProps('pix')}
-            />
-          </Card>
-        </Tabs.Panel>
+                <MultiSelect
+                  label="Idiomas"
+                  placeholder="Selecione os idiomas"
+                  data={[
+                    { value: 'portugues', label: 'Português' },
+                    { value: 'ingles', label: 'Inglês' },
+                    { value: 'espanhol', label: 'Espanhol' },
+                    { value: 'frances', label: 'Francês' },
+                    { value: 'italiano', label: 'Italiano' },
+                    { value: 'alemao', label: 'Alemão' },
+                    { value: 'japones', label: 'Japonês' },
+                    { value: 'mandarim', label: 'Mandarim' },
+                    { value: 'russo', label: 'Russo' },
+                    { value: 'arabe', label: 'Árabe' },
+                  ]}
+                  searchable
+                  clearable
+                  {...form.getInputProps('idiomas')}
+                  mb="xl"
+                />
+              </Card>
 
-        <Tabs.Panel value="idiomas-veiculos">
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Idiomas</Title>
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Carteira de Habilitação
+                </Title>
 
-            <MultiSelect
-              label="Idiomas"
-              placeholder="Selecione os idiomas"
-              data={[
-                { value: 'portugues', label: 'Português' },
-                { value: 'ingles', label: 'Inglês' },
-                { value: 'espanhol', label: 'Espanhol' },
-                { value: 'frances', label: 'Francês' },
-                { value: 'italiano', label: 'Italiano' },
-                { value: 'alemao', label: 'Alemão' },
-                { value: 'japones', label: 'Japonês' },
-                { value: 'mandarim', label: 'Mandarim' },
-                { value: 'russo', label: 'Russo' },
-                { value: 'arabe', label: 'Árabe' },
-              ]}
-              searchable
-              clearable
-              {...form.getInputProps('idiomas')}
-              mb="xl"
-            />
-          </Card>
+                <MultiSelect
+                  label="Categorias"
+                  placeholder="Selecione as categorias"
+                  data={[
+                    { value: 'A', label: 'A - Motocicletas' },
+                    { value: 'B', label: 'B - Carros de passeio' },
+                    { value: 'C', label: 'C - Veículos de carga acima de 3,5 ton' },
+                    { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
+                    { value: 'E', label: 'E - Veículos com reboque' },
+                  ]}
+                  searchable
+                  clearable
+                  {...form.getInputProps('habilitacao_categorias')}
+                  mb="md"
+                />
 
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Carteira de Habilitação</Title>
+                <DateInput
+                  label="Validade da CNH"
+                  placeholder="Selecione a data"
+                  valueFormat="DD/MM/YYYY"
+                  {...form.getInputProps('habilitacao_validade')}
+                  mb="lg"
+                />
+              </Card>
 
-            <MultiSelect
-              label="Categorias"
-              placeholder="Selecione as categorias"
-              data={[
-                { value: 'A', label: 'A - Motocicletas' },
-                { value: 'B', label: 'B - Carros de passeio' },
-                { value: 'C', label: 'C - Veículos de carga acima de 3,5 ton' },
-                { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
-                { value: 'E', label: 'E - Veículos com reboque' },
-              ]}
-              searchable
-              clearable
-              {...form.getInputProps('habilitacao_categorias')}
-              mb="md"
-            />
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Title order={3} mb="lg">
+                  Veículos
+                </Title>
 
-            <DateInput
-              label="Validade da CNH"
-              placeholder="Selecione a data"
-              valueFormat="DD/MM/YYYY"
-              {...form.getInputProps('habilitacao_validade')}
-              mb="lg"
-            />
-          </Card>
+                <Switch
+                  label="Possui veículo próprio"
+                  {...form.getInputProps('possui_veiculo', { type: 'checkbox' })}
+                />
+              </Card>
+            </Tabs.Panel>
+          </Tabs>
 
-          <Card withBorder p="xl" radius="md" mb="xl">
-            <Title order={3} mb="lg">Veículos</Title>
-
-            <Switch
-              label="Possui veículo próprio"
-              {...form.getInputProps('possui_veiculo', { type: 'checkbox' })}
-            />
-          </Card>
-        </Tabs.Panel>
-      </Tabs>
-
-      <Group position="right" mt="xl">
-        <Button variant="outline" onClick={() => router.push('/admin/casting')}>
-          Cancelar
-        </Button>
-        <Button
-          type="submit"
-          loading={isLoading}
-          styles={{
-            root: {
-              backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-              color: '#FFFFFF !important',
-              '&:hover': {
-                backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
-              },
-            },
-          }}
-        >
-          Atualizar Casting
-        </Button>
-      </Group>
-    </form>
-    </Container>
+          <Group position="right" mt="xl">
+            <Button variant="outline" onClick={() => router.push('/admin/casting')}>
+              Cancelar
+            </Button>
+            <Button
+              type="submit"
+              loading={isLoading}
+              styles={{
+                root: {
+                  backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                  color: '#FFFFFF !important',
+                  '&:hover': {
+                    backgroundColor: isDark ? '#a855f7 !important' : '#6b21a8 !important',
+                  },
+                },
+              }}
+            >
+              Atualizar Casting
+            </Button>
+          </Group>
+        </form>
+      </Container>
     </>
   );
 }

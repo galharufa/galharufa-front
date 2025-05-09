@@ -89,7 +89,7 @@ export interface CastingDetalhado extends CastingResumido {
   idiomas: string[] | Idioma[];
   instagram: string;
   imdb: string;
-  
+
   // Campos para links de trabalho
   link_trabalho_1?: string;
   link_trabalho_2?: string;
@@ -98,11 +98,11 @@ export interface CastingDetalhado extends CastingResumido {
   link_trabalho_5?: string;
   link_trabalho_6?: string;
   link_trabalho_7?: string;
-  
+
   // Dados de naturalidade
   natural_de?: string;
   ano?: string;
-  
+
   // Características físicas
   manequim?: string;
   sapato?: string;
@@ -111,7 +111,7 @@ export interface CastingDetalhado extends CastingResumido {
   tipo_cabelo?: string;
   tem_tatuagens?: boolean;
   locais_tatuagens?: string;
-  
+
   // Documentos
   DRT?: string;
   RG?: string;
@@ -119,7 +119,7 @@ export interface CastingDetalhado extends CastingResumido {
   tem_passaporte?: boolean;
   passaporte?: string;
   validade_passaporte?: string;
-  
+
   // Contato
   email?: string;
   telefone_1?: string;
@@ -130,7 +130,7 @@ export interface CastingDetalhado extends CastingResumido {
   youtube?: string;
   contato_emergencia_nome?: string;
   contato_emergencia_telefone?: string;
-  
+
   // Endereço
   cep?: string;
   endereco?: string;
@@ -139,14 +139,14 @@ export interface CastingDetalhado extends CastingResumido {
   bairro?: string;
   cidade?: string;
   estado?: string;
-  
+
   // Finanças
   banco?: string;
   agencia?: string;
   conta?: string;
   tipo_conta?: string;
   pix?: string;
-  
+
   // Habilitação e veículos
   habilitacao_categorias?: string[];
   habilitacao_validade?: string;
