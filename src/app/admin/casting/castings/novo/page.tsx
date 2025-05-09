@@ -42,7 +42,14 @@ import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
-import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
+import {
+  corCabelo,
+  errorToast,
+  genderData,
+  habilidades,
+  successToast,
+  tipoCabelo,
+} from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 import {
   etny,
@@ -787,23 +794,14 @@ export default function NovoCasting() {
                     {...form.getInputProps('genero')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                </SimpleGrid>
-
-                <MultiSelect
-                  label="Habilidades"
-                  searchable
-                  clearable
-                  placeholder="Selecione uma ou mais habilidades"
-                  data={habilidadesData}
-                  {...form.getInputProps('habilidades')}
-                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                />
-
-                <SimpleGrid cols={3}>
-                  <TextInput
+                  <Select
                     label="Naturalidade"
+                    searchable
                     placeholder="Natural de (município/estado)"
+                    nothingFound="Não encontrado"
                     {...form.getInputProps('natural_de')}
+                    data={estados}
+                    clearable
                     mb="md"
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -817,7 +815,18 @@ export default function NovoCasting() {
                     {...form.getInputProps('nacionalidade')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                </SimpleGrid>
 
+                <SimpleGrid cols={2}>
+                  <MultiSelect
+                    label="Habilidades"
+                    searchable
+                    clearable
+                    placeholder="Selecione uma ou mais habilidades"
+                    data={habilidadesData}
+                    {...form.getInputProps('habilidades')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
                   <Select
                     label="Etnia"
                     placeholder="Selecione a etnia"
@@ -894,14 +903,14 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Manequim"
                     placeholder="Tamanho do manequim"
                     {...form.getInputProps('manequim')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Sapato"
                     placeholder="Número do sapato"
                     {...form.getInputProps('sapato')}
@@ -917,7 +926,7 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Camisa"
                     placeholder="Tamanho da camisa"
                     {...form.getInputProps('camisa')}
@@ -945,14 +954,7 @@ export default function NovoCasting() {
                   <Select
                     label="Tipo de Cabelo"
                     placeholder="Selecione o tipo de cabelo"
-                    data={[
-                      { value: 'liso', label: 'Liso' },
-                      { value: 'ondulado', label: 'Ondulado' },
-                      { value: 'cacheado', label: 'Cacheado' },
-                      { value: 'crespo', label: 'Crespo' },
-                      { value: 'careca', label: 'Careca' },
-                      { value: 'outro', label: 'Outro' },
-                    ]}
+                    data={tipoCabelo}
                     {...form.getInputProps('tipo_cabelo')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -961,6 +963,7 @@ export default function NovoCasting() {
                     label="Cor do Cabelo"
                     placeholder="Selecione a cor do cabelo"
                     data={corCabelo}
+                    disabled={form.values.tipo_cabelo === 'careca'}
                     {...form.getInputProps('cor_cabelo')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
