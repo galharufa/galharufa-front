@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import { useEffect, useState } from 'react';
+import React, { useState, useCallback, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Container,
@@ -26,6 +26,7 @@ import {
   MultiSelect,
   Divider,
   SimpleGrid,
+  Box,
 } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -34,10 +35,12 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { DateInput } from '@mantine/dates';
+import { useDisclosure, useUncontrolled } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
+import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
 import {
   corCabelo,
@@ -105,6 +108,7 @@ export default function NovoCasting() {
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
+  const [linksTrabalho, setLinksTrabalho] = useState<string[]>(['', '']);
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -228,6 +232,7 @@ export default function NovoCasting() {
           { id: '5', nome: 'Qual Casting' },
         ]);
       } catch (error) {
+        console.error('Falha ao carregar dados iniciais:', error);
         notifications.show({
           title: 'Erro',
           message: 'Falha ao carregar dados iniciais. Tente novamente mais tarde.',
@@ -247,6 +252,28 @@ export default function NovoCasting() {
 
   // Funções para gerenciar fotos adicionais
   const adicionarFoto = () => {
+    // Verifica se já atingiu o limite de 8 fotos
+    if (fotosAdicionais.length >= 8) {
+      notifications.show({
+        title: 'Limite atingido',
+        message: 'Você já adicionou o número máximo de 8 fotos.',
+        color: 'yellow',
+      });
+      return;
+    }
+
+    // Verifica se a última foto adicionada está preenchida
+    const ultimaFotoIndex = fotosAdicionais.length - 1;
+    if (ultimaFotoIndex >= 0 && !fotosAdicionais[ultimaFotoIndex]) {
+      notifications.show({
+        title: 'Foto vazia',
+        message: 'Selecione uma imagem para a foto atual antes de adicionar outra.',
+        color: 'yellow',
+      });
+      return;
+    }
+
+    // Adiciona nova foto e legenda
     setFotosAdicionais([...fotosAdicionais, null as unknown as File]);
     setLegendasFotos([...legendasFotos, '']);
   };
@@ -439,6 +466,14 @@ export default function NovoCasting() {
       if (values.link_monologo) formData.set('link_monologo', values.link_monologo);
       if (values.link_trabalho_1) formData.set('link_trabalho_1', values.link_trabalho_1);
       if (values.link_trabalho_2) formData.set('link_trabalho_2', values.link_trabalho_2);
+
+      // Links de trabalho adicionais (3 a 7)
+      linksTrabalho.forEach((link, index) => {
+        if (index >= 2 && link) {
+          // A partir do link 3 (índice 2)
+          formData.set(`link_trabalho_${index + 1}`, link);
+        }
+      });
 
       // Contato
       if (values.telefone) formData.set('telefone', values.telefone);
@@ -1155,32 +1190,127 @@ export default function NovoCasting() {
                   <Title order={3}>Links de Mídia</Title>
                 </Group>
 
-                <SimpleGrid cols={2} mb="md">
+                <div>
+                  <Group position="apart" mb="lg">
+                    <Title order={4}>Link de Monólogo</Title>
+                  </Group>
                   <TextInput
                     label="Link de Monólogo"
                     placeholder="URL do monólogo ou apresentação"
                     icon={<IconMovie size={14} />}
                     {...form.getInputProps('link_monologo')}
+                    mb="xs"
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                  {form.values.link_monologo && (
+                    <VideoPreview url={form.values.link_monologo} height={280} />
+                  )}
+                </div>
 
-                  <TextInput
-                    label="Link de Trabalho 1"
-                    placeholder="URL de algum trabalho realizado"
-                    icon={<IconMovie size={14} />}
-                    {...form.getInputProps('link_trabalho_1')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
+                <Divider my="md" label="Links de Trabalho" labelPosition="center" />
+
+                {/* Links de Trabalho 1 e 2 (já existentes no form) */}
+                <SimpleGrid cols={2} mb="md">
+                  <div>
+                    <TextInput
+                      label="Link de Trabalho 1"
+                      placeholder="URL de algum trabalho realizado"
+                      icon={<IconMovie size={14} />}
+                      {...form.getInputProps('link_trabalho_1')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+                    {form.values.link_trabalho_1 && (
+                      <VideoPreview url={form.values.link_trabalho_1} height={280} />
+                    )}
+                  </div>
+
+                  <div>
+                    <TextInput
+                      label="Link de Trabalho 2"
+                      placeholder="URL de outro trabalho realizado"
+                      icon={<IconMovie size={14} />}
+                      {...form.getInputProps('link_trabalho_2')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+                    {form.values.link_trabalho_2 && (
+                      <VideoPreview url={form.values.link_trabalho_2} height={280} />
+                    )}
+                  </div>
                 </SimpleGrid>
 
-                <TextInput
-                  label="Link de Trabalho 2"
-                  placeholder="URL de outro trabalho realizado"
-                  icon={<IconMovie size={14} />}
-                  {...form.getInputProps('link_trabalho_2')}
-                  mb="md"
-                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                />
+                {/* Links de Trabalho adicionais (3 a 7) */}
+                {linksTrabalho.map(
+                  (link, index) =>
+                    index >= 2 && (
+                      <Box key={`trabalho_${index + 1}`} mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Link de Trabalho {index + 1}</Text>
+                          <ActionIcon
+                            color="red"
+                            onClick={() => {
+                              const novosLinks = [...linksTrabalho];
+                              novosLinks.splice(index, 1);
+                              setLinksTrabalho(novosLinks);
+                            }}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                        <TextInput
+                          placeholder={`URL do trabalho ${index + 1}`}
+                          icon={<IconMovie size={14} />}
+                          value={link}
+                          onChange={(e) => {
+                            const novosLinks = [...linksTrabalho];
+                            novosLinks[index] = e.target.value;
+                            setLinksTrabalho(novosLinks);
+                          }}
+                          ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                        />
+                        {link && <VideoPreview url={link} height={280} />}
+                      </Box>
+                    ),
+                )}
+
+                {/* Botão para adicionar mais links de trabalho */}
+                {linksTrabalho.length < 9 && (
+                  <Group position="center" mt="md">
+                    <Button
+                      leftIcon={<IconPlus size={16} />}
+                      variant="outline"
+                      onClick={() => {
+                        // Verificar se o último link foi preenchido
+                        const ultimoLink = linksTrabalho[linksTrabalho.length - 1];
+                        if (!ultimoLink) {
+                          notifications.show({
+                            title: 'Campo vazio',
+                            message: 'Preencha o link atual antes de adicionar outro.',
+                            color: 'yellow',
+                          });
+                          return;
+                        }
+
+                        // Adicionar novo link vazio
+                        setLinksTrabalho([...linksTrabalho, '']);
+                      }}
+                      styles={{
+                        root: {
+                          borderColor: isDark
+                            ? '#9333ea !important'
+                            : '#7e22ce !important',
+                          color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                          transition: 'transform 0.3s, box-shadow 0.3s',
+                          '&:hover': {
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                          },
+                        },
+                      }}
+                    >
+                      Adicionar Link de Trabalho
+                    </Button>
+                  </Group>
+                )}
               </Card>
             </Tabs.Panel>
 

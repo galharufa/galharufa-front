@@ -72,12 +72,8 @@ export interface CastingDetalhado extends CastingResumido {
   nacionalidade: string | null;
   etnia: string | null;
   altura: string;
-  sapato: number;
-  DRT: string;
-  manequim: string;
   peso: string;
   olhos: string | null;
-  tipo_cabelo: string | null;
   cor_cabelo: string | null;
   canta_profissionalmente: boolean;
   danca_profissionalmente: boolean;
@@ -90,12 +86,71 @@ export interface CastingDetalhado extends CastingResumido {
   fotos: Foto[];
   videos: Video[];
   habilidades: Funcao[];
-  idiomas: Idioma[];
-  link_instagram: string;
-  link_imdb: string;
-  link_monologo: string;
-  link_trabalho_1: string;
-  link_trabalho_2: string;
+  idiomas: string[] | Idioma[];
+  instagram: string;
+  imdb: string;
+
+  // Campos para links de trabalho
+  link_trabalho_1?: string;
+  link_trabalho_2?: string;
+  link_trabalho_3?: string;
+  link_trabalho_4?: string;
+  link_trabalho_5?: string;
+  link_trabalho_6?: string;
+  link_trabalho_7?: string;
+
+  // Dados de naturalidade
+  natural_de?: string;
+  ano?: string;
+
+  // Características físicas
+  manequim?: string;
+  sapato?: string;
+  terno?: string;
+  camisa?: string;
+  tipo_cabelo?: string;
+  tem_tatuagens?: boolean;
+  locais_tatuagens?: string;
+
+  // Documentos
+  DRT?: string;
+  RG?: string;
+  CPF?: string;
+  tem_passaporte?: boolean;
+  passaporte?: string;
+  validade_passaporte?: string;
+
+  // Contato
+  email?: string;
+  telefone_1?: string;
+  telefone_2?: string;
+  facebook?: string;
+  twitter?: string;
+  tiktok?: string;
+  youtube?: string;
+  contato_emergencia_nome?: string;
+  contato_emergencia_telefone?: string;
+
+  // Endereço
+  cep?: string;
+  endereco?: string;
+  numero?: string;
+  complemento?: string;
+  bairro?: string;
+  cidade?: string;
+  estado?: string;
+
+  // Finanças
+  banco?: string;
+  agencia?: string;
+  conta?: string;
+  tipo_conta?: string;
+  pix?: string;
+
+  // Habilitação e veículos
+  habilitacao_categorias?: string[];
+  habilitacao_validade?: string;
+  possui_veiculo?: boolean;
 }
 
 export interface PaginatedResponse<T> {
