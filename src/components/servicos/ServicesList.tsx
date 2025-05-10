@@ -7,6 +7,7 @@ import { motion, useInView, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ServicosService, ServicoResumido } from '@/services';
+import parse from 'html-react-parser';
 
 const ServicesList = () => {
   const ref = useRef(null);
@@ -145,7 +146,9 @@ const ServicesList = () => {
                             <h3 className="text-white text-xl font-semibold">
                               {servico.nome}
                             </h3>
-                            <p className="text-gray-300 text-sm">{servico.descricao}</p>
+                            <span className="text-gray-300 text-sm">
+                              {parse(servico.descricao)}
+                            </span>
                           </div>
                         </div>
                       </Link>

@@ -124,7 +124,9 @@ export default function ServicoDetalhe() {
             </div>
             {/* Conteúdo dos Serviços */}
             <div>
-              <p className="text-black dark:text-white">{parse(servico.descricao)}</p>
+              <span className="text-black dark:text-white">
+                {parse(servico.descricao)}
+              </span>
             </div>
             <div className="align-right"></div>
           </AnimatedSection>

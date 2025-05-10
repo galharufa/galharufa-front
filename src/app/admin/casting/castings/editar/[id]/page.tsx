@@ -203,6 +203,7 @@ export default function EditarCasting() {
       celular: '',
       whatsapp: '',
       instagram: '',
+      imdb: '',
       tiktok: '',
       youtube: '',
       website: '',
@@ -393,7 +394,8 @@ export default function EditarCasting() {
           email: castingResponse.email || '',
           telefone_1: castingResponse.telefone_1 || '',
           telefone_2: castingResponse.telefone_2 || '',
-          instagram: castingResponse.instagram || '',
+          instagram: castingResponse.link_instagram || '',
+          imdb: castingResponse.link_imdb || '',
           tiktok: castingResponse.tiktok || '',
           youtube: castingResponse.youtube || '',
           facebook: castingResponse.facebook || '',
@@ -416,7 +418,7 @@ export default function EditarCasting() {
           pix: castingResponse.pix || '',
 
           // Idiomas e Veículos
-          idiomas: (castingResponse.idiomas as string[]) || [],
+          idiomas: (castingResponse.idiomas as []) || [],
           habilitacao_categorias: castingResponse.habilitacao_categorias || [],
           habilitacao_validade: habilitacaoValidade,
         });
