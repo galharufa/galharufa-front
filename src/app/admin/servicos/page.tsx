@@ -15,10 +15,10 @@ import {
   Loader,
   Modal,
   TextInput,
-  Textarea,
   Switch,
   FileInput,
 } from '@mantine/core';
+import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
 import { ServicosService, type Servico, type ServicoResumido } from '@/services';
@@ -27,6 +27,12 @@ import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUpload } from '@tabler/icons-react';
 import Image from 'next/image';
+import { useEditor } from '@tiptap/react';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import parse from 'html-react-parser';
 
 export default function ServicoAdmin() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -56,6 +62,13 @@ export default function ServicoAdmin() {
         value.trim().length === 0 ? 'A descrição é obrigatória' : null,
       preco: (value) => (value.trim().length === 0 ? 'O preço é obrigatório' : null),
     },
+  });
+
+  const editor = useEditor({
+    extensions: [StarterKit, Link, TextAlign, Highlight, Underline],
+    content: form.getInputProps('experiencia').value,
+    onUpdate: ({ editor }) => form.getInputProps('descricao').onChange(editor.getHTML()),
+    immediatelyRender: false, // Corrige o problema de hidratação SSR
   });
 
   // Carregar serviços
@@ -263,7 +276,7 @@ export default function ServicoAdmin() {
                       )}
                     </Group>
                     <Text mt="md" color="dimmed">
-                      {servico.descricao}
+                      {parse(servico.descricao)}
                     </Text>
                     {servico.imagem && (
                       <div
@@ -342,14 +355,51 @@ export default function ServicoAdmin() {
             mb="md"
           />
 
-          <Textarea
+          <Text size="sm" fw={500} mb="xs">
+            Descrição
+          </Text>
+          <RichTextEditor editor={editor}>
+            <RichTextEditor.Toolbar sticky stickyOffset={60}>
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Bold ref={undefined} />
+                <RichTextEditor.Italic ref={undefined} />
+                <RichTextEditor.Underline ref={undefined} />
+                <RichTextEditor.Strikethrough ref={undefined} />
+                <RichTextEditor.ClearFormatting ref={undefined} />
+                <RichTextEditor.Highlight ref={undefined} />
+                <RichTextEditor.Code ref={undefined} />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.H1 ref={undefined} />
+                <RichTextEditor.H2 ref={undefined} />
+                <RichTextEditor.H3 ref={undefined} />
+                <RichTextEditor.H4 ref={undefined} />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Hr ref={undefined} />
+                <RichTextEditor.BulletList ref={undefined} />
+                <RichTextEditor.OrderedList ref={undefined} />
+              </RichTextEditor.ControlsGroup>
+
+              <RichTextEditor.ControlsGroup>
+                <RichTextEditor.Link ref={undefined} />
+                <RichTextEditor.Unlink ref={undefined} />
+              </RichTextEditor.ControlsGroup>
+            </RichTextEditor.Toolbar>
+
+            <RichTextEditor.Content />
+          </RichTextEditor>
+
+          {/* <Textarea
             label="Descrição"
             placeholder="Descrição detalhada do serviço"
             required
             minRows={4}
             {...form.getInputProps('descricao')}
             mb="md"
-          />
+          /> */}
 
           <TextInput
             label="Preço"

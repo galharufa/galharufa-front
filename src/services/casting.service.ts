@@ -28,7 +28,7 @@ export interface Video {
   ordem: number;
 }
 
-type NivelIdioma = 'Básico' | 'Intermediário' | 'Avançado' | 'Fluente';
+type NivelIdioma = 'basico' | 'intermediário' | 'avancado' | 'Fluente';
 
 export interface Idioma {
   ingles: boolean;
@@ -43,7 +43,7 @@ export interface Idioma {
   nivel_italiano?: NivelIdioma;
   alemao: boolean;
   nivel_alemao?: NivelIdioma;
-  mandarin: boolean;
+  mandarim: boolean;
   nivel_mandarin?: NivelIdioma;
   japones: boolean;
   nivel_japones?: NivelIdioma;
@@ -86,9 +86,9 @@ export interface CastingDetalhado extends CastingResumido {
   fotos: Foto[];
   videos: Video[];
   habilidades: Funcao[];
-  idiomas: string[] | Idioma[];
-  instagram: string;
-  imdb: string;
+  idiomas: Idioma[];
+  link_instagram: string;
+  link_imdb: string;
 
   // Campos para links de trabalho
   link_trabalho_1?: string;

@@ -8,7 +8,7 @@ import { FaArrowLeft, FaInstagram, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import { CastingDetalhado, CastingService } from '@/services';
+import { CastingDetalhado, CastingService, Idioma } from '@/services';
 import parse from 'html-react-parser';
 import {
   tipoMap,
@@ -20,6 +20,7 @@ import {
   nacionalidadeMap,
   corOlhosMap,
 } from '@/utils';
+import {} from '../../../services/casting.service';
 
 export default function CastingPage() {
   const params = useParams();
@@ -140,7 +141,7 @@ export default function CastingPage() {
           <div className="container mx-auto">
             <AnimatedText
               text={casting.nome}
-              className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2 lg:leading-tight"
               delay={0.2}
             />
             <AnimatedSection
@@ -231,14 +232,25 @@ export default function CastingPage() {
                   </div>
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
-                    {casting.idiomas &&
-                      Object.entries(casting.idiomas)
-                        .filter(([_, valor]) => valor)
-                        .map(([idioma], index) => (
-                          <p key={index} className="text-black dark:text-white">
-                            {idioma.charAt(0).toUpperCase() + idioma.slice(1)}
-                          </p>
-                        ))}
+                    {casting.idiomas?.[0] &&
+                      Object.entries(casting.idiomas[0])
+                        .filter(([chave, valor]) => {
+                          return typeof valor === 'boolean' && valor === true;
+                        })
+                        .map(([idioma], index) => {
+                          const nivelKey = `nivel_${idioma}` as keyof Idioma;
+                          const idiomaKey = idioma as keyof Idioma;
+                          const nivel = casting.idiomas[0][nivelKey] as
+                            | string
+                            | undefined;
+
+                          return (
+                            <p key={index} className="text-black dark:text-white">
+                              {idioma.charAt(0).toUpperCase() + idioma.slice(1)}{' '}
+                              {nivel ? `(${nivel})` : ''}
+                            </p>
+                          );
+                        })}
                   </div>
 
                   {casting.link_instagram && (
@@ -340,9 +352,9 @@ export default function CastingPage() {
                 )}
                 {casting.videos && casting.videos.length > 0 && (
                   <button
-                    onClick={() => setActiveTab('galeria')}
+                    onClick={() => setActiveTab('videos')}
                     className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
-                      activeTab === 'galeria'
+                      activeTab === 'videos'
                         ? 'border-black dark:border-white text-black dark:text-white'
                         : 'border-transparent text-gray-500 dark:text-gray-400'
                     }`}
@@ -408,9 +420,7 @@ export default function CastingPage() {
               )}
               {activeTab === 'videos' && casting.videos && casting.videos.length > 0 && (
                 <AnimatedSection direction="up" delay={0.2}>
-                  <h2 className="heading-tertiary text-black dark:text-white">
-                    Galeria de Fotos
-                  </h2>
+                  <h2 className="heading-tertiary text-black dark:text-white">Videos</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     {casting.videos.map((video, index) => (
                       <AnimatedImage

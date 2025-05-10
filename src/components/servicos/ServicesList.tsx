@@ -6,36 +6,7 @@ import { useRef, useState, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-// import { FaUserTie, FaCamera } from 'react-icons/fa';
 import { ServicosService, ServicoResumido } from '@/services';
-
-// // Dados detalhados dos serviços
-// const services = [
-//   {
-//     id: 1,
-//     icon: <FaUserTie className="text-5xl mb-6" />,
-//     title: 'Agenciamento Artístico',
-//     details: [
-//       'Representação exclusiva para atores, criativos e influenciadores',
-//       'Negociação de contratos e cachês',
-//       'Planejamento estratégico de carreira',
-//       'Assessoria jurídica especializada',
-//     ],
-//     image: '/images/service-1.jpg',
-//   },
-//   {
-//     id: 2,
-//     icon: <FaCamera className="text-5xl mb-6" />,
-//     title: 'Material para Atores',
-//     details: [
-//       'Produção de material fotográfico',
-//       'Videobook',
-//       'Vídeos de Apresentação',
-//       'Edição de Demo Reel',
-//     ],
-//     image: '/images/service-2.jpg',
-//   },
-// ];
 
 const ServicesList = () => {
   const ref = useRef(null);
@@ -132,13 +103,13 @@ const ServicesList = () => {
   );
 
   return (
-    <section className="py-20 bg-white dark:bg-black">
+    <section className="py-10 bg-white dark:bg-black">
       <div className="container-section py-4">
         <h2 className="heading-secondary text-black dark:text-white text-center mb-16">
           O Que Oferecemos
         </h2>
         <div className="w-20 h-1 bg-gradient-to-r from-black to-gray-500 dark:from-white dark:to-gray-500 mx-auto mt-2 mb-6"></div>
-        <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+        <p className="text-gray-700 dark:text-gray-300 max-w-3xl mx-auto mb-20">
           Conheça nossa gama completa de serviços, desenvolvidos para atender às
           necessidades específicas de nossos talentos e clientes.
         </p>
@@ -170,11 +141,10 @@ const ServicesList = () => {
                             className="object-cover transition-transform duration-500 group-hover:scale-110"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
+                          <div className="absolute bottom-5 left-0 right-0 p-4 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
                             <h3 className="text-white text-xl font-semibold">
                               {servico.nome}
                             </h3>
-                            <p className="text-gray-300 text-sm">{servico.descricao}</p>
                             <p className="text-gray-300 text-sm">{servico.descricao}</p>
                           </div>
                         </div>

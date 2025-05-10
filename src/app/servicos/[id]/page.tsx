@@ -8,8 +8,9 @@ import Image from 'next/image';
 import { FaArrowLeft } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
-import { formatarData } from '@/utils';
+import { formatarData, formatarMoeda } from '@/utils';
 import { ServicosService, Servico } from '@/services';
+import parse from 'html-react-parser';
 
 export default function ServicoDetalhe() {
   const params = useParams();
@@ -118,12 +119,12 @@ export default function ServicoDetalhe() {
                 <small></small>
               </div>
               <div className="order-2 text-right text-sm text-gray-500 dark:text-gray-400">
-                {formatarData(servico.descricao)}
+                {formatarData(servico.data_cadastro)}
               </div>
             </div>
-            {/* Conteúdo do Blog */}
+            {/* Conteúdo dos Serviços */}
             <div>
-              <p className="text-black dark:text-white">{servico.preco}</p>
+              <p className="text-black dark:text-white">{parse(servico.descricao)}</p>
             </div>
             <div className="align-right"></div>
           </AnimatedSection>
@@ -139,17 +140,17 @@ export default function ServicoDetalhe() {
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Resumo:</h3>
                   <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">
-                    {servico.descricao}
+                    {parse(servico.descricao)}
                   </p>
 
                   {/* <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">Autor:</h3>
                   <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.autor_nome}</p> */}
 
                   <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-                    Categoria:
+                    Valor:
                   </h3>
                   <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">
-                    {servico.descricao}
+                    {formatarMoeda(Number(servico.preco))}
                   </p>
                 </div>
               </div>
