@@ -76,7 +76,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 ">
         <div className="flex items-center justify-between py-2">
           {/* Logo */}
-          <Link href="/" className="relative z-10 ">
+          <Link href="/" className="relative z-10">
             <div className="flex items-center">
               {scrolled || pathname !== '/' ? (
                 <div className="relative w-auto">

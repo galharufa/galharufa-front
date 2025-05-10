@@ -8,7 +8,19 @@ import { FaArrowLeft, FaInstagram, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import { CastingDetalhado, CastingService } from '@/services';
+import { CastingDetalhado, CastingService, Idioma } from '@/services';
+import parse from 'html-react-parser';
+import {
+  tipoMap,
+  etniaMap,
+  tipoCabeloMap,
+  genderMap,
+  languagesMap,
+  corCabeloMap,
+  nacionalidadeMap,
+  corOlhosMap,
+} from '@/utils';
+import {} from '../../../services/casting.service';
 
 export default function CastingPage() {
   const params = useParams();
@@ -17,18 +29,6 @@ export default function CastingPage() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('sobre');
   const [apiError, setApiError] = useState(false);
-
-  // DRT
-  // Ano de nascimento
-  // Altura
-  // Manequim
-  // Sapato
-  // Peso
-  // Olhos
-  // Cabelos
-  // Idiomas
-  // Instagram
-  // IMDB
 
   useEffect(() => {
     const fetchCasts = async () => {
@@ -99,6 +99,30 @@ export default function CastingPage() {
     );
   }
 
+  const tipoCasting = casting.tipo
+    ? tipoMap[casting.tipo] || casting.tipo
+    : 'Não informado';
+  const nacionalidadeCasting = casting.nacionalidade
+    ? nacionalidadeMap[casting.nacionalidade] || casting.nacionalidade
+    : 'Não informado';
+
+  const generoCasting = casting.genero
+    ? genderMap[casting?.genero] || casting.genero
+    : 'Não informado';
+  const etniaCasting = casting.etnia
+    ? etniaMap[casting?.etnia] || casting.etnia
+    : 'Não informado';
+  const tipoCabeloCasting = casting.tipo_cabelo
+    ? tipoCabeloMap[casting.tipo_cabelo] || casting.tipo_cabelo
+    : 'Não informado';
+  const corCabeloCasting = casting.cor_cabelo
+    ? corCabeloMap[casting.cor_cabelo] || casting.cor_cabelo
+    : 'Não informado';
+
+  const corOlhosCasting = casting.olhos
+    ? corOlhosMap[casting.olhos] || casting.olhos
+    : 'Não informado';
+
   return (
     <div className="bg-white dark:bg-black min-h-screen">
       {/* Hero Section */}
@@ -117,7 +141,7 @@ export default function CastingPage() {
           <div className="container mx-auto">
             <AnimatedText
               text={casting.nome}
-              className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2"
+              className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2 lg:leading-tight"
               delay={0.2}
             />
             <AnimatedSection
@@ -145,8 +169,21 @@ export default function CastingPage() {
 
               <div className="space-y-4">
                 <div>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Tipo</h3>
+                  <p className="text-black dark:text-white">{tipoCasting}</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
-                  <p className="text-black dark:text-white">99999/SP</p>
+                  <p className="text-black dark:text-white">{casting.DRT}</p>
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                    Nacionalidade
+                  </h3>
+                  <p className="text-black dark:text-white">{nacionalidadeCasting}</p>
+
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Gênero</h3>
+                  <p className="text-black dark:text-white">{generoCasting}</p>
+
+                  <h3 className="text-sm text-gray-500 dark:text-gray-400">Etnia</h3>
+                  <p className="text-black dark:text-white">{etniaCasting}</p>
+
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
                     Ano de Nascimento
                   </h3>
@@ -155,20 +192,20 @@ export default function CastingPage() {
                       ? new Date(casting.data_nascimento).getFullYear()
                       : 'Não informado'}
                   </p>
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
+                    <p className="text-black dark:text-white">{casting.manequim}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
+                    <p className="text-black dark:text-white">
+                      {casting.sapato || 'Não informado'}
+                    </p>
+                  </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Altura</h3>
                     <p className="text-black dark:text-white">{casting.altura} m</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Manequim</h3>
-                    <p className="text-black dark:text-white">Não informado</p>
-                  </div>
-
-                  <div>
-                    <h3 className="text-sm text-gray-500 dark:text-gray-400">Sapato</h3>
-                    <p className="text-black dark:text-white">Não informado</p>
                   </div>
 
                   <div>
@@ -180,62 +217,78 @@ export default function CastingPage() {
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Olhos</h3>
-                    <p className="text-black dark:text-white">
-                      {casting.olhos || 'Não informado'}
-                    </p>
+                    <p className="text-black dark:text-white">{corOlhosCasting}</p>
+                  </div>
+                  <div>
+                    <h3 className="text-sm text-gray-500 dark:text-gray-400">
+                      Tipo de Cabelo
+                    </h3>
+                    <p className="text-black dark:text-white">{tipoCabeloCasting}</p>
                   </div>
 
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
-                    <p className="text-black dark:text-white">
-                      {casting.cor_cabelo || 'Não informado'}
-                    </p>
+                    <p className="text-black dark:text-white">{corCabeloCasting}</p>
                   </div>
-
                   <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
-                    <p className="text-black dark:text-white">
-                      {casting.cor_cabelo || 'Não informado'}
-                    </p>
+                    {casting.idiomas?.[0] &&
+                      Object.entries(casting.idiomas[0])
+                        .filter(([chave, valor]) => {
+                          return typeof valor === 'boolean' && valor === true;
+                        })
+                        .map(([idioma], index) => {
+                          const nivelKey = `nivel_${idioma}` as keyof Idioma;
+                          const idiomaKey = idioma as keyof Idioma;
+                          const nivel = casting.idiomas[0][nivelKey] as
+                            | string
+                            | undefined;
+
+                          return (
+                            <p key={index} className="text-black dark:text-white">
+                              {idioma.charAt(0).toUpperCase() + idioma.slice(1)}{' '}
+                              {nivel ? `(${nivel})` : ''}
+                            </p>
+                          );
+                        })}
                   </div>
-                  {casting.instagram && (
+
+                  {casting.link_instagram && (
                     <div>
                       <h3 className="text-sm text-gray-500 dark:text-gray-400">
                         Instagram
                       </h3>
                       <p className="text-black dark:text-white flex items-center gap-2">
-                        <FaInstagram />
                         <a
                           href={
-                            casting.instagram.startsWith('http')
-                              ? casting.instagram
-                              : `https://${casting.instagram}`
+                            casting.link_instagram.startsWith('http')
+                              ? casting.link_instagram
+                              : `https://${casting.link_instagram}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="underline"
                         >
-                          {casting.instagram}
+                          <FaInstagram />
                         </a>
                       </p>
                     </div>
                   )}
-                  {casting.instagram && (
+                  {casting.link_imdb && (
                     <div>
                       <h3 className="text-sm text-gray-500 dark:text-gray-400">IMDB</h3>
                       <p className="text-black dark:text-white flex items-center gap-2">
-                        <FaImdb />
                         <a
                           href={
-                            casting.imdb.startsWith('http')
-                              ? casting.imdb
-                              : `https://${casting.imdb}`
+                            casting.link_imdb.startsWith('http')
+                              ? casting.link_imdb
+                              : `https://${casting.link_imdb}`
                           }
                           target="_blank"
                           rel="noopener noreferrer"
                           className="underline"
                         >
-                          {casting.imdb}
+                          <FaImdb />
                         </a>
                       </p>
                     </div>
@@ -297,6 +350,18 @@ export default function CastingPage() {
                     Galeria
                   </button>
                 )}
+                {casting.videos && casting.videos.length > 0 && (
+                  <button
+                    onClick={() => setActiveTab('videos')}
+                    className={`py-4 px-1 border-b-2 font-medium text-sm hover-link ${
+                      activeTab === 'videos'
+                        ? 'border-black dark:border-white text-black dark:text-white'
+                        : 'border-transparent text-gray-500 dark:text-gray-400'
+                    }`}
+                  >
+                    Videos
+                  </button>
+                )}
               </nav>
             </div>
 
@@ -323,9 +388,9 @@ export default function CastingPage() {
                       Experiência Profissional
                     </h2>
                     <ul className="space-y-4 mt-4">
-                      <p className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
-                        {casting.experiencia}
-                      </p>
+                      <span className="text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                        {parse(casting.experiencia)}
+                      </span>
                     </ul>
                   </AnimatedSection>
                 )}
@@ -344,6 +409,24 @@ export default function CastingPage() {
                         alt={
                           foto.legenda || `${casting.nome_artistico} - Foto ${index + 1}`
                         }
+                        width={600}
+                        height={800}
+                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
+                        delay={index * 0.1}
+                      />
+                    ))}
+                  </div>
+                </AnimatedSection>
+              )}
+              {activeTab === 'videos' && casting.videos && casting.videos.length > 0 && (
+                <AnimatedSection direction="up" delay={0.2}>
+                  <h2 className="heading-tertiary text-black dark:text-white">Videos</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                    {casting.videos.map((video, index) => (
+                      <AnimatedImage
+                        key={video.id}
+                        src={video.url}
+                        alt={video.titulo}
                         width={600}
                         height={800}
                         className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"

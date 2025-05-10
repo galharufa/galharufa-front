@@ -23,6 +23,7 @@ import type {
   Foto,
   Video,
   Funcao,
+  Idioma,
 } from './casting.service';
 
 export {
@@ -45,6 +46,7 @@ export type {
   PostFiltros,
   Configuracoes,
   Servico,
+  Idioma,
   ServicoResumido,
   CastingResumido,
   CastingDetalhado,

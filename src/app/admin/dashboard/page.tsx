@@ -65,6 +65,14 @@ export default function Dashboard() {
     }
   }, [isAuthenticated, authLoading, router]);
 
+  const slugify = (str: string) =>
+    str
+      .normalize('NFD') // separa letras de acentos
+      .replace(/[\u0300-\u036f]/g, '') // remove acentos
+      .replace(/ç/g, 'c') // substitui cedilha
+      .replace(/[^a-zA-Z0-9]/g, '-') // substitui espaços e outros caracteres por hífen (opcional)
+      .toLowerCase();
+
   useEffect(() => {
     const carregarDados = async () => {
       if (!isAuthenticated || authLoading) return;
@@ -192,8 +200,8 @@ export default function Dashboard() {
     return null;
   }
 
-  const corPrimaria = isDark ? '#9333ea' : '#7e22ce';
-  const corSecundaria = isDark ? '#a855f7' : '#6b21a8';
+  const corPrimaria = isDark ? 'oklch(50.5% 0.213 27.518)' : 'oklch(70.4% 0.191 22.216)';
+  const corSecundaria = isDark ? 'oklch(55.3% 0.195 38.402)' : 'oklch(83.7% 0.128 66.29)';
 
   const stats = [
     {
@@ -261,18 +269,18 @@ export default function Dashboard() {
               <Button
                 styles={{
                   root: {
-                    backgroundColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                    backgroundColor: isDark ? '#404040 !important' : '#737373 !important',
                     color: '#FFFFFF !important',
                     '&:hover': {
                       backgroundColor: isDark
-                        ? '#a855f7 !important'
-                        : '#6b21a8 !important',
+                        ? '#525252 !important'
+                        : '#a3a3a3 !important',
                     },
                   },
                 }}
                 fullWidth
                 mt="md"
-                onClick={() => router.push(`/admin/${stat.title.toLowerCase()}`)}
+                onClick={() => router.push(`/admin/${slugify(stat.title)}`)}
               >
                 Gerenciar
               </Button>

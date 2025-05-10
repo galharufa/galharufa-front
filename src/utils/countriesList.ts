@@ -879,7 +879,7 @@ export type NacionalideMap = {
   [key: string]: string;
 };
 
-export const nacionalidadeMap: NacionalideMap = {
+export const nacionalidadeMap: Record<string, string> = {
   af: 'Afeganistão',
   za: 'África do Sul',
   al: 'Albânia',

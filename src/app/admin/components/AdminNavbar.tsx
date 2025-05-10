@@ -65,7 +65,7 @@ export default function AdminNavbar() {
     {
       icon: IconReceipt,
       label: 'Serviços',
-      link: '/admin/servico',
+      link: '/admin/servicos',
     },
     {
       icon: IconNews,
