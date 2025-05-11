@@ -151,7 +151,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
                     className="group cursor-pointer opacity-70 hover:opacity-100 hover:cursor-pointer grayscale hover:grayscale-0"
                   >
                     <Link
-                      href={`/cast/${slugify(casting.nome_artistico) || casting.id}`}
+                      href={`/casting/${slugify(casting.nome_artistico) || casting.id}`}
                       passHref
                     >
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">

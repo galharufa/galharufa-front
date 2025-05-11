@@ -15,7 +15,7 @@ import {
   etniaMap,
   tipoCabeloMap,
   genderMap,
-  languagesMap,
+  // languagesMap,
   corCabeloMap,
   nacionalidadeMap,
   corOlhosMap,
@@ -230,7 +230,7 @@ export default function CastingPage() {
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
                     <p className="text-black dark:text-white">{corCabeloCasting}</p>
                   </div>
-                  <div>
+                  {/* <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
                     {casting.idiomas?.[0] &&
                       Object.entries(casting.idiomas[0])
@@ -251,7 +251,7 @@ export default function CastingPage() {
                             </p>
                           );
                         })}
-                  </div>
+                  </div> */}
 
                   {casting.link_instagram && (
                     <div>
