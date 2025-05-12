@@ -159,7 +159,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
                           src={
                             casting.fotos?.[0]?.imagem || '/images/placeholder-talent.jpg'
                           }
-                          alt={casting.nome}
+                          alt={casting.nome_artistico}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
                           className="object-cover transition-transform duration-500 group-hover:scale-110"
@@ -167,7 +167,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                         <div className="absolute bottom-0 left-0 right-0 p-4 transform translate-y-6 group-hover:translate-y-0 transition-transform duration-300">
                           <h3 className="text-white text-xl font-semibold">
-                            {casting.nome}
+                            {casting.nome_artistico}
                           </h3>
                           <p className="text-gray-300 text-sm">
                             {casting.categoria_nome}

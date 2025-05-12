@@ -8,7 +8,7 @@ import { FaArrowLeft, FaInstagram, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import { CastingDetalhado, CastingService, Idioma } from '@/services';
+import { CastingDetalhado, CastingService } from '@/services';
 import parse from 'html-react-parser';
 import {
   tipoMap,
@@ -20,7 +20,7 @@ import {
   nacionalidadeMap,
   corOlhosMap,
 } from '@/utils';
-import {} from '../../../services/casting.service';
+import VideoPreview from '@/components/shared/VideoPreview';
 
 export default function CastingPage() {
   const params = useParams();
@@ -131,7 +131,7 @@ export default function CastingPage() {
         <div className="absolute inset-0">
           <Image
             src={casting.foto_principal}
-            alt={casting.nome}
+            alt={casting.nome_artistico}
             fill
             className="object-cover object-center"
             priority
@@ -140,7 +140,7 @@ export default function CastingPage() {
         <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
           <div className="container mx-auto">
             <AnimatedText
-              text={casting.nome}
+              text={casting.nome_artistico}
               className="text-4xl md:text-5xl lg:text-6xl font-light text-white mb-2 lg:leading-tight"
               delay={0.2}
             />
@@ -423,15 +423,7 @@ export default function CastingPage() {
                   <h2 className="heading-tertiary text-black dark:text-white">Videos</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                     {casting.videos.map((video, index) => (
-                      <AnimatedImage
-                        key={video.id}
-                        src={video.url}
-                        alt={video.titulo}
-                        width={600}
-                        height={800}
-                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
-                        delay={index * 0.1}
-                      />
+                      <VideoPreview key={index} url={video.url} height={280} />
                     ))}
                   </div>
                 </AnimatedSection>
