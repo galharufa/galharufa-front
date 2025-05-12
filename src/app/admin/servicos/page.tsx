@@ -93,6 +93,22 @@ export default function ServicoAdmin() {
     }
   }, [isAuthenticated, authLoading]);
 
+  //carregar campo rich text usando o editor
+  useEffect(() => {
+    if (
+      isAuthenticated &&
+      !authLoading &&
+      editor &&
+      modoEdicao &&
+      servicoAtual !== null
+    ) {
+      const servicoSelecionado = servicos.find((s) => s.id === servicoAtual);
+      if (servicoSelecionado && servicoSelecionado.descricao) {
+        editor.commands.setContent(servicoSelecionado.descricao);
+      }
+    }
+  }, [editor, modoEdicao, servicoAtual, servicos, isAuthenticated, authLoading]);
+
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/admin/login');

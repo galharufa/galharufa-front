@@ -141,9 +141,9 @@ export default function ServicoDetalhe() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Resumo:</h3>
-                  <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">
+                  <span className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">
                     {parse(servico.descricao)}
-                  </p>
+                  </span>
 
                   {/* <h3 className="text-sm text-gray-500 dark:text-gray-400 mt-4">Autor:</h3>
                   <p className="flex flex-wrap gap-2 mt-1 text-black dark:text-white">{post.autor_nome}</p> */}
