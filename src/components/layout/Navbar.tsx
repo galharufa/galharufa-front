@@ -22,6 +22,14 @@ const Navbar = () => {
     return basePath === href;
   };
 
+  const showWhiteLogo = pathname === '/' && !scrolled;
+
+  const logoSrc = showWhiteLogo
+    ? '/images/logos/logo_horizontal_black.jpg'
+    : isDark
+      ? '/images/logos/logo_horizontal_black.jpg'
+      : '/images/logos/logo_horizontal_white.jpg';
+
   // Controla o estado de scroll da página
   useEffect(() => {
     const handleScroll = () => {
@@ -79,27 +87,23 @@ const Navbar = () => {
           <Link href="/" className="relative z-10">
             <div className="flex items-center">
               {scrolled || pathname !== '/' ? (
-                <div className="relative w-auto">
+                <div className="relative">
                   <Image
-                    src={
-                      isDark
-                        ? '/images/logos/logo_horizontal_black.jpg'
-                        : '/images/logos/logo_horizontal_white.jpg'
-                    }
+                    src={logoSrc}
                     alt="Galharufa Logo"
-                    width={140}
-                    height={28}
-                    className="object-contain w-auto"
+                    width={230}
+                    height={100}
+                    className="object-contain"
                   />
                 </div>
               ) : (
-                <div className="relative w-auto">
+                <div className="relative">
                   <Image
-                    src="/images/logo_horizontal_black.jpg"
+                    src={logoSrc}
                     alt="Galharufa Logo"
-                    width={140}
-                    height={28}
-                    className="object-contain w-auto"
+                    width={230}
+                    height={100}
+                    className="object-contain"
                   />
                 </div>
               )}
