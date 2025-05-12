@@ -370,9 +370,7 @@ export default function CastingPage() {
               {/* Sobre */}
               {activeTab === 'sobre' && casting.biografia && (
                 <AnimatedSection direction="up" delay={0.2}>
-                  <h2 className="heading-tertiary text-black dark:text-white">
-                    Biografia
-                  </h2>
+                  <h2 className="heading-tertiary text-black dark:text-white">Sobre</h2>
                   <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-8">
                     {casting.biografia}
                   </p>
