@@ -156,7 +156,9 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
                     >
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                         <Image
-                          src={casting.foto_principal || '/images/placeholder-talent.jpg'}
+                          src={
+                            casting.fotos?.[0]?.imagem || '/images/placeholder-talent.jpg'
+                          }
                           alt={casting.nome}
                           fill
                           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"

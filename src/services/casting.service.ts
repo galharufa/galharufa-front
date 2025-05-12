@@ -63,6 +63,7 @@ export interface CastingResumido {
   categoria_nome: string;
   foto_principal: string;
   ativo: boolean;
+  fotos?: Foto[];
 }
 
 export interface CastingDetalhado extends CastingResumido {
