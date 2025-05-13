@@ -111,6 +111,7 @@ export interface CastingDetalhado extends CastingResumido {
   DRT?: string;
   RG?: string;
   CPF?: string;
+  CNPJ?: string;
   tem_passaporte?: boolean;
   passaporte?: string;
   validade_passaporte?: string;

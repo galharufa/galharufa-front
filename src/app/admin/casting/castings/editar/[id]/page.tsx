@@ -50,16 +50,17 @@ import {
 } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
-import { corCabelo, errorToast, genderData, habilidades, successToast } from '@/utils';
-import { compressImage } from '@/utils/imageCompression';
 import {
-  etny,
-  instrumentos,
-  esportes,
-  nationality,
-  modalidadesCircenses,
+  corCabelo,
   estados,
-} from '@/utils/index';
+  errorToast,
+  genderData,
+  habilidadesData,
+  successToast,
+  etny,
+  nationality,
+} from '@/utils';
+import { compressImage } from '@/utils/imageCompression';
 
 import {
   IconUpload,
@@ -81,12 +82,7 @@ import {
 
 import Image from 'next/image';
 
-const habilidadesData = [
-  ...(habilidades || []),
-  ...(modalidadesCircenses || []),
-  ...(esportes || []),
-  ...(instrumentos || []),
-];
+const habilidadesDados = habilidadesData;
 
 export default function EditarCasting() {
   const params = useParams();
@@ -360,6 +356,7 @@ export default function EditarCasting() {
           DRT: castingResponse.DRT || '',
           RG: castingResponse.RG || '',
           CPF: castingResponse.CPF || '',
+          CNPJ: castingResponse.CNPJ || '',
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
           validade_passaporte: castingResponse.validade_passaporte || '',
@@ -838,19 +835,6 @@ export default function EditarCasting() {
                     {...form.getInputProps('genero')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                </SimpleGrid>
-
-                <MultiSelect
-                  label="Habilidades"
-                  searchable
-                  clearable
-                  placeholder="Selecione uma ou mais habilidades"
-                  data={habilidadesData}
-                  {...form.getInputProps('habilidades')}
-                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                />
-
-                <SimpleGrid cols={3}>
                   <TextInput
                     label="Naturalidade"
                     placeholder="Natural de (município/estado)"
@@ -868,7 +852,18 @@ export default function EditarCasting() {
                     {...form.getInputProps('nacionalidade')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                </SimpleGrid>
 
+                <SimpleGrid cols={2}>
+                  <MultiSelect
+                    label="Habilidades"
+                    searchable
+                    clearable
+                    placeholder="Selecione uma ou mais habilidades"
+                    data={habilidadesDados}
+                    {...form.getInputProps('habilidades')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
                   <Select
                     label="Etnia"
                     placeholder="Selecione a etnia"
@@ -881,7 +876,7 @@ export default function EditarCasting() {
                 <Group align="flex-start" mb="md">
                   <div style={{ flex: 1 }}>
                     <FileInput
-                      label="Foto Principal"
+                      label="Foto Principal (horizontal)"
                       description="Selecione uma nova imagem para substituir a atual"
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
@@ -893,12 +888,13 @@ export default function EditarCasting() {
                   {casting.foto_principal && (
                     <div>
                       <Text size="sm" weight={500} mb={5}>
-                        Foto Atual
+                        Foto Atual <br />
+                        (horizontal)
                       </Text>
                       <div
                         style={{
-                          width: 100,
-                          height: 100,
+                          width: 300,
+                          height: 150,
                           position: 'relative',
                           overflow: 'hidden',
                           borderRadius: '4px',
@@ -906,10 +902,10 @@ export default function EditarCasting() {
                       >
                         <Image
                           src={casting.foto_principal}
-                          alt={casting.nome}
+                          alt={casting.nome_artistico}
                           style={{ objectFit: 'cover' }}
                           fill
-                          sizes="100px"
+                          sizes="300px"
                         />
                       </div>
                     </div>
@@ -960,9 +956,6 @@ export default function EditarCasting() {
                     step={0.01}
                     {...form.getInputProps('altura')}
                   />
-                </SimpleGrid>
-
-                <SimpleGrid cols={3} mb="md">
                   <NumberInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
@@ -972,7 +965,9 @@ export default function EditarCasting() {
                     {...form.getInputProps('peso')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                </SimpleGrid>
 
+                <SimpleGrid cols={4} mb="md">
                   <NumberInput
                     label="Manequim"
                     placeholder="Tamanho do manequim"
@@ -986,9 +981,6 @@ export default function EditarCasting() {
                     {...form.getInputProps('sapato')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                </SimpleGrid>
-
-                <SimpleGrid cols={2} mb="md">
                   <NumberInput
                     label="Terno"
                     placeholder="Tamanho do terno"
@@ -1070,7 +1062,7 @@ export default function EditarCasting() {
                   Documentos e Registros Profissionais
                 </Title>
 
-                <SimpleGrid cols={3} mb="md">
+                <SimpleGrid cols={4} mb="md">
                   <TextInput
                     label="DRT"
                     placeholder="Número do DRT e Estado de emissão"
@@ -1094,6 +1086,12 @@ export default function EditarCasting() {
                     {...form.getInputProps('CPF')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                  <TextInput
+                    label="CNH"
+                    placeholder="Número da CNH"
+                    {...form.getInputProps('CNH')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
                 </SimpleGrid>
 
                 <SimpleGrid cols={3} mb="md">
@@ -1104,24 +1102,28 @@ export default function EditarCasting() {
                       ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     />
                   </Group>
-                  <TextInput
-                    label="Número do Passaporte"
-                    placeholder="Número do passaporte"
-                    {...form.getInputProps('passaporte')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
+                  {form.values.tem_passaporte && (
+                    <>
+                      <TextInput
+                        label="Número do Passaporte"
+                        placeholder="Número do passaporte"
+                        {...form.getInputProps('passaporte')}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      />
 
-                  <DateInput
-                    label="Validade do Passaporte"
-                    placeholder="Selecione a data"
-                    valueFormat="DD/MM/YYYY"
-                    {...form.getInputProps('validade_passaporte')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                    popoverProps={{
-                      zIndex: 9999,
-                      withinPortal: true,
-                    }}
-                  />
+                      <DateInput
+                        label="Validade do Passaporte"
+                        placeholder="Selecione a data"
+                        valueFormat="DD/MM/YYYY"
+                        {...form.getInputProps('validade_passaporte')}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                        popoverProps={{
+                          zIndex: 9999,
+                          withinPortal: true,
+                        }}
+                      />
+                    </>
+                  )}
                 </SimpleGrid>
 
                 <Divider
@@ -1140,9 +1142,16 @@ export default function EditarCasting() {
                   />
 
                   <TextInput
-                    label="Email"
-                    placeholder="Email de contato"
-                    {...form.getInputProps('email')}
+                    label="Razão Social"
+                    placeholder="Razão Social da empresa"
+                    {...form.getInputProps('razao_social')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+
+                  <TextInput
+                    label="Inscrição Estadual"
+                    placeholder="Número da Inscrição Estadual"
+                    {...form.getInputProps('inscricao_estadual')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>

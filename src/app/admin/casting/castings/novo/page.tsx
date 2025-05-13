@@ -44,7 +44,7 @@ import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
 import { corCabelo, errorToast, genderData, successToast, tipoCabelo } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
-import { etny, nationality, estados, corOlhos } from '@/utils/index';
+import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
 import {
   IconUpload,
   IconPlus,
@@ -673,7 +673,7 @@ export default function NovoCasting() {
       <AdminNavbar />
       <Container size="lg" py="xl">
         <Group position="apart" mb="xl">
-          <Title order={2}>Adicionar Novo Casting</Title>
+          <Title order={2}>Novo Casting</Title>
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -842,9 +842,6 @@ export default function NovoCasting() {
                     step={0.01}
                     {...form.getInputProps('altura')}
                   />
-                </SimpleGrid>
-
-                <SimpleGrid cols={3} mb="md">
                   <NumberInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
@@ -854,7 +851,9 @@ export default function NovoCasting() {
                     {...form.getInputProps('peso')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                </SimpleGrid>
 
+                <SimpleGrid cols={4} mb="md">
                   <TextInput
                     label="Manequim"
                     placeholder="Tamanho do manequim"
@@ -868,9 +867,6 @@ export default function NovoCasting() {
                     {...form.getInputProps('sapato')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                </SimpleGrid>
-
-                <SimpleGrid cols={2} mb="md">
                   <NumberInput
                     label="Terno"
                     placeholder="Tamanho do terno"
@@ -938,7 +934,7 @@ export default function NovoCasting() {
                   Documentos e Registros Profissionais
                 </Title>
 
-                <SimpleGrid cols={3} mb="md">
+                <SimpleGrid cols={4} mb="md">
                   <TextInput
                     label="DRT"
                     placeholder="Número do DRT e Estado de emissão"
@@ -962,9 +958,15 @@ export default function NovoCasting() {
                     {...form.getInputProps('CPF')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+                  <TextInput
+                    label="CNH"
+                    placeholder="Número da CNH"
+                    {...form.getInputProps('CNH')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
                 </SimpleGrid>
 
-                <SimpleGrid cols={2} mb="md">
+                <SimpleGrid cols={3} mb="md">
                   <Group align="center">
                     <Switch
                       label="Possui Passaporte"
@@ -973,12 +975,28 @@ export default function NovoCasting() {
                     />
                   </Group>
 
-                  <TextInput
-                    label="CNH"
-                    placeholder="Número da CNH"
-                    {...form.getInputProps('CNH')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
+                  {form.values.tem_passaporte && (
+                    <>
+                      <TextInput
+                        label="Número do Passaporte"
+                        placeholder="Número do passaporte"
+                        {...form.getInputProps('passaporte')}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      />
+
+                      <DateInput
+                        label="Validade do Passaporte"
+                        placeholder="Selecione a data"
+                        valueFormat="DD/MM/YYYY"
+                        {...form.getInputProps('validade_passaporte')}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                        popoverProps={{
+                          zIndex: 9999,
+                          withinPortal: true,
+                        }}
+                      />
+                    </>
+                  )}
                 </SimpleGrid>
 
                 <Divider
