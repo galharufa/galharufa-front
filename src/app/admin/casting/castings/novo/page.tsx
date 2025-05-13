@@ -42,25 +42,9 @@ import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
-import {
-  corCabelo,
-  errorToast,
-  genderData,
-  habilidades,
-  successToast,
-  tipoCabelo,
-} from '@/utils';
+import { corCabelo, errorToast, genderData, successToast, tipoCabelo } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
-import {
-  etny,
-  instrumentos,
-  esportes,
-  nationality,
-  modalidadesCircenses,
-  estados,
-  corOlhos,
-} from '@/utils/index';
-
+import { etny, nationality, estados, corOlhos } from '@/utils/index';
 import {
   IconUpload,
   IconPlus,
@@ -77,19 +61,11 @@ import {
   IconAward,
   IconEdit,
   IconUser,
-  // IconEPassport,
   IconBrandWhatsapp,
   IconBrandTiktok,
   IconWorld,
   IconMap,
 } from '@tabler/icons-react';
-
-const habilidadesData = [
-  ...(habilidades || []),
-  ...(modalidadesCircenses || []),
-  ...(esportes || []),
-  ...(instrumentos || []),
-];
 
 export default function NovoCasting() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -99,11 +75,6 @@ export default function NovoCasting() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [habilidades, setHabilidades] = useState<any[]>([]);
-  const [esportes, setEsportes] = useState<any[]>([]);
-  const [modalidadesCircenses, setModalidadesCircenses] = useState<any[]>([]);
-  const [instrumentos, setInstrumentos] = useState<any[]>([]);
-  const [plataformasBusca, setPlataformasBusca] = useState<any[]>([]);
 
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
@@ -165,11 +136,6 @@ export default function NovoCasting() {
       email: '',
       telefone: '',
       celular: '',
-      whatsapp: '',
-      instagram: '',
-      tiktok: '',
-      youtube: '',
-      website: '',
       emergencia_nome: '',
       emergencia_telefone: '',
 
@@ -218,19 +184,6 @@ export default function NovoCasting() {
       try {
         const categoriasData = await CastingService.getCategorias({ ordering: 'nome' });
         setCategorias(categoriasData.results || []);
-
-        // Buscar funções da API
-        // const habilidadesData = await CastingService.getHabilidades({ ordering: 'nome' });
-        // setHabilidades(habilidadesData.results || []);
-        // setHabilidades([modalidadesCircenses, instrumentos, habilidades, esportes]);
-
-        setPlataformasBusca([
-          { id: '1', nome: 'Casting.com' },
-          { id: '2', nome: 'Elenco Direto' },
-          { id: '3', nome: 'Casting Net' },
-          { id: '4', nome: 'Dama Cast' },
-          { id: '5', nome: 'Qual Casting' },
-        ]);
       } catch (error) {
         console.error('Falha ao carregar dados iniciais:', error);
         notifications.show({
@@ -448,8 +401,6 @@ export default function NovoCasting() {
       if (values.cnh) formData.set('cnh', values.cnh);
 
       // Currículo e habilidades
-      if (values.curriculum_artistico)
-        formData.set('curriculum_artistico', values.curriculum_artistico);
       if (values.habilidades)
         formData.set('habilidades', JSON.stringify(values.habilidades));
       if (values.habilidade_especifica)

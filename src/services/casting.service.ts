@@ -2,12 +2,6 @@
 // Serviços para gerenciamento de casting
 import api from './api';
 
-export interface Funcao {
-  id: string;
-  nome: string;
-  descricao?: string;
-}
-
 export interface Categoria {
   id: number;
   nome: string;
@@ -86,7 +80,7 @@ export interface CastingDetalhado extends CastingResumido {
   data_atualizacao: string;
   fotos: Foto[];
   videos: Video[];
-  habilidades: Funcao[];
+  habilidades: string[];
   idiomas: Idioma[];
   link_instagram: string;
   link_imdb: string;
@@ -125,10 +119,6 @@ export interface CastingDetalhado extends CastingResumido {
   email?: string;
   telefone_1?: string;
   telefone_2?: string;
-  facebook?: string;
-  twitter?: string;
-  tiktok?: string;
-  youtube?: string;
   contato_emergencia_nome?: string;
   contato_emergencia_telefone?: string;
 

@@ -71,16 +71,12 @@ import {
   IconMovie,
   IconMail,
   IconPhone,
-  IconCar,
   IconId,
   IconCreditCard,
   IconAward,
   IconEdit,
   IconUser,
-  IconBrandWhatsapp,
   IconBrandTiktok,
-  IconWorld,
-  IconMap,
 } from '@tabler/icons-react';
 
 import Image from 'next/image';
@@ -104,11 +100,6 @@ export default function EditarCasting() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
-  const [habilidadesState, setHabilidadesState] = useState<string[]>([]);
-  const [esportesState, setEsportesState] = useState<any[]>([]);
-  const [modalidadesCircensesState, setModalidadesCircensesState] = useState<any[]>([]);
-  const [instrumentosState, setInstrumentosState] = useState<any[]>([]);
-  const [plataformasBusca, setPlataformasBusca] = useState<any[]>([]);
   const [casting, setCasting] = useState<CastingDetalhado | null>(null);
 
   // Fotos
@@ -262,14 +253,6 @@ export default function EditarCasting() {
       try {
         const categoriasData = await CastingService.getCategorias({ ordering: 'nome' });
         setCategorias(categoriasData.results || []);
-
-        setPlataformasBusca([
-          { id: '1', nome: 'Casting.com' },
-          { id: '2', nome: 'Elenco Direto' },
-          { id: '3', nome: 'Casting Net' },
-          { id: '4', nome: 'Dama Cast' },
-          { id: '5', nome: 'Qual Casting' },
-        ]);
       } catch (error) {
         console.error('Falha ao carregar dados iniciais:', error);
         notifications.show({
@@ -291,14 +274,12 @@ export default function EditarCasting() {
         setIsLoading(true);
         dadosCarregados.current = true;
 
-        // Carregar categorias e casting em paralelo
         const castingResponse = await CastingService.getCasting(id);
-
         setCasting(castingResponse);
         setFotosExistentes(castingResponse.fotos || []);
         setVideosExistentes(castingResponse.videos || []);
 
-        // Configurar links de trabalho existentes
+        // Links de trabalho
         const linksDeTrabalho = [];
         if (castingResponse.link_trabalho_1)
           linksDeTrabalho.push(castingResponse.link_trabalho_1);
@@ -315,14 +296,9 @@ export default function EditarCasting() {
         if (castingResponse.link_trabalho_7)
           linksDeTrabalho.push(castingResponse.link_trabalho_7);
 
-        // Garantir que sempre tenha pelo menos dois slots (pode estar vazio)
-        while (linksDeTrabalho.length < 2) {
-          linksDeTrabalho.push('');
-        }
-
+        while (linksDeTrabalho.length < 2) linksDeTrabalho.push('');
         setLinksTrabalho(linksDeTrabalho);
 
-        // Preencher o formulário com os dados do casting
         const dataNascimento = castingResponse.data_nascimento
           ? new Date(castingResponse.data_nascimento)
           : null;
@@ -331,17 +307,10 @@ export default function EditarCasting() {
           ? new Date(castingResponse.habilitacao_validade)
           : null;
 
-        // Inicializar o editor com o conteúdo da experiência
-        // if (editor && castingResponse.experiencia) {
-        //   editor.commands.setContent(castingResponse.experiencia);
-        // }
-
         form.setValues({
-          // Informações Básicas
           nome: castingResponse.nome || '',
           nome_artistico: castingResponse.nome_artistico || '',
           genero: castingResponse.genero || 'masculino',
-          // Se o casting possuir mais de uma categoria, usamos a primeira; caso contrário, string vazia
           categoria:
             Array.isArray(castingResponse.categoria) &&
             castingResponse.categoria.length > 0
@@ -349,10 +318,22 @@ export default function EditarCasting() {
               : castingResponse.categoria
                 ? String(castingResponse.categoria)
                 : '',
-          // Converter o array de objetos "Funcao" em um array de nomes (string)
-          habilidades: Array.isArray(castingResponse.habilidades)
-            ? (castingResponse.habilidades as Funcao[]).map((h) => h.nome)
-            : [],
+
+          // 🔧 Corrigido: habilidades agora faz parse corretamente
+          habilidades: (() => {
+            try {
+              if (
+                Array.isArray(castingResponse.habilidades) &&
+                castingResponse.habilidades.length > 0
+              ) {
+                return JSON.parse(castingResponse.habilidades[0]);
+              }
+            } catch (e) {
+              console.warn('Erro ao fazer parse de habilidades:', e);
+            }
+            return [];
+          })(),
+
           natural_de: castingResponse.natural_de || '',
           nacionalidade: castingResponse.nacionalidade || 'Brasileira',
           etnia: castingResponse.etnia || '',
@@ -360,7 +341,6 @@ export default function EditarCasting() {
           ativo: castingResponse.ativo ?? true,
           autoriza_imagem_site: castingResponse.autoriza_imagem_site ?? true,
 
-          // Características Físicas
           data_nascimento: dataNascimento,
           ano: castingResponse.ano
             ? Number(castingResponse.ano)
@@ -377,7 +357,6 @@ export default function EditarCasting() {
           tem_tatuagens: castingResponse.tem_tatuagens || false,
           locais_tatuagens: castingResponse.locais_tatuagens || '',
 
-          // Documentos e Registros
           DRT: castingResponse.DRT || '',
           RG: castingResponse.RG || '',
           CPF: castingResponse.CPF || '',
@@ -385,28 +364,20 @@ export default function EditarCasting() {
           passaporte: castingResponse.passaporte || '',
           validade_passaporte: castingResponse.validade_passaporte || '',
 
-          // Biografia e Experiência
           biografia: castingResponse.biografia || '',
           experiencia: castingResponse.experiencia || '',
 
-          // Mídia
           link_trabalho_1: castingResponse.link_trabalho_1 || '',
           link_trabalho_2: castingResponse.link_trabalho_2 || '',
 
-          // Contato
           email: castingResponse.email || '',
           telefone_1: castingResponse.telefone_1 || '',
           telefone_2: castingResponse.telefone_2 || '',
           instagram: castingResponse.link_instagram || '',
           imdb: castingResponse.link_imdb || '',
-          tiktok: castingResponse.tiktok || '',
-          youtube: castingResponse.youtube || '',
-          facebook: castingResponse.facebook || '',
-          twitter: castingResponse.twitter || '',
           contato_emergencia_nome: castingResponse.contato_emergencia_nome || '',
           contato_emergencia_telefone: castingResponse.contato_emergencia_telefone || '',
 
-          // Endereço e Informações Financeiras
           cep: castingResponse.cep || '',
           endereco: castingResponse.endereco || '',
           numero: castingResponse.numero || '',
@@ -420,7 +391,6 @@ export default function EditarCasting() {
           tipo_conta: castingResponse.tipo_conta || '',
           pix: castingResponse.pix || '',
 
-          // Idiomas e Veículos
           idiomas: (castingResponse.idiomas as []) || [],
           habilitacao_categorias: castingResponse.habilitacao_categorias || [],
           habilitacao_validade: habilitacaoValidade,
@@ -1126,7 +1096,7 @@ export default function EditarCasting() {
                   />
                 </SimpleGrid>
 
-                <SimpleGrid cols={2} mb="md">
+                <SimpleGrid cols={3} mb="md">
                   <Group align="center">
                     <Switch
                       label="Possui Passaporte"
@@ -1134,6 +1104,12 @@ export default function EditarCasting() {
                       ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     />
                   </Group>
+                  <TextInput
+                    label="Número do Passaporte"
+                    placeholder="Número do passaporte"
+                    {...form.getInputProps('passaporte')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
 
                   <DateInput
                     label="Validade do Passaporte"
@@ -1141,6 +1117,10 @@ export default function EditarCasting() {
                     valueFormat="DD/MM/YYYY"
                     {...form.getInputProps('validade_passaporte')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    popoverProps={{
+                      zIndex: 9999,
+                      withinPortal: true,
+                    }}
                   />
                 </SimpleGrid>
 
@@ -1156,13 +1136,6 @@ export default function EditarCasting() {
                     placeholder="Número do CNPJ"
                     icon={<IconCreditCard size={14} />}
                     {...form.getInputProps('CNPJ')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Passaporte"
-                    placeholder="Número do passaporte"
-                    {...form.getInputProps('passaporte')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
