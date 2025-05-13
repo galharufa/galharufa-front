@@ -245,10 +245,13 @@ export default function EditarCasting() {
 
   const editor = useEditor({
     extensions: [StarterKit, Link, TextAlign, Highlight, Underline],
-    content: form.getInputProps('experiencia').value,
     onUpdate: ({ editor }) =>
       form.getInputProps('experiencia').onChange(editor.getHTML()),
-    immediatelyRender: false, // Corrige o problema de hidratação SSR
+    editorProps: {
+      attributes: {
+        class: 'min-h-[150px]', // ou qualquer classe Tailwind para altura inicial
+      },
+    },
   });
 
   const dadosCarregados = useRef(false);
@@ -329,9 +332,9 @@ export default function EditarCasting() {
           : null;
 
         // Inicializar o editor com o conteúdo da experiência
-        if (editor && castingResponse.experiencia) {
-          editor.commands.setContent(castingResponse.experiencia);
-        }
+        // if (editor && castingResponse.experiencia) {
+        //   editor.commands.setContent(castingResponse.experiencia);
+        // }
 
         form.setValues({
           // Informações Básicas
@@ -435,6 +438,12 @@ export default function EditarCasting() {
       carregarDados();
     }
   }, [isAuthenticated, id, form, router, editor]);
+
+  useEffect(() => {
+    if (editor && casting?.experiencia && !editor.isDestroyed) {
+      editor.commands.setContent(casting.experiencia);
+    }
+  }, [editor, casting?.experiencia]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -1182,7 +1191,7 @@ export default function EditarCasting() {
                 </Title>
 
                 <Textarea
-                  label="Biografia"
+                  label="Sobre"
                   placeholder="Sobre o casting"
                   minRows={4}
                   {...form.getInputProps('biografia')}

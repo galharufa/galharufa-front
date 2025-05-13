@@ -66,7 +66,7 @@ export default function ServicoAdmin() {
 
   const editor = useEditor({
     extensions: [StarterKit, Link, TextAlign, Highlight, Underline],
-    content: form.getInputProps('experiencia').value,
+    content: form.getInputProps('descricao').value,
     onUpdate: ({ editor }) => form.getInputProps('descricao').onChange(editor.getHTML()),
     immediatelyRender: false, // Corrige o problema de hidratação SSR
   });
