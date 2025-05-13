@@ -68,7 +68,6 @@ import {
   IconTrash,
   IconInfoCircle,
   IconBrandInstagram,
-  IconBrandYoutube,
   IconMovie,
   IconMail,
   IconPhone,
@@ -77,7 +76,10 @@ import {
   IconAward,
   IconEdit,
   IconUser,
-  IconBrandTiktok,
+  IconLink,
+  IconBrandWhatsapp,
+  IconMap,
+  IconDeviceMobile,
 } from '@tabler/icons-react';
 
 import Image from 'next/image';
@@ -188,14 +190,8 @@ export default function EditarCasting() {
       telefone_1: '',
       telefone_2: '',
       celular: '',
-      whatsapp: '',
       instagram: '',
       imdb: '',
-      tiktok: '',
-      youtube: '',
-      website: '',
-      facebook: '',
-      twitter: '',
       contato_emergencia_nome: '',
       contato_emergencia_telefone: '',
       emergencia_nome: '',
@@ -360,6 +356,9 @@ export default function EditarCasting() {
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
           validade_passaporte: castingResponse.validade_passaporte || '',
+          razao_social: castingResponse.razao_social || '',
+          inscricao_estadual: castingResponse.inscricao_estadual || '',
+          possui_nota_propria: castingResponse.possui_nota_propria || false,
 
           biografia: castingResponse.biografia || '',
           experiencia: castingResponse.experiencia || '',
@@ -622,14 +621,8 @@ export default function EditarCasting() {
       // Contato
       if (values.telefone_1) formData.append('telefone_1', values.telefone_1);
       if (values.celular) formData.append('celular', values.celular);
-      if (values.whatsapp) formData.append('whatsapp', values.whatsapp);
       if (values.email) formData.append('email', values.email);
       if (values.instagram) formData.append('instagram', values.instagram);
-      if (values.tiktok) formData.append('tiktok', values.tiktok);
-      if (values.youtube) formData.append('youtube', values.youtube);
-      if (values.website) formData.append('website', values.website);
-      if (values.facebook) formData.append('facebook', values.facebook);
-      if (values.twitter) formData.append('twitter', values.twitter);
       if (values.emergencia_nome)
         formData.append('emergencia_nome', values.emergencia_nome);
       if (values.emergencia_telefone)
@@ -766,7 +759,7 @@ export default function EditarCasting() {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Tabs defaultValue="informacoes-basicas" mb="xl">
+          <Tabs defaultValue="endereco" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
                 Informações Básicas
@@ -777,8 +770,8 @@ export default function EditarCasting() {
               <Tabs.Tab value="documentos" icon={<IconId size={14} />}>
                 Documentos
               </Tabs.Tab>
-              <Tabs.Tab value="habilidades" icon={<IconAward size={14} />}>
-                Habilidades
+              <Tabs.Tab value="biografia" icon={<IconAward size={14} />}>
+                Biografia
               </Tabs.Tab>
               <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
                 Mídia
@@ -1156,20 +1149,19 @@ export default function EditarCasting() {
                   />
                 </SimpleGrid>
 
-                <TextInput
-                  label="Telefone"
-                  placeholder="(00) 0000-0000"
-                  {...form.getInputProps('telefone_1')}
+                <Switch
+                  label="Possui Nota Própria"
+                  {...form.getInputProps('possui_nota_propria', { type: 'checkbox' })}
                   mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
               </Card>
             </Tabs.Panel>
 
-            <Tabs.Panel value="habilidades">
+            <Tabs.Panel value="biografia">
               <Card withBorder p="xl" radius="md" mb="md">
                 <Title order={3} mb="lg">
-                  Sobre e Experiências
+                  Biografia
                 </Title>
 
                 <Textarea
@@ -1502,150 +1494,121 @@ export default function EditarCasting() {
                   Informações de Contato
                 </Title>
 
-                <TextInput
-                  icon={<IconMail size={16} />}
-                  label="E-mail"
-                  placeholder="E-mail de contato"
-                  type="email"
-                  {...form.getInputProps('email')}
-                  mb="md"
-                />
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    icon={<IconMail size={16} />}
+                    label="E-mail"
+                    placeholder="E-mail de contato"
+                    type="email"
+                    {...form.getInputProps('email')}
+                    mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
 
-                <TextInput
-                  icon={<IconPhone size={16} />}
-                  label="Telefone"
-                  placeholder="(00) 0000-0000"
-                  {...form.getInputProps('telefone_1')}
-                  mb="md"
-                />
+                  <TextInput
+                    icon={<IconBrandWhatsapp size={16} />}
+                    label="Celular/Whatsapp"
+                    placeholder="(00) 0000-0000"
+                    {...form.getInputProps('celular_whatsapp')}
+                    mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  <TextInput
+                    label="Website"
+                    placeholder="Link completo"
+                    icon={<IconLink size={16} />}
+                    {...form.getInputProps('website')}
+                    mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                </SimpleGrid>
 
-                <TextInput
-                  label="Telefone 2"
-                  placeholder="(00) 00000-0000"
-                  icon={<IconPhone size={16} />}
-                  {...form.getInputProps('telefone_2')}
-                  mb="md"
-                />
-              </Card>
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Instagram"
+                    placeholder="@usuario"
+                    icon={<IconBrandInstagram size={16} />}
+                    {...form.getInputProps('link_instagram')}
+                    mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  <TextInput
+                    label="IMDB"
+                    placeholder="Link completo"
+                    icon={<IconLink size={16} />}
+                    {...form.getInputProps('link_imdb')}
+                    mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                </SimpleGrid>
 
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Title order={3} mb="lg">
-                  Redes Sociais
-                </Title>
+                <Divider my="md" label="Contato de Emergência" labelPosition="center" />
 
-                <TextInput
-                  label="Instagram"
-                  placeholder="@usuario"
-                  icon={<IconBrandInstagram size={16} />}
-                  {...form.getInputProps('instagram')}
-                  mb="md"
-                />
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Nome do Contato de Emergência"
+                    placeholder="Nome completo"
+                    {...form.getInputProps('emergencia_nome')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
 
-                <TextInput
-                  label="TikTok"
-                  placeholder="@usuario"
-                  icon={<IconBrandTiktok size={16} />}
-                  {...form.getInputProps('tiktok')}
-                  mb="md"
-                />
-
-                <TextInput
-                  label="YouTube"
-                  placeholder="URL do canal ou usuário"
-                  icon={<IconBrandYoutube size={16} />}
-                  {...form.getInputProps('youtube')}
-                  mb="md"
-                />
-
-                <TextInput
-                  label="Facebook"
-                  placeholder="@usuario"
-                  icon={<IconBrandInstagram size={16} />}
-                  {...form.getInputProps('facebook')}
-                  mb="md"
-                />
-
-                <TextInput
-                  label="Twitter"
-                  placeholder="@usuario"
-                  icon={<IconBrandInstagram size={16} />}
-                  {...form.getInputProps('twitter')}
-                  mb="md"
-                />
-              </Card>
-
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Title order={3} mb="lg">
-                  Contato de Emergência
-                </Title>
-
-                <TextInput
-                  label="Nome"
-                  placeholder="Nome da pessoa para contato"
-                  icon={<IconUser size={16} />}
-                  {...form.getInputProps('contato_emergencia_nome')}
-                  mb="md"
-                />
-
-                <TextInput
-                  label="Telefone"
-                  placeholder="(00) 00000-0000"
-                  icon={<IconPhone size={16} />}
-                  {...form.getInputProps('contato_emergencia_telefone')}
-                  mb="md"
-                />
+                  <TextInput
+                    label="Telefone de Emergência"
+                    placeholder="Número de telefone com DDD"
+                    icon={<IconPhone size={14} />}
+                    {...form.getInputProps('emergencia_telefone')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                </SimpleGrid>
               </Card>
             </Tabs.Panel>
 
             <Tabs.Panel value="endereco">
               <Card withBorder p="xl" radius="md" mb="xl">
                 <Title order={3} mb="lg">
-                  Endereço
+                  Endereço e Informações Financeiras
                 </Title>
-
-                <TextInput
-                  label="CEP"
-                  placeholder="00000-000"
-                  {...form.getInputProps('cep')}
-                  mb="md"
-                />
 
                 <SimpleGrid cols={2} spacing="md" mb="md">
                   <TextInput
+                    label="CEP"
+                    placeholder="Formato: 00000-000"
+                    icon={<IconMap size={14} />}
+                    {...form.getInputProps('cep')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  <TextInput
                     label="Endereço"
                     placeholder="Rua, Avenida, etc."
-                    {...form.getInputProps('endereco')}
+                    {...form.getInputProps('logradouro')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-
+                </SimpleGrid>
+                <SimpleGrid cols={3} spacing="md" mb="md">
                   <TextInput
                     label="Número"
                     placeholder="123"
                     {...form.getInputProps('numero')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                </SimpleGrid>
-
-                <TextInput
-                  label="Complemento"
-                  placeholder="Apto, Bloco, etc."
-                  {...form.getInputProps('complemento')}
-                  mb="md"
-                />
-
-                <SimpleGrid cols={2} spacing="md" mb="md">
+                  <TextInput
+                    label="Complemento"
+                    placeholder="Apto, bloco, etc (se houver)"
+                    {...form.getInputProps('complemento')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
                   <TextInput
                     label="Bairro"
                     placeholder="Bairro"
                     {...form.getInputProps('bairro')}
                   />
-
+                </SimpleGrid>
+                <SimpleGrid cols={3} spacing="md" mb="md">
                   <TextInput
                     label="Cidade"
-                    placeholder="Cidade"
+                    placeholder="Nome da cidade"
                     {...form.getInputProps('cidade')}
                   />
-                </SimpleGrid>
-
-                <SimpleGrid cols={2} spacing="md">
                   <Select
                     label="Estado"
                     placeholder="Selecione o estado"
@@ -1653,53 +1616,59 @@ export default function EditarCasting() {
                     searchable
                     {...form.getInputProps('estado')}
                   />
-
-                  <TextInput label="País" placeholder="País" value="Brasil" disabled />
+                  <TextInput
+                    label="País"
+                    placeholder="País"
+                    {...form.getInputProps('pais')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
                 </SimpleGrid>
-              </Card>
+                <Divider my="md" label="Dados Bancários" labelPosition="center" />
 
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Title order={3} mb="lg">
-                  Informações Bancárias
-                </Title>
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    label="Banco"
+                    placeholder="Número ou nome do banco"
+                    {...form.getInputProps('banco')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
 
-                <TextInput
-                  label="Banco"
-                  placeholder="Nome do banco"
-                  {...form.getInputProps('banco')}
-                  mb="md"
-                />
-
-                <SimpleGrid cols={2} spacing="md" mb="md">
                   <TextInput
                     label="Agência"
                     placeholder="Número da agência"
                     {...form.getInputProps('agencia')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Conta"
-                    placeholder="Número da conta"
+                    placeholder="Número da conta com dígito"
                     {...form.getInputProps('conta')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
-                <Select
-                  label="Tipo de Conta"
-                  placeholder="Selecione o tipo de conta"
-                  data={[
-                    { value: 'corrente', label: 'Corrente' },
-                    { value: 'poupanca', label: 'Poupança' },
-                  ]}
-                  {...form.getInputProps('tipo_conta')}
-                  mb="md"
-                />
+                <SimpleGrid cols={2} mb="md">
+                  <Select
+                    label="Tipo de Conta"
+                    placeholder="Selecione o tipo de conta"
+                    data={[
+                      { value: 'corrente', label: 'Corrente' },
+                      { value: 'poupanca', label: 'Poupança' },
+                      { value: 'conjunta', label: 'Conjunta' },
+                      { value: 'pagamento', label: 'Pagamento' },
+                    ]}
+                    {...form.getInputProps('tipo_conta')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
 
-                <TextInput
-                  label="Chave PIX"
-                  placeholder="CPF, telefone, email ou chave aleatória"
-                  {...form.getInputProps('pix')}
-                />
+                  <TextInput
+                    label="PIX"
+                    placeholder="Chave PIX"
+                    {...form.getInputProps('pix')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                </SimpleGrid>
               </Card>
             </Tabs.Panel>
 

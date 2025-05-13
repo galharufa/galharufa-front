@@ -33,6 +33,7 @@
     "@tabler/icons-react": "^2.47.0",
     "@tanstack/react-query": "^5.74.11",
     "@tiptap/extension-highlight": "^2.11.9",
+    "@tiptap/extension-placeholder": "^2.12.0",
     "@tiptap/extension-text-align": "^2.11.9",
     "@tiptap/extension-underline": "^2.11.9",
     "@tiptap/react": "^2.11.9",

@@ -34,6 +34,7 @@ import Highlight from '@tiptap/extension-highlight';
 import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
 import { DateInput } from '@mantine/dates';
 import { useDisclosure, useUncontrolled } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
@@ -65,6 +66,8 @@ import {
   IconBrandTiktok,
   IconWorld,
   IconMap,
+  IconDeviceMobile,
+  IconLink,
 } from '@tabler/icons-react';
 
 export default function NovoCasting() {
@@ -171,7 +174,16 @@ export default function NovoCasting() {
   });
 
   const editor = useEditor({
-    extensions: [StarterKit, Link, TextAlign, Highlight, Underline],
+    extensions: [
+      StarterKit,
+      Link,
+      TextAlign,
+      Highlight,
+      Underline,
+      Placeholder.configure({
+        placeholder: 'Escreva aqui a experiência ou descrição...', // 🔥 seu placeholder aqui
+      }),
+    ],
     content: form.getInputProps('experiencia').value,
     onUpdate: ({ editor }) =>
       form.getInputProps('experiencia').onChange(editor.getHTML()),
@@ -393,7 +405,7 @@ export default function NovoCasting() {
       if (values.RG) formData.set('RG', values.RG);
       if (values.CPF) formData.set('CPF', values.CPF);
       formData.set('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
-      if (values.cnpj) formData.set('cnpj', values.cnpj);
+      if (values.CNPJ) formData.set('CNPJ', values.CNPJ);
       if (values.razao_social) formData.set('razao_social', values.razao_social);
       if (values.inscricao_estadual)
         formData.set('inscricao_estadual', values.inscricao_estadual);
@@ -677,7 +689,7 @@ export default function NovoCasting() {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Tabs defaultValue="informacoes-basicas" mb="xl">
+          <Tabs defaultValue="endereco" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
                 Informações Básicas
@@ -688,8 +700,8 @@ export default function NovoCasting() {
               <Tabs.Tab value="documentos" icon={<IconId size={14} />}>
                 Documentos
               </Tabs.Tab>
-              <Tabs.Tab value="habilidades" icon={<IconAward size={14} />}>
-                Habilidades
+              <Tabs.Tab value="biografia" icon={<IconAward size={14} />}>
+                Biografia
               </Tabs.Tab>
               <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
                 Mídia
@@ -1038,10 +1050,10 @@ export default function NovoCasting() {
               </Card>
             </Tabs.Panel>
 
-            <Tabs.Panel value="habilidades">
+            <Tabs.Panel value="biografia">
               <Card withBorder p="xl" radius="md" mb="md">
                 <Title order={3} mb="lg">
-                  Sobre e Experiências
+                  Biografia
                 </Title>
 
                 <Textarea
@@ -1289,76 +1301,50 @@ export default function NovoCasting() {
                   Informações de Contato
                 </Title>
 
-                <SimpleGrid cols={2} mb="md">
-                  <TextInput
-                    label="Email"
-                    placeholder="Endereço de email para contato"
-                    icon={<IconMail size={14} />}
-                    {...form.getInputProps('email')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Telefone"
-                    placeholder="Número de telefone com DDD"
-                    icon={<IconPhone size={14} />}
-                    {...form.getInputProps('telefone')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                </SimpleGrid>
-
-                <SimpleGrid cols={2} mb="md">
-                  <TextInput
-                    label="Celular"
-                    placeholder="Número de celular com DDD"
-                    icon={<IconPhone size={14} />}
-                    {...form.getInputProps('celular')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="WhatsApp"
-                    placeholder="Número de WhatsApp (se diferente do celular)"
-                    icon={<IconBrandWhatsapp size={14} />}
-                    {...form.getInputProps('whatsapp')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                </SimpleGrid>
-
                 <SimpleGrid cols={3} mb="md">
+                  <TextInput
+                    icon={<IconMail size={16} />}
+                    label="E-mail"
+                    placeholder="E-mail de contato"
+                    type="email"
+                    {...form.getInputProps('email')}
+                    mb="md"
+                  />
+
+                  <TextInput
+                    icon={<IconBrandWhatsapp size={16} />}
+                    label="Celular/Whatsapp"
+                    placeholder="(00) 0000-0000"
+                    {...form.getInputProps('celular_whatsapp')}
+                    mb="md"
+                  />
+                  <TextInput
+                    label="Website"
+                    placeholder="Link completo"
+                    icon={<IconLink size={16} />}
+                    {...form.getInputProps('website')}
+                    mb="md"
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={2} mb="md">
                   <TextInput
                     label="Instagram"
                     placeholder="@usuario"
-                    icon={<IconBrandInstagram size={14} />}
-                    {...form.getInputProps('instagram')}
+                    icon={<IconBrandInstagram size={16} />}
+                    {...form.getInputProps('link_instagram')}
+                    mb="md"
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-
                   <TextInput
-                    label="TikTok"
-                    placeholder="@usuario"
-                    icon={<IconBrandTiktok size={14} />}
-                    {...form.getInputProps('tiktok')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Youtube"
-                    placeholder="URL do canal ou vídeo"
-                    icon={<IconBrandYoutube size={14} />}
-                    {...form.getInputProps('youtube')}
+                    label="IMDB"
+                    placeholder="Link completo"
+                    icon={<IconLink size={16} />}
+                    {...form.getInputProps('link_imdb')}
+                    mb="md"
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
-
-                <TextInput
-                  label="Website"
-                  placeholder="URL do site pessoal (se houver)"
-                  icon={<IconWorld size={14} />}
-                  {...form.getInputProps('website')}
-                  mb="md"
-                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                />
 
                 <Divider my="md" label="Contato de Emergência" labelPosition="center" />
 
@@ -1392,14 +1378,14 @@ export default function NovoCasting() {
                     label="CEP"
                     placeholder="Formato: 00000-000"
                     icon={<IconMap size={14} />}
-                    {...form.getInputProps('CEP')}
+                    {...form.getInputProps('cep')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
                     label="Rua/Avenida"
-                    placeholder="Nome da rua ou avenida"
-                    {...form.getInputProps('rua')}
+                    placeholder="Rua, Avenida, etc."
+                    {...form.getInputProps('logradouro')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
@@ -1407,7 +1393,7 @@ export default function NovoCasting() {
                 <SimpleGrid cols={3} mb="md">
                   <TextInput
                     label="Número"
-                    placeholder="Número do endereço"
+                    placeholder="123"
                     {...form.getInputProps('numero')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
