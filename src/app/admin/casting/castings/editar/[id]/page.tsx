@@ -41,6 +41,7 @@ import AdminNavbar from '../../../../components/AdminNavbar';
 import { CastingService, type CastingDetalhado, type Foto, type Video } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import ImagePreview from '@/components/shared/ImagePreview';
+import { SearchZipCode } from '@/components/shared/SearchZipCode';
 import Image from 'next/image';
 import { notifications } from '@mantine/notifications';
 import {
@@ -52,6 +53,7 @@ import {
   successToast,
   etny,
   nationality,
+  banksList,
 } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 
@@ -86,6 +88,7 @@ export default function EditarCasting() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
   const [casting, setCasting] = useState<CastingDetalhado | null>(null);
+  const [loadingCep, setLoadingCep] = useState(false);
 
   // Fotos
   const [fotosExistentes, setFotosExistentes] = useState<Foto[]>([]);
@@ -215,6 +218,18 @@ export default function EditarCasting() {
       },
     },
   });
+
+  //Limpa / adiciona mascara ao campo de CEP para api conseguir calcular
+  const handleCepBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    let valor = event.target.value;
+    valor = valor.replace(/\D/g, '');
+
+    if (valor.length === 8) {
+      form.setFieldValue('cep', valor.replace(/(\d{5})(\d{3})/, '$1-$2'));
+    } else {
+      alert('CEP inválido. Use o formato 00000-000.');
+    }
+  };
 
   const dadosCarregados = useRef(false);
 
@@ -1597,11 +1612,24 @@ export default function EditarCasting() {
                   Endereço e Informações Financeiras
                 </Title>
 
+                <SearchZipCode
+                  cep={form.values.cep}
+                  onLoading={setLoadingCep}
+                  onResult={(endereco) => {
+                    if (endereco.logradouro)
+                      form.setFieldValue('logradouro', endereco.logradouro);
+                    if (endereco.bairro) form.setFieldValue('bairro', endereco.bairro);
+                    if (endereco.cidade) form.setFieldValue('cidade', endereco.cidade);
+                    if (endereco.estado) form.setFieldValue('estado', endereco.estado);
+                  }}
+                />
+
                 <SimpleGrid cols={2} spacing="md" mb="md">
                   <TextInput
                     label="CEP"
                     placeholder="Formato: 00000-000"
-                    icon={<IconMap size={14} />}
+                    icon={loadingCep ? <Loader size={14} /> : <IconMap size={14} />}
+                    onBlur={handleCepBlur}
                     {...form.getInputProps('cep')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1654,10 +1682,13 @@ export default function EditarCasting() {
                 <Divider my="md" label="Dados Bancários" labelPosition="center" />
 
                 <SimpleGrid cols={3} mb="md">
-                  <TextInput
+                  <Select
                     label="Banco"
                     placeholder="Número ou nome do banco"
-                    {...form.getInputProps('banco')}
+                    data={banksList}
+                    searchable
+                    nothingFound="Nada encontrado..."
+                    {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 

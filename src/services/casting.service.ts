@@ -55,43 +55,37 @@ export interface Idioma {
   nivel_hungaro?: NivelIdioma;
 }
 
-export interface CastingResumido {
+export interface CastingResumido extends CastingDetalhado {
+  nome_artistico: string;
+}
+
+export interface CastingDetalhado {
   id: string;
   nome: string;
   nome_artistico: string;
-  categoria?: string[];
-  categoria_nome: string;
-  foto_principal: string;
-  ativo: boolean;
-  fotos?: Foto[];
-}
-
-export interface CastingDetalhado extends CastingResumido {
-  nome_artistico: string;
-  tipo: string;
   genero: string;
-  nacionalidade: string | null;
+  categoria: string;
   etnia: string | null;
+  data_nascimento: string;
+  data_cadastro: string;
+  data_atualizacao: string;
+  habilidades: string[];
+  idiomas: Idioma[];
+  foto_principal: string;
+  fotos?: Foto[];
+  videos?: Video[];
+  ativo: boolean;
+  autoriza_imagem_site: boolean;
+
+  // Dados de naturalidade
+  natural_de?: string;
+  nacionalidade: string | null;
+
+  // Características físicas
   altura: string;
   peso: string;
   olhos: string | null;
   cor_cabelo: string | null;
-  canta_profissionalmente: boolean;
-  danca_profissionalmente: boolean;
-  autoriza_imagem_site: boolean;
-  data_nascimento: string;
-  data_cadastro: string;
-  data_atualizacao: string;
-  fotos: Foto[];
-  videos: Video[];
-  habilidades: string[];
-  idiomas: Idioma[];
-
-  // Dados de naturalidade
-  natural_de?: string;
-  ano?: string;
-
-  // Características físicas
   manequim?: string;
   sapato?: string;
   terno?: string;

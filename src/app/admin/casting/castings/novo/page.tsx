@@ -1568,10 +1568,11 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <Select
                     label="Estado"
-                    placeholder="UF"
-                    maxLength={2}
+                    placeholder="Selecione o estado"
+                    data={estados}
+                    searchable
                     {...form.getInputProps('estado')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1591,7 +1592,6 @@ export default function NovoCasting() {
                     label="Banco"
                     placeholder="Número ou nome do banco"
                     data={banksList}
-                    required
                     searchable
                     nothingFound="Nada encontrado..."
                     {...form.getInputProps('categoria')}
