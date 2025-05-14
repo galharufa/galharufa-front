@@ -41,6 +41,7 @@ import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
+import ImagePreview from '@/components/shared/ImagePreview';
 import { notifications } from '@mantine/notifications';
 import { corCabelo, errorToast, genderData, successToast, tipoCabelo } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
@@ -75,8 +76,8 @@ export default function NovoCasting() {
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
   const [videos, setVideos] = useState<string[]>([]);
-  const [linksTrabalho, setLinksTrabalho] = useState<string[]>(['', '']);
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
+  const [linksTrabalho, setLinksTrabalho] = useState<string[]>(['', '']);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm({
@@ -216,10 +217,10 @@ export default function NovoCasting() {
   // Funções para gerenciar fotos adicionais
   const adicionarFoto = () => {
     // Verifica se já atingiu o limite de 8 fotos
-    if (fotosAdicionais.length >= 8) {
+    if (fotosAdicionais.length >= 6) {
       notifications.show({
         title: 'Limite atingido',
-        message: 'Você já adicionou o número máximo de 8 fotos.',
+        message: 'Você já adicionou o número máximo de 6 fotos.',
         color: 'yellow',
       });
       return;
@@ -268,6 +269,35 @@ export default function NovoCasting() {
 
   // Funções para gerenciar vídeos
   const adicionarVideo = () => {
+    const LIMITE_MAXIMO = 6;
+
+    if (videos.length >= LIMITE_MAXIMO) {
+      notifications.show({
+        title: 'Limite atingido',
+        message: 'Você só pode adicionar até 6 vídeos',
+        color: 'yellow',
+      });
+      return;
+    }
+    // Se o array está vazio, pode adicionar o primeiro vídeo sem validação
+    if (videos.length === 0) {
+      setVideos(['']);
+      setDescricaoVideos(['']);
+      return;
+    }
+
+    // Se o último vídeo está vazio, bloqueia
+    const ultimoVideo = videos[videos.length - 1];
+    if (!ultimoVideo?.trim()) {
+      notifications.show({
+        title: 'Campo vazio',
+        message: 'Preencha o link atual antes de adicionar outro.',
+        color: 'yellow',
+      });
+      return;
+    }
+
+    // Adiciona novo campo vazio
     setVideos([...videos, '']);
     setDescricaoVideos([...descricaoVideos, '']);
   };
@@ -424,20 +454,20 @@ export default function NovoCasting() {
       if (values.camisa) formData.set('camisa', values.camisa);
 
       // Links de mídia
-      if (values.link_monologo) formData.set('link_monologo', values.link_monologo);
-      if (values.link_trabalho_1) formData.set('link_trabalho_1', values.link_trabalho_1);
-      if (values.link_trabalho_2) formData.set('link_trabalho_2', values.link_trabalho_2);
+      // if (values.link_trabalho_1) formData.set('link_trabalho_1', values.link_trabalho_1);
+      // if (values.link_trabalho_2) formData.set('link_trabalho_2', values.link_trabalho_2);
 
-      // Links de trabalho adicionais (3 a 7)
-      linksTrabalho.forEach((link, index) => {
-        if (index >= 2 && link) {
-          // A partir do link 3 (índice 2)
-          formData.set(`link_trabalho_${index + 1}`, link);
-        }
-      });
+      // // Links de trabalho adicionais (3 a 7)
+      // linksTrabalho.forEach((link, index) => {
+      //   if (index >= 2 && link) {
+      //     // A partir do link 3 (índice 2)
+      //     formData.set(`link_trabalho_${index + 1}`, link);
+      //   }
+      // });
 
       // Contato
-      if (values.telefone) formData.set('telefone', values.telefone);
+      if (values.celular_whatsapp)
+        formData.set('celular_whatsapp', values.celular_whatsapp);
       if (values.email) formData.set('email', values.email);
       if (values.link_imdb) formData.set('link_imdb', values.link_imdb);
       if (values.link_instagram) formData.set('link_instagram', values.link_instagram);
@@ -686,7 +716,7 @@ export default function NovoCasting() {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Tabs defaultValue="informacoes-basicas" mb="xl">
+          <Tabs defaultValue="midia" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
                 Informações Básicas
@@ -983,88 +1013,125 @@ export default function NovoCasting() {
 
                 {fotosAdicionais.length === 0 ? (
                   <Text color="dimmed" align="center" py="lg">
-                    Nenhuma foto adicional. Clique em &quot;Adicionar Foto&quot; para
-                    incluir mais fotos.
+                    Nenhuma foto adicional. Clique em "Adicionar Foto" para incluir mais
+                    fotos.
                   </Text>
                 ) : (
-                  fotosAdicionais.map((foto, index) => (
-                    <Card key={index} withBorder p="md" radius="md" mb="md">
-                      <Group position="apart" mb="xs">
-                        <Text weight={500}>Foto {index + 1}</Text>
-                        <ActionIcon color="red" onClick={() => removerFoto(index)}>
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Group>
+                  <SimpleGrid
+                    cols={2}
+                    spacing="md"
+                    breakpoints={[
+                      { maxWidth: 'sm', cols: 1 }, // 1 coluna em telas pequenas
+                    ]}
+                  >
+                    {fotosAdicionais.map((foto, index) => (
+                      <Card key={index} withBorder p="md" radius="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Foto {index + 1}</Text>
+                          <ActionIcon color="red" onClick={() => removerFoto(index)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
 
-                      <FileInput
-                        label="Imagem"
-                        description="Selecione uma imagem"
-                        accept="image/png,image/jpeg,image/webp"
-                        icon={<IconUpload size={14} />}
-                        value={foto}
-                        onChange={(file) => atualizarFoto(file, index)}
-                        mb="md"
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
+                        <FileInput
+                          label="Imagem"
+                          description="Selecione uma imagem"
+                          accept="image/png,image/jpeg,image/webp"
+                          icon={<IconUpload size={14} />}
+                          value={foto}
+                          onChange={(file) => atualizarFoto(file, index)}
+                          mb="md"
+                          ref={undefined} // React 19 compatibility
+                        />
+                        {foto && <ImagePreview file={foto} height={150} />}
 
-                      <TextInput
-                        label="Legenda"
-                        placeholder="Legenda da foto"
-                        value={legendasFotos[index] || ''}
-                        onChange={(e) => atualizarLegenda(e.target.value, index)}
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-                    </Card>
-                  ))
+                        <TextInput
+                          label="Legenda"
+                          placeholder="Legenda da foto"
+                          value={legendasFotos[index] || ''}
+                          onChange={(e) => atualizarLegenda(e.target.value, index)}
+                          ref={undefined}
+                        />
+                      </Card>
+                    ))}
+                  </SimpleGrid>
                 )}
 
+                <Divider my="md" label="Vídeos" labelPosition="center" />
+
                 <Group position="apart" mb="lg">
-                  <Title order={3}>Links de Mídia</Title>
+                  <Title order={3}>Videos</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarVideo}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Video
+                  </Button>
                 </Group>
 
-                <>
-                  <Group position="apart" mb="lg">
-                    <Title order={4}>Link de Monólogo</Title>
-                  </Group>
-                  <TextInput
-                    label="Link de Monólogo"
-                    placeholder="URL do monólogo ou apresentação"
-                    icon={<IconMovie size={14} />}
-                    {...form.getInputProps('link_monologo')}
-                    mb="xs"
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                  {form.values.link_monologo && (
-                    <VideoPreview url={form.values.link_monologo} height={280} />
-                  )}
-                </>
+                {videos.length === 0 ? (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhum vídeo adicionado. Clique em "Adicionar Vídeo" para incluir
+                    vídeos.
+                  </Text>
+                ) : (
+                  <SimpleGrid
+                    cols={2}
+                    spacing="md"
+                    breakpoints={[
+                      { maxWidth: 'sm', cols: 1 }, // Em telas pequenas, fica uma coluna só
+                    ]}
+                  >
+                    {videos.map((video, index) => (
+                      <Card key={index} withBorder p="md" radius="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Vídeo {index + 1}</Text>
+                          <ActionIcon
+                            color="red"
+                            style={{
+                              backgroundColor: 'rgba(255,255,255,0.8)',
+                              zIndex: 2,
+                            }}
+                            onClick={() => removerVideo(index)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
 
-                <Divider my="md" label="Links de Trabalho" labelPosition="center" />
+                        <TextInput
+                          label="URL do vídeo"
+                          placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
+                          value={video}
+                          onChange={(e) => atualizarVideo(e.target.value, index)}
+                          mb="md"
+                          ref={undefined}
+                        />
 
-                {/* Links de Trabalho 1 e 2 (já existentes no form) */}
-                <SimpleGrid cols={2} mb="md">
-                  <TextInput
-                    label="Link de Trabalho 1"
-                    placeholder="URL de algum trabalho realizado"
-                    icon={<IconMovie size={14} />}
-                    {...form.getInputProps('link_trabalho_1')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                  {form.values.link_trabalho_1 && (
-                    <VideoPreview url={form.values.link_trabalho_1} height={280} />
-                  )}
+                        <TextInput
+                          label="Descrição"
+                          placeholder="Descrição do vídeo"
+                          value={descricaoVideos[index] || ''}
+                          onChange={(e) => atualizarDescricaoVideo(e.target.value, index)}
+                          ref={undefined}
+                        />
 
-                  <TextInput
-                    label="Link de Trabalho 2"
-                    placeholder="URL de outro trabalho realizado"
-                    icon={<IconMovie size={14} />}
-                    {...form.getInputProps('link_trabalho_2')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                  {form.values.link_trabalho_2 && (
-                    <VideoPreview url={form.values.link_trabalho_2} height={280} />
-                  )}
-                </SimpleGrid>
+                        {video && <VideoPreview url={video} height={150} />}
+                      </Card>
+                    ))}
+                  </SimpleGrid>
+                )}
 
                 {/* Links de Trabalho adicionais (3 a 7) */}
                 {linksTrabalho.map(
@@ -1098,46 +1165,6 @@ export default function NovoCasting() {
                         {link && <VideoPreview url={link} height={280} />}
                       </Box>
                     ),
-                )}
-
-                {/* Botão para adicionar mais links de trabalho */}
-                {linksTrabalho.length < 9 && (
-                  <Group position="center" mt="md">
-                    <Button
-                      leftIcon={<IconPlus size={16} />}
-                      variant="outline"
-                      onClick={() => {
-                        // Verificar se o último link foi preenchido
-                        const ultimoLink = linksTrabalho[linksTrabalho.length - 1];
-                        if (!ultimoLink) {
-                          notifications.show({
-                            title: 'Campo vazio',
-                            message: 'Preencha o link atual antes de adicionar outro.',
-                            color: 'yellow',
-                          });
-                          return;
-                        }
-
-                        // Adicionar novo link vazio
-                        setLinksTrabalho([...linksTrabalho, '']);
-                      }}
-                      styles={{
-                        root: {
-                          borderColor: isDark
-                            ? '#9333ea !important'
-                            : '#7e22ce !important',
-                          color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                          transition: 'transform 0.3s, box-shadow 0.3s',
-                          '&:hover': {
-                            transform: 'translateY(-3px)',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                          },
-                        },
-                      }}
-                    >
-                      Adicionar Link de Trabalho
-                    </Button>
-                  </Group>
                 )}
               </Card>
             </Tabs.Panel>
