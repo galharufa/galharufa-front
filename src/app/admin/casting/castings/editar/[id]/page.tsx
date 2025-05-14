@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import React, { useState, useCallback, useMemo, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import {
   Container,
@@ -35,19 +35,10 @@ import StarterKit from '@tiptap/starter-kit';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import { DateInput } from '@mantine/dates';
-import { useDisclosure, useUncontrolled } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../../components/AdminNavbar';
-import {
-  CastingService,
-  api,
-  type CategoriasCasting,
-  type CastingDetalhado,
-  type Foto,
-  type Video,
-  type Funcao,
-} from '@/services';
+import { CastingService, type CastingDetalhado, type Foto, type Video } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import { notifications } from '@mantine/notifications';
 import {
@@ -74,12 +65,10 @@ import {
   IconId,
   IconCreditCard,
   IconAward,
-  IconEdit,
   IconUser,
   IconLink,
   IconBrandWhatsapp,
   IconMap,
-  IconDeviceMobile,
 } from '@tabler/icons-react';
 
 import Image from 'next/image';
@@ -172,6 +161,7 @@ export default function EditarCasting() {
       validade_passaporte: '',
       CNH: '',
       CNPJ: '',
+      PIS: '',
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
@@ -179,11 +169,6 @@ export default function EditarCasting() {
       // Biografia e Experiência
       biografia: '',
       experiencia: '',
-      curriculum_artistico: '',
-
-      // Mídia
-      link_trabalho_1: '',
-      link_trabalho_2: '',
 
       // Contato
       email: '',
@@ -215,10 +200,10 @@ export default function EditarCasting() {
       habilitacao_validade: null as Date | null,
     },
     validate: {
-      nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
-      categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
-      altura: (value) => (!value ? 'A altura é obrigatória' : null),
-      peso: (value) => (!value ? 'O peso é obrigatório' : null),
+      // nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
+      // categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
+      // altura: (value) => (!value ? 'A altura é obrigatória' : null),
+      // peso: (value) => (!value ? 'O peso é obrigatório' : null),
     },
   });
 
@@ -266,26 +251,6 @@ export default function EditarCasting() {
         setCasting(castingResponse);
         setFotosExistentes(castingResponse.fotos || []);
         setVideosExistentes(castingResponse.videos || []);
-
-        // Links de trabalho
-        const linksDeTrabalho = [];
-        if (castingResponse.link_trabalho_1)
-          linksDeTrabalho.push(castingResponse.link_trabalho_1);
-        if (castingResponse.link_trabalho_2)
-          linksDeTrabalho.push(castingResponse.link_trabalho_2);
-        if (castingResponse.link_trabalho_3)
-          linksDeTrabalho.push(castingResponse.link_trabalho_3);
-        if (castingResponse.link_trabalho_4)
-          linksDeTrabalho.push(castingResponse.link_trabalho_4);
-        if (castingResponse.link_trabalho_5)
-          linksDeTrabalho.push(castingResponse.link_trabalho_5);
-        if (castingResponse.link_trabalho_6)
-          linksDeTrabalho.push(castingResponse.link_trabalho_6);
-        if (castingResponse.link_trabalho_7)
-          linksDeTrabalho.push(castingResponse.link_trabalho_7);
-
-        while (linksDeTrabalho.length < 2) linksDeTrabalho.push('');
-        setLinksTrabalho(linksDeTrabalho);
 
         const dataNascimento = castingResponse.data_nascimento
           ? new Date(castingResponse.data_nascimento)
@@ -349,6 +314,10 @@ export default function EditarCasting() {
           RG: castingResponse.RG || '',
           CPF: castingResponse.CPF || '',
           CNPJ: castingResponse.CNPJ || '',
+          CNH: castingResponse.CNH || '',
+          PIS: castingResponse.PIS || '',
+          website: castingResponse.website || '',
+
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
           validade_passaporte: castingResponse.validade_passaporte || '',
@@ -359,9 +328,6 @@ export default function EditarCasting() {
           biografia: castingResponse.biografia || '',
           experiencia: castingResponse.experiencia || '',
 
-          link_trabalho_1: castingResponse.link_trabalho_1 || '',
-          link_trabalho_2: castingResponse.link_trabalho_2 || '',
-
           email: castingResponse.email || '',
           link_instagram: castingResponse.link_instagram || '',
           link_imdb: castingResponse.link_imdb || '',
@@ -369,7 +335,7 @@ export default function EditarCasting() {
           contato_emergencia_telefone: castingResponse.contato_emergencia_telefone || '',
 
           cep: castingResponse.cep || '',
-          logradouro: castingResponse.endereco || '',
+          logradouro: castingResponse.logradouro || '',
           numero: castingResponse.numero || '',
           complemento: castingResponse.complemento || '',
           bairro: castingResponse.bairro || '',
@@ -585,6 +551,7 @@ export default function EditarCasting() {
       if (values.CPF) formData.append('CPF', values.CPF);
       formData.append('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
       if (values.CNPJ) formData.append('CNPJ', values.CNPJ);
+      if (values.PIS) formData.append('PIS', values.PIS);
       if (values.razao_social) formData.append('razao_social', values.razao_social);
       if (values.inscricao_estadual)
         formData.append('inscricao_estadual', values.inscricao_estadual);
@@ -598,12 +565,6 @@ export default function EditarCasting() {
       if (values.habilidades)
         formData.append('habilidades', JSON.stringify(values.habilidades));
 
-      // Links de mídia
-      if (values.link_trabalho_1)
-        formData.append('link_trabalho_1', values.link_trabalho_1);
-      if (values.link_trabalho_2)
-        formData.append('link_trabalho_2', values.link_trabalho_2);
-
       // Links de trabalho adicionais
       linksTrabalho.forEach((link, index) => {
         if (index >= 2 && link) {
@@ -613,18 +574,23 @@ export default function EditarCasting() {
       });
 
       // Contato
-      if (values.telefone_1) formData.append('telefone_1', values.telefone_1);
-      if (values.celular) formData.append('celular', values.celular);
+      if (values.celular_whatsapp)
+        formData.append('celular_whatsapp', values.celular_whatsapp);
       if (values.email) formData.append('email', values.email);
-      if (values.instagram) formData.append('instagram', values.instagram);
-      if (values.emergencia_nome)
-        formData.append('emergencia_nome', values.emergencia_nome);
-      if (values.emergencia_telefone)
-        formData.append('emergencia_telefone', values.emergencia_telefone);
+      if (values.link_instagram) formData.append('link_instagram', values.link_instagram);
+      if (values.link_imdb) formData.append('link_imdb', values.link_imdb);
+      if (values.website) formData.append('website', values.website);
+      if (values.contato_emergencia_nome)
+        formData.append('contato_emergencia_nome', values.contato_emergencia_nome);
+      if (values.contato_emergencia_telefone)
+        formData.append(
+          'contato_emergencia_telefone',
+          values.contato_emergencia_telefone,
+        );
 
       // Endereço
       if (values.cep) formData.append('cep', values.cep);
-      if (values.rua) formData.append('rua', values.rua);
+      if (values.logradouro) formData.append('rua', values.logradouro);
       if (values.numero) formData.append('numero', values.numero);
       if (values.complemento) formData.append('complemento', values.complemento);
       if (values.bairro) formData.append('bairro', values.bairro);
@@ -1085,9 +1051,6 @@ export default function EditarCasting() {
                 {/* Fotos existentes */}
                 {fotosExistentes.length > 0 && (
                   <>
-                    <Title order={4} mb="md">
-                      Fotos Existentes
-                    </Title>
                     <Group mb="xl">
                       {fotosExistentes.map((foto) => (
                         <Card
@@ -1212,18 +1175,31 @@ export default function EditarCasting() {
                   ]}
                 >
                   {videosExistentes.map((video) => (
-                    <Box key={video.id} style={{ width: 300, height: 200 }}>
-                      <Group position="apart" mb="xs">
-                        <Text weight={500} size="sm" truncate>
-                          {video.titulo}
-                        </Text>
-                        <ActionIcon
-                          color="red"
-                          onClick={() => marcarVideoParaExcluir(video.id)}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Group>
+                    <Box
+                      key={video.id}
+                      style={{
+                        width: 300,
+                        position: 'relative',
+                        marginRight: 10,
+                      }}
+                    >
+                      {/* Ícone de lixeira flutuando sobre o vídeo */}
+                      <ActionIcon
+                        color="red"
+                        variant="light"
+                        onClick={() => marcarVideoParaExcluir(video.id)}
+                        style={{
+                          position: 'absolute',
+                          top: 18,
+                          right: 8,
+                          backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                          zIndex: 2,
+                        }}
+                      >
+                        <IconTrash size={16} />
+                      </ActionIcon>
+
+                      {/* Player do vídeo */}
                       <VideoPreview url={video.url} height={150} />
                     </Box>
                   ))}
@@ -1260,6 +1236,8 @@ export default function EditarCasting() {
                           value={video.url}
                           onChange={(e) => atualizarVideo('url', e.target.value, index)}
                         />
+
+                        {video.url && <VideoPreview url={video.url} height={150} />}
                       </Card>
                     ))}
                   </>
@@ -1271,62 +1249,6 @@ export default function EditarCasting() {
                     incluir vídeos.
                   </Text>
                 )}
-                <Divider my="md" label="Links de trabalho" labelPosition="center" />
-
-                <Group position="apart" mb="lg">
-                  <Title order={3}>Links de Trabalho</Title>
-                  <Button
-                    leftIcon={<IconPlus size={16} />}
-                    variant="outline"
-                    onClick={adicionarLinkTrabalho}
-                    styles={{
-                      root: {
-                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                        },
-                      },
-                    }}
-                  >
-                    Adicionar Link
-                  </Button>
-                </Group>
-
-                <TextInput
-                  label="Link de Trabalho 1"
-                  placeholder="https://exemplo.com"
-                  {...form.getInputProps('link_trabalho_1')}
-                  mb="md"
-                />
-
-                <TextInput
-                  label="Link de Trabalho 2"
-                  placeholder="https://exemplo.com"
-                  {...form.getInputProps('link_trabalho_2')}
-                  mb="md"
-                />
-
-                {linksTrabalho.map((link, index) => (
-                  <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
-                    <TextInput
-                      label={`Link de Trabalho ${index + 3}`}
-                      placeholder="https://exemplo.com"
-                      value={link}
-                      onChange={(e) => atualizarLinkTrabalho(e.target.value, index)}
-                      rightSection={
-                        <ActionIcon
-                          color="red"
-                          onClick={() => removerLinkTrabalho(index)}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      }
-                    />
-                  </div>
-                ))}
               </Card>
             </Tabs.Panel>
 
@@ -1593,7 +1515,7 @@ export default function EditarCasting() {
                   <TextInput
                     label="Nome do Contato de Emergência"
                     placeholder="Nome completo"
-                    {...form.getInputProps('emergencia_nome')}
+                    {...form.getInputProps('contato_emergencia_nome')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
@@ -1601,7 +1523,7 @@ export default function EditarCasting() {
                     label="Telefone de Emergência"
                     placeholder="Número de telefone com DDD"
                     icon={<IconPhone size={14} />}
-                    {...form.getInputProps('emergencia_telefone')}
+                    {...form.getInputProps('contato_emergencia_telefone')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>

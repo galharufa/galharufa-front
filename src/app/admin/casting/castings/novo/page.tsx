@@ -36,7 +36,6 @@ import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
 import Placeholder from '@tiptap/extension-placeholder';
 import { DateInput } from '@mantine/dates';
-import { useDisclosure, useUncontrolled } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
@@ -52,21 +51,15 @@ import {
   IconTrash,
   IconInfoCircle,
   IconBrandInstagram,
-  IconBrandYoutube,
   IconMovie,
   IconMail,
   IconPhone,
-  IconCar,
   IconId,
   IconCreditCard,
   IconAward,
-  IconEdit,
   IconUser,
   IconBrandWhatsapp,
-  IconBrandTiktok,
-  IconWorld,
   IconMap,
-  IconDeviceMobile,
   IconLink,
 } from '@tabler/icons-react';
 
@@ -125,14 +118,14 @@ export default function NovoCasting() {
       validade_passaporte: '',
       CNH: '',
       CNPJ: '',
+      PIS: '',
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
 
-      // Mídia
-      link_monologo: '',
-      link_trabalho_1: '',
-      link_trabalho_2: '',
+      // Biografia e Experiência
+      biografia: '',
+      experiencia: '',
 
       // Contato
       email: '',
@@ -158,19 +151,19 @@ export default function NovoCasting() {
       tipo_conta: '',
       pix: '',
 
-      // Idiomas e Veículos
+      // Idiomas
       idiomas: [] as string[],
       habilitacao_categorias: [] as string[],
       habilitacao_validade: null as Date | null,
     },
     validate: {
-      nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
-      categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
-      altura: (value) => (!value ? 'A altura é obrigatória' : null),
-      peso: (value) => (!value ? 'O peso é obrigatório' : null),
+      // nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
+      // categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
+      // altura: (value) => (!value ? 'A altura é obrigatória' : null),
+      // peso: (value) => (!value ? 'O peso é obrigatório' : null),
       // biografia: (value) => (!value ? 'A biografia é obrigatória' : null),
       // experiencia: (value) => (!value ? 'A experiência é obrigatória' : null),
-      foto_principal: (value) => (!value ? 'A foto principal é obrigatória' : null),
+      // foto_principal: (value) => (!value ? 'A foto principal é obrigatória' : null),
     },
   });
 
@@ -182,7 +175,7 @@ export default function NovoCasting() {
       Highlight,
       Underline,
       Placeholder.configure({
-        placeholder: 'Escreva aqui a experiência ou descrição...', // 🔥 seu placeholder aqui
+        placeholder: 'Escreva aqui a experiência ou descrição...',
       }),
     ],
     content: form.getInputProps('experiencia').value,
@@ -467,7 +460,6 @@ export default function NovoCasting() {
       if (values.endereco_id) formData.set('endereco_id', values.endereco_id);
       if (values.idiomas_id) formData.set('idiomas_id', values.idiomas_id);
       if (values.usuario_id) formData.set('usuario_id', values.usuario_id);
-      if (values.veiculos_id) formData.set('veiculos_id', values.veiculos_id);
 
       // Adicionar biografia - campos obrigatórios
       formData.set('biografia', values.biografia);

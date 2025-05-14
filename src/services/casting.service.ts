@@ -80,26 +80,12 @@ export interface CastingDetalhado extends CastingResumido {
   danca_profissionalmente: boolean;
   autoriza_imagem_site: boolean;
   data_nascimento: string;
-  biografia?: string;
-  experiencia?: string;
   data_cadastro: string;
   data_atualizacao: string;
   fotos: Foto[];
   videos: Video[];
   habilidades: string[];
   idiomas: Idioma[];
-  link_instagram: string;
-  link_imdb: string;
-  website: string;
-
-  // Campos para links de trabalho
-  link_trabalho_1?: string;
-  link_trabalho_2?: string;
-  link_trabalho_3?: string;
-  link_trabalho_4?: string;
-  link_trabalho_5?: string;
-  link_trabalho_6?: string;
-  link_trabalho_7?: string;
 
   // Dados de naturalidade
   natural_de?: string;
@@ -119,28 +105,37 @@ export interface CastingDetalhado extends CastingResumido {
   RG?: string;
   CPF?: string;
   CNPJ?: string;
-  razao_social?: string;
-  inscricao_estadual?: string;
-  possui_nota_propria?: boolean;
+  CNH?: string;
+  PIS?: string;
   tem_passaporte?: boolean;
   passaporte?: string;
   validade_passaporte?: string;
+  razao_social?: string;
+  inscricao_estadual?: string;
+  possui_nota_propria?: boolean;
+
+  //biografia e experiencia
+  biografia?: string;
+  experiencia?: string;
 
   // Contato
   email?: string;
-  telefone?: string;
-  telefone_2?: string;
+  celular_whatsapp?: string;
+  link_instagram?: string;
+  link_imdb?: string;
+  website?: string;
   contato_emergencia_nome?: string;
   contato_emergencia_telefone?: string;
 
   // Endereço
   cep?: string;
-  endereco?: string;
+  logradouro?: string;
   numero?: string;
   complemento?: string;
   bairro?: string;
   cidade?: string;
   estado?: string;
+  pais?: string;
 
   // Finanças
   banco?: string;
@@ -152,7 +147,6 @@ export interface CastingDetalhado extends CastingResumido {
   // Habilitação e veículos
   habilitacao_categorias?: string[];
   habilitacao_validade?: string;
-  possui_veiculo?: boolean;
 }
 
 export interface PaginatedResponse<T> {
