@@ -40,6 +40,8 @@ import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../../components/AdminNavbar';
 import { CastingService, type CastingDetalhado, type Foto, type Video } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
+import ImagePreview from '@/components/shared/ImagePreview';
+import Image from 'next/image';
 import { notifications } from '@mantine/notifications';
 import {
   corCabelo,
@@ -70,10 +72,6 @@ import {
   IconBrandWhatsapp,
   IconMap,
 } from '@tabler/icons-react';
-
-import Image from 'next/image';
-
-const habilidadesDados = habilidadesData;
 
 export default function EditarCasting() {
   const params = useParams();
@@ -385,6 +383,27 @@ export default function EditarCasting() {
 
   // Funções para gerenciar fotos adicionais
   const adicionarFoto = () => {
+    const LIMITE_MAXIMO = 6;
+    const totalFotos = fotosExistentes.length + fotosAdicionais.length;
+    if (totalFotos >= LIMITE_MAXIMO) {
+      notifications.show({
+        title: 'Limite atingido',
+        message: 'Você já adicionou o número máximo de 6 fotos.',
+        color: 'yellow',
+      });
+      return;
+    }
+
+    // Verifica se a última foto adicionada está preenchida
+    const ultimaFotoIndex = fotosAdicionais.length - 1;
+    if (ultimaFotoIndex >= 0 && !fotosAdicionais[ultimaFotoIndex]) {
+      notifications.show({
+        title: 'Foto vazia',
+        message: 'Selecione uma imagem para a foto atual antes de adicionar outra.',
+        color: 'yellow',
+      });
+      return;
+    }
     setFotosAdicionais([...fotosAdicionais, null as unknown as File]);
     setLegendasFotos([...legendasFotos, '']);
   };
@@ -422,6 +441,31 @@ export default function EditarCasting() {
 
   // Funções para gerenciar vídeos novos
   const adicionarVideo = () => {
+    const LIMITE_MAXIMO = 6;
+
+    const totalVideos = videosExistentes.length + videosNovos.length;
+
+    if (totalVideos >= LIMITE_MAXIMO) {
+      notifications.show({
+        title: 'Limite atingido',
+        message: 'Você só pode adicionar até 6 vídeos',
+        color: 'yellow',
+      });
+      return;
+    }
+
+    if (videosNovos.length > 0) {
+      const ultimo = videosNovos[videosNovos.length - 1];
+      if (!ultimo.titulo.trim() || !ultimo.url.trim()) {
+        notifications.show({
+          title: 'Campos obrigatórios',
+          message: 'Preencha o título e o link do último vídeo antes de adicionar outro.',
+          color: 'yellow',
+        });
+        return;
+      }
+    }
+
     setVideosNovos([...videosNovos, { titulo: '', url: '' }]);
   };
 
@@ -810,7 +854,7 @@ export default function EditarCasting() {
                     searchable
                     clearable
                     placeholder="Selecione uma ou mais habilidades"
-                    data={habilidadesDados}
+                    data={habilidadesData}
                     {...form.getInputProps('habilidades')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1107,33 +1151,42 @@ export default function EditarCasting() {
                     <Title order={4} mb="md">
                       Novas Fotos
                     </Title>
-                    {fotosAdicionais.map((foto, index) => (
-                      <Card key={index} withBorder p="md" radius="md" mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>Foto Nova {index + 1}</Text>
-                          <ActionIcon color="red" onClick={() => removerFoto(index)}>
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
+                    <SimpleGrid
+                      cols={2}
+                      spacing="md"
+                      breakpoints={[
+                        { maxWidth: 'sm', cols: 1 }, // 1 coluna em telas pequenas
+                      ]}
+                    >
+                      {fotosAdicionais.map((foto, index) => (
+                        <Card key={index} withBorder p="md" radius="md" mb="md">
+                          <Group position="apart" mb="xs">
+                            <Text weight={500}>Foto Nova {index + 1}</Text>
+                            <ActionIcon color="red" onClick={() => removerFoto(index)}>
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </Group>
 
-                        <FileInput
-                          label="Imagem"
-                          description="Selecione uma imagem"
-                          accept="image/png,image/jpeg,image/webp"
-                          icon={<IconUpload size={14} />}
-                          value={foto}
-                          onChange={(file) => atualizarFoto(file, index)}
-                          mb="md"
-                        />
+                          <FileInput
+                            label="Imagem"
+                            description="Selecione uma imagem"
+                            accept="image/png,image/jpeg,image/webp"
+                            icon={<IconUpload size={14} />}
+                            value={foto}
+                            onChange={(file) => atualizarFoto(file, index)}
+                            mb="md"
+                          />
+                          {foto && <ImagePreview file={foto} height={150} />}
 
-                        <TextInput
-                          label="Legenda"
-                          placeholder="Legenda da foto"
-                          value={legendasFotos[index] || ''}
-                          onChange={(e) => atualizarLegenda(e.target.value, index)}
-                        />
-                      </Card>
-                    ))}
+                          <TextInput
+                            label="Legenda"
+                            placeholder="Legenda da foto"
+                            value={legendasFotos[index] || ''}
+                            onChange={(e) => atualizarLegenda(e.target.value, index)}
+                          />
+                        </Card>
+                      ))}
+                    </SimpleGrid>
                   </>
                 )}
 
@@ -1211,35 +1264,43 @@ export default function EditarCasting() {
                     <Title order={4} mb="md">
                       Novos Vídeos
                     </Title>
-                    {videosNovos.map((video, index) => (
-                      <Card key={index} withBorder p="md" radius="md" mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>Vídeo Novo {index + 1}</Text>
-                          <ActionIcon color="red" onClick={() => removerVideo(index)}>
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
+                    <SimpleGrid
+                      cols={2}
+                      spacing="md"
+                      breakpoints={[
+                        { maxWidth: 'sm', cols: 1 }, // 1 coluna em telas pequenas
+                      ]}
+                    >
+                      {videosNovos.map((video, index) => (
+                        <Card key={index} withBorder p="md" radius="md" mb="md">
+                          <Group position="apart" mb="xs">
+                            <Text weight={500}>Vídeo Novo {index + 1}</Text>
+                            <ActionIcon color="red" onClick={() => removerVideo(index)}>
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </Group>
 
-                        <TextInput
-                          label="Título"
-                          placeholder="Título do vídeo"
-                          value={video.titulo}
-                          onChange={(e) =>
-                            atualizarVideo('titulo', e.target.value, index)
-                          }
-                          mb="md"
-                        />
+                          <TextInput
+                            label="Título"
+                            placeholder="Título do vídeo"
+                            value={video.titulo}
+                            onChange={(e) =>
+                              atualizarVideo('titulo', e.target.value, index)
+                            }
+                            mb="md"
+                          />
 
-                        <TextInput
-                          label="URL"
-                          placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
-                          value={video.url}
-                          onChange={(e) => atualizarVideo('url', e.target.value, index)}
-                        />
+                          <TextInput
+                            label="URL"
+                            placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
+                            value={video.url}
+                            onChange={(e) => atualizarVideo('url', e.target.value, index)}
+                          />
 
-                        {video.url && <VideoPreview url={video.url} height={150} />}
-                      </Card>
-                    ))}
+                          {video.url && <VideoPreview url={video.url} height={150} />}
+                        </Card>
+                      ))}
+                    </SimpleGrid>
                   </>
                 )}
 
