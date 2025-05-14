@@ -71,6 +71,7 @@ import {
   IconMap,
   IconLink,
 } from '@tabler/icons-react';
+import { SearchZipCode } from '../../../../../components/shared/SearchZipCode';
 
 export default function NovoCasting() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -80,6 +81,7 @@ export default function NovoCasting() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [categorias, setCategorias] = useState<any[]>([]);
+  const [loadingCep, setLoadingCep] = useState(false);
 
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
@@ -197,6 +199,18 @@ export default function NovoCasting() {
       },
     },
   });
+
+  //Limpa / adiciona mascara ao campo de CEP para api conseguir calcular
+  const handleCepBlur = (event: React.FocusEvent<HTMLInputElement>) => {
+    let valor = event.target.value;
+    valor = valor.replace(/\D/g, '');
+
+    if (valor.length === 8) {
+      form.setFieldValue('cep', valor.replace(/(\d{5})(\d{3})/, '$1-$2'));
+    } else {
+      alert('CEP inválido. Use o formato 00000-000.');
+    }
+  };
 
   // Carregar dados iniciais (categorias, funções, etc.)
   useEffect(() => {
@@ -1493,11 +1507,24 @@ export default function NovoCasting() {
                   Endereço e Informações Financeiras
                 </Title>
 
+                <SearchZipCode
+                  cep={form.values.cep}
+                  onLoading={setLoadingCep}
+                  onResult={(endereco) => {
+                    if (endereco.logradouro)
+                      form.setFieldValue('logradouro', endereco.logradouro);
+                    if (endereco.bairro) form.setFieldValue('bairro', endereco.bairro);
+                    if (endereco.cidade) form.setFieldValue('cidade', endereco.cidade);
+                    if (endereco.estado) form.setFieldValue('estado', endereco.estado);
+                  }}
+                />
+
                 <SimpleGrid cols={2} mb="md">
                   <TextInput
                     label="CEP"
                     placeholder="Formato: 00000-000"
-                    icon={<IconMap size={14} />}
+                    icon={loadingCep ? <Loader size={14} /> : <IconMap size={14} />}
+                    onBlur={handleCepBlur}
                     {...form.getInputProps('cep')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
