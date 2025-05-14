@@ -44,7 +44,14 @@ import VideoPreview from '@/components/shared/VideoPreview';
 import ImagePreview from '@/components/shared/ImagePreview';
 import Image from 'next/image';
 import { notifications } from '@mantine/notifications';
-import { corCabelo, errorToast, genderData, successToast, tipoCabelo } from '@/utils';
+import {
+  banksList,
+  corCabelo,
+  errorToast,
+  genderData,
+  successToast,
+  tipoCabelo,
+} from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
 import {
@@ -1553,10 +1560,14 @@ export default function NovoCasting() {
                 <Divider my="md" label="Dados Bancários" labelPosition="center" />
 
                 <SimpleGrid cols={3} mb="md">
-                  <TextInput
+                  <Select
                     label="Banco"
                     placeholder="Número ou nome do banco"
-                    {...form.getInputProps('banco')}
+                    data={banksList}
+                    required
+                    searchable
+                    nothingFound="Nada encontrado..."
+                    {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 

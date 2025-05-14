@@ -35,7 +35,7 @@ export const etniaMap: Record<string, string> = {
   parda: 'Parda',
 };
 
-export const banknumbers = [
+export const banksList = [
   { value: '001', label: 'Banco do Brasil' },
   { value: '002', label: 'Banco Central do Brasil' },
   { value: '003', label: 'Banco da Amazônia' },
