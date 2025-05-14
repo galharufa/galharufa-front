@@ -42,6 +42,7 @@ import AdminNavbar from '../../../components/AdminNavbar';
 import { CastingService, api } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import ImagePreview from '@/components/shared/ImagePreview';
+import Image from 'next/image';
 import { notifications } from '@mantine/notifications';
 import { corCabelo, errorToast, genderData, successToast, tipoCabelo } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
@@ -75,6 +76,7 @@ export default function NovoCasting() {
 
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
+  const [previewFotoPrincipal, setPreviewFotoPrincipal] = useState<string | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
   const [linksTrabalho, setLinksTrabalho] = useState<string[]>(['', '']);
@@ -716,7 +718,7 @@ export default function NovoCasting() {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Tabs defaultValue="midia" mb="xl">
+          <Tabs defaultValue="informacoes-basicas" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
                 Informações Básicas
@@ -774,7 +776,7 @@ export default function NovoCasting() {
                   />
                 </SimpleGrid>
 
-                <SimpleGrid cols={3}>
+                <SimpleGrid cols={3} mt="md">
                   <Select
                     label="Gênero"
                     placeholder="Selecione o gênero"
@@ -824,15 +826,48 @@ export default function NovoCasting() {
                   />
                 </SimpleGrid>
 
-                <FileInput
-                  label="Foto Principal"
-                  description="Selecione uma imagem para a foto principal - formato landscape(formatos: JPG, PNG, WebP)"
-                  accept="image/png,image/jpeg,image/webp"
-                  icon={<IconUpload size={14} />}
-                  {...form.getInputProps('foto_principal')}
-                  mb="md"
-                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                />
+                <Group align="flex-start" mb="md" mt="md">
+                  <div style={{ flex: 1 }}>
+                    <FileInput
+                      label="Foto Principal"
+                      description="Selecione uma imagem para a foto principal - formato landscape (JPG, PNG, WebP)"
+                      accept="image/png,image/jpeg,image/webp"
+                      icon={<IconUpload size={14} />}
+                      {...form.getInputProps('foto_principal')}
+                      onChange={(file) => {
+                        form.setFieldValue('foto_principal', file);
+                        setPreviewFotoPrincipal(file ? URL.createObjectURL(file) : null);
+                      }}
+                      mb="md"
+                      ref={undefined} // Corrige o warning do React 19
+                    />
+                  </div>
+
+                  {previewFotoPrincipal && (
+                    <div>
+                      <Text size="sm" weight={500} mb={5}>
+                        Pré-visualização
+                      </Text>
+                      <div
+                        style={{
+                          width: 300,
+                          height: 150,
+                          position: 'relative',
+                          overflow: 'hidden',
+                          borderRadius: '4px',
+                        }}
+                      >
+                        <Image
+                          src={previewFotoPrincipal}
+                          alt="Pré-visualização da foto principal"
+                          style={{ objectFit: 'cover' }}
+                          fill
+                          sizes="300px"
+                        />
+                      </div>
+                    </div>
+                  )}
+                </Group>
 
                 <Switch
                   label="Ativo"
