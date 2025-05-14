@@ -187,20 +187,16 @@ export default function EditarCasting() {
 
       // Contato
       email: '',
-      telefone_1: '',
-      telefone_2: '',
-      celular: '',
-      instagram: '',
-      imdb: '',
+      celular_whatsapp: '',
+      link_instagram: '',
+      link_imdb: '',
+      website: '',
       contato_emergencia_nome: '',
       contato_emergencia_telefone: '',
-      emergencia_nome: '',
-      emergencia_telefone: '',
 
       // Endereço e Informações Financeiras
       cep: '',
-      rua: '',
-      endereco: '',
+      logradouro: '',
       numero: '',
       complemento: '',
       bairro: '',
@@ -367,15 +363,13 @@ export default function EditarCasting() {
           link_trabalho_2: castingResponse.link_trabalho_2 || '',
 
           email: castingResponse.email || '',
-          telefone_1: castingResponse.telefone_1 || '',
-          telefone_2: castingResponse.telefone_2 || '',
-          instagram: castingResponse.link_instagram || '',
-          imdb: castingResponse.link_imdb || '',
+          link_instagram: castingResponse.link_instagram || '',
+          link_imdb: castingResponse.link_imdb || '',
           contato_emergencia_nome: castingResponse.contato_emergencia_nome || '',
           contato_emergencia_telefone: castingResponse.contato_emergencia_telefone || '',
 
           cep: castingResponse.cep || '',
-          endereco: castingResponse.endereco || '',
+          logradouro: castingResponse.endereco || '',
           numero: castingResponse.numero || '',
           complemento: castingResponse.complemento || '',
           bairro: castingResponse.bairro || '',
@@ -759,7 +753,7 @@ export default function EditarCasting() {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Tabs defaultValue="endereco" mb="xl">
+          <Tabs defaultValue="informacoes-basicas" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
                 Informações Básicas
@@ -767,23 +761,20 @@ export default function EditarCasting() {
               <Tabs.Tab value="caracteristicas" icon={<IconInfoCircle size={14} />}>
                 Características
               </Tabs.Tab>
+              <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
+                Mídia
+              </Tabs.Tab>
               <Tabs.Tab value="documentos" icon={<IconId size={14} />}>
                 Documentos
               </Tabs.Tab>
               <Tabs.Tab value="biografia" icon={<IconAward size={14} />}>
                 Biografia
               </Tabs.Tab>
-              <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
-                Mídia
-              </Tabs.Tab>
               <Tabs.Tab value="contato" icon={<IconMail size={14} />}>
                 Contato
               </Tabs.Tab>
               <Tabs.Tab value="endereco" icon={<IconCreditCard size={14} />}>
                 Endereço e Finanças
-              </Tabs.Tab>
-              <Tabs.Tab value="idiomas-veiculos" icon={<IconEdit size={14} />}>
-                Idiomas e Veículos
               </Tabs.Tab>
             </Tabs.List>
 
@@ -1046,6 +1037,296 @@ export default function EditarCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 )}
+                <Divider my="md" label="Idiomas" labelPosition="center" />
+                <MultiSelect
+                  label="Idiomas"
+                  placeholder="Selecione os idiomas"
+                  data={[
+                    { value: 'portugues', label: 'Português' },
+                    { value: 'ingles', label: 'Inglês' },
+                    { value: 'espanhol', label: 'Espanhol' },
+                    { value: 'frances', label: 'Francês' },
+                    { value: 'italiano', label: 'Italiano' },
+                    { value: 'alemao', label: 'Alemão' },
+                    { value: 'mandarim', label: 'Mandarim' },
+                    { value: 'japones', label: 'Japonês' },
+                    { value: 'russo', label: 'Russo' },
+                    { value: 'arabe', label: 'Árabe' },
+                    { value: 'hungaro', label: 'Húngaro' },
+                    { value: 'outros', label: 'Outros' },
+                  ]}
+                  searchable
+                  clearable
+                  {...form.getInputProps('idiomas')}
+                  mb="xl"
+                />
+              </Card>
+            </Tabs.Panel>
+
+            <Tabs.Panel value="midia">
+              <Card withBorder p="xl" radius="md" mb="xl">
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Fotos</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarFoto}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                      },
+                    }}
+                  >
+                    Adicionar Foto
+                  </Button>
+                </Group>
+
+                {/* Fotos existentes */}
+                {fotosExistentes.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Fotos Existentes
+                    </Title>
+                    <Group mb="xl">
+                      {fotosExistentes.map((foto) => (
+                        <Card
+                          key={foto.id}
+                          withBorder
+                          p="md"
+                          radius="md"
+                          style={{ width: 200 }}
+                        >
+                          <div style={{ position: 'relative' }}>
+                            <div
+                              style={{
+                                width: '100%',
+                                height: 150,
+                                position: 'relative',
+                                overflow: 'hidden',
+                                borderRadius: '4px',
+                                marginBottom: 10,
+                              }}
+                            >
+                              <Image
+                                src={foto.imagem}
+                                alt={foto.legenda || 'Foto do casting'}
+                                style={{ objectFit: 'cover' }}
+                                fill
+                                sizes="200px"
+                              />
+                            </div>
+                            <ActionIcon
+                              color="red"
+                              style={{
+                                position: 'absolute',
+                                top: 5,
+                                right: 5,
+                                backgroundColor: 'rgba(255,255,255,0.8)',
+                              }}
+                              onClick={() => marcarFotoParaExcluir(foto.id)}
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </div>
+                          <Text size="sm" align="center">
+                            {foto.legenda || 'Sem legenda'}
+                          </Text>
+                        </Card>
+                      ))}
+                    </Group>
+                  </>
+                )}
+
+                {/* Novas fotos */}
+                {fotosAdicionais.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Novas Fotos
+                    </Title>
+                    {fotosAdicionais.map((foto, index) => (
+                      <Card key={index} withBorder p="md" radius="md" mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Foto Nova {index + 1}</Text>
+                          <ActionIcon color="red" onClick={() => removerFoto(index)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+
+                        <FileInput
+                          label="Imagem"
+                          description="Selecione uma imagem"
+                          accept="image/png,image/jpeg,image/webp"
+                          icon={<IconUpload size={14} />}
+                          value={foto}
+                          onChange={(file) => atualizarFoto(file, index)}
+                          mb="md"
+                        />
+
+                        <TextInput
+                          label="Legenda"
+                          placeholder="Legenda da foto"
+                          value={legendasFotos[index] || ''}
+                          onChange={(e) => atualizarLegenda(e.target.value, index)}
+                        />
+                      </Card>
+                    ))}
+                  </>
+                )}
+
+                {fotosExistentes.length === 0 && fotosAdicionais.length === 0 && (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhuma foto adicionada. Clique em &quot;Adicionar Foto&quot; para
+                    incluir fotos.
+                  </Text>
+                )}
+                <Divider my="md" label="Videos" labelPosition="center" />
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Vídeos</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarVideo}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Vídeo
+                  </Button>
+                </Group>
+
+                <SimpleGrid
+                  cols={3}
+                  spacing="md"
+                  breakpoints={[
+                    { maxWidth: 'sm', cols: 1 },
+                    { maxWidth: 'md', cols: 2 },
+                  ]}
+                >
+                  {videosExistentes.map((video) => (
+                    <Box key={video.id} style={{ width: 300, height: 200 }}>
+                      <Group position="apart" mb="xs">
+                        <Text weight={500} size="sm" truncate>
+                          {video.titulo}
+                        </Text>
+                        <ActionIcon
+                          color="red"
+                          onClick={() => marcarVideoParaExcluir(video.id)}
+                        >
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      </Group>
+                      <VideoPreview url={video.url} height={150} />
+                    </Box>
+                  ))}
+                </SimpleGrid>
+
+                {/* Novos vídeos */}
+                {videosNovos.length > 0 && (
+                  <>
+                    <Title order={4} mb="md">
+                      Novos Vídeos
+                    </Title>
+                    {videosNovos.map((video, index) => (
+                      <Card key={index} withBorder p="md" radius="md" mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Vídeo Novo {index + 1}</Text>
+                          <ActionIcon color="red" onClick={() => removerVideo(index)}>
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+
+                        <TextInput
+                          label="Título"
+                          placeholder="Título do vídeo"
+                          value={video.titulo}
+                          onChange={(e) =>
+                            atualizarVideo('titulo', e.target.value, index)
+                          }
+                          mb="md"
+                        />
+
+                        <TextInput
+                          label="URL"
+                          placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
+                          value={video.url}
+                          onChange={(e) => atualizarVideo('url', e.target.value, index)}
+                        />
+                      </Card>
+                    ))}
+                  </>
+                )}
+
+                {videosExistentes.length === 0 && videosNovos.length === 0 && (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhum vídeo adicionado. Clique em &quot;Adicionar Vídeo&quot; para
+                    incluir vídeos.
+                  </Text>
+                )}
+                <Divider my="md" label="Links de trabalho" labelPosition="center" />
+
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Links de Trabalho</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarLinkTrabalho}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Link
+                  </Button>
+                </Group>
+
+                <TextInput
+                  label="Link de Trabalho 1"
+                  placeholder="https://exemplo.com"
+                  {...form.getInputProps('link_trabalho_1')}
+                  mb="md"
+                />
+
+                <TextInput
+                  label="Link de Trabalho 2"
+                  placeholder="https://exemplo.com"
+                  {...form.getInputProps('link_trabalho_2')}
+                  mb="md"
+                />
+
+                {linksTrabalho.map((link, index) => (
+                  <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
+                    <TextInput
+                      label={`Link de Trabalho ${index + 3}`}
+                      placeholder="https://exemplo.com"
+                      value={link}
+                      onChange={(e) => atualizarLinkTrabalho(e.target.value, index)}
+                      rightSection={
+                        <ActionIcon
+                          color="red"
+                          onClick={() => removerLinkTrabalho(index)}
+                        >
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      }
+                    />
+                  </div>
+                ))}
               </Card>
             </Tabs.Panel>
 
@@ -1079,11 +1360,51 @@ export default function EditarCasting() {
                     {...form.getInputProps('CPF')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
+
+                  <TextInput
+                    label="PIS"
+                    placeholder="Número do PIS"
+                    icon={<IconId size={14} />}
+                    {...form.getInputProps('PIS')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                </SimpleGrid>
+                <SimpleGrid cols={3} mb="md">
                   <TextInput
                     label="CNH"
                     placeholder="Número da CNH"
                     {...form.getInputProps('CNH')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  <MultiSelect
+                    label="Categorias"
+                    placeholder="Selecione as categorias"
+                    data={[
+                      { value: 'A', label: 'A - Motos' },
+                      { value: 'B', label: 'B - Carros' },
+                      { value: 'C', label: 'C - Veículos de carga acima de 3,5t' },
+                      { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
+                      {
+                        value: 'E',
+                        label: 'E - Veículos com unidade acoplada acima de 6t',
+                      },
+                    ]}
+                    searchable
+                    clearable
+                    {...form.getInputProps('habilitacao_categorias')}
+                    mb="md"
+                  />
+
+                  <DateInput
+                    label="Validade da CNH"
+                    placeholder="Selecione a data"
+                    valueFormat="DD/MM/YYYY"
+                    {...form.getInputProps('habilitacao_validade')}
+                    mb="md"
+                    popoverProps={{
+                      zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
+                      withinPortal: true, // Renderiza o calendário dentro de um portal para evitar problemas de z-index
+                    }}
                   />
                 </SimpleGrid>
 
@@ -1209,282 +1530,6 @@ export default function EditarCasting() {
 
                   <RichTextEditor.Content />
                 </RichTextEditor>
-              </Card>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="midia">
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Group position="apart" mb="lg">
-                  <Title order={3}>Fotos</Title>
-                  <Button
-                    leftIcon={<IconPlus size={16} />}
-                    variant="outline"
-                    onClick={adicionarFoto}
-                    styles={{
-                      root: {
-                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                      },
-                    }}
-                  >
-                    Adicionar Foto
-                  </Button>
-                </Group>
-
-                {/* Fotos existentes */}
-                {fotosExistentes.length > 0 && (
-                  <>
-                    <Title order={4} mb="md">
-                      Fotos Existentes
-                    </Title>
-                    <Group mb="xl">
-                      {fotosExistentes.map((foto) => (
-                        <Card
-                          key={foto.id}
-                          withBorder
-                          p="md"
-                          radius="md"
-                          style={{ width: 200 }}
-                        >
-                          <div style={{ position: 'relative' }}>
-                            <div
-                              style={{
-                                width: '100%',
-                                height: 150,
-                                position: 'relative',
-                                overflow: 'hidden',
-                                borderRadius: '4px',
-                                marginBottom: 10,
-                              }}
-                            >
-                              <Image
-                                src={foto.imagem}
-                                alt={foto.legenda || 'Foto do casting'}
-                                style={{ objectFit: 'cover' }}
-                                fill
-                                sizes="200px"
-                              />
-                            </div>
-                            <ActionIcon
-                              color="red"
-                              style={{
-                                position: 'absolute',
-                                top: 5,
-                                right: 5,
-                                backgroundColor: 'rgba(255,255,255,0.8)',
-                              }}
-                              onClick={() => marcarFotoParaExcluir(foto.id)}
-                            >
-                              <IconTrash size={16} />
-                            </ActionIcon>
-                          </div>
-                          <Text size="sm" align="center">
-                            {foto.legenda || 'Sem legenda'}
-                          </Text>
-                        </Card>
-                      ))}
-                    </Group>
-                  </>
-                )}
-
-                {/* Novas fotos */}
-                {fotosAdicionais.length > 0 && (
-                  <>
-                    <Title order={4} mb="md">
-                      Novas Fotos
-                    </Title>
-                    {fotosAdicionais.map((foto, index) => (
-                      <Card key={index} withBorder p="md" radius="md" mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>Foto Nova {index + 1}</Text>
-                          <ActionIcon color="red" onClick={() => removerFoto(index)}>
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
-
-                        <FileInput
-                          label="Imagem"
-                          description="Selecione uma imagem"
-                          accept="image/png,image/jpeg,image/webp"
-                          icon={<IconUpload size={14} />}
-                          value={foto}
-                          onChange={(file) => atualizarFoto(file, index)}
-                          mb="md"
-                        />
-
-                        <TextInput
-                          label="Legenda"
-                          placeholder="Legenda da foto"
-                          value={legendasFotos[index] || ''}
-                          onChange={(e) => atualizarLegenda(e.target.value, index)}
-                        />
-                      </Card>
-                    ))}
-                  </>
-                )}
-
-                {fotosExistentes.length === 0 && fotosAdicionais.length === 0 && (
-                  <Text color="dimmed" align="center" py="lg">
-                    Nenhuma foto adicionada. Clique em &quot;Adicionar Foto&quot; para
-                    incluir fotos.
-                  </Text>
-                )}
-              </Card>
-
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Group position="apart" mb="lg">
-                  <Title order={3}>Vídeos</Title>
-                  <Button
-                    leftIcon={<IconPlus size={16} />}
-                    variant="outline"
-                    onClick={adicionarVideo}
-                    styles={{
-                      root: {
-                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                        },
-                      },
-                    }}
-                  >
-                    Adicionar Vídeo
-                  </Button>
-                </Group>
-
-                {/* Vídeos existentes */}
-                {videosExistentes.length > 0 && (
-                  <>
-                    <Title order={4} mb="md">
-                      Vídeos Existentes
-                    </Title>
-                    {videosExistentes.map((video) => (
-                      <Card key={video.id} withBorder p="md" radius="md" mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>{video.titulo}</Text>
-                          <ActionIcon
-                            color="red"
-                            onClick={() => marcarVideoParaExcluir(video.id)}
-                          >
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
-                        <Text
-                          component="a"
-                          href={video.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          size="sm"
-                          color="blue"
-                        >
-                          {video.url}
-                        </Text>
-                      </Card>
-                    ))}
-                  </>
-                )}
-
-                {/* Novos vídeos */}
-                {videosNovos.length > 0 && (
-                  <>
-                    <Title order={4} mb="md">
-                      Novos Vídeos
-                    </Title>
-                    {videosNovos.map((video, index) => (
-                      <Card key={index} withBorder p="md" radius="md" mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>Vídeo Novo {index + 1}</Text>
-                          <ActionIcon color="red" onClick={() => removerVideo(index)}>
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
-
-                        <TextInput
-                          label="Título"
-                          placeholder="Título do vídeo"
-                          value={video.titulo}
-                          onChange={(e) =>
-                            atualizarVideo('titulo', e.target.value, index)
-                          }
-                          mb="md"
-                        />
-
-                        <TextInput
-                          label="URL"
-                          placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
-                          value={video.url}
-                          onChange={(e) => atualizarVideo('url', e.target.value, index)}
-                        />
-                      </Card>
-                    ))}
-                  </>
-                )}
-
-                {videosExistentes.length === 0 && videosNovos.length === 0 && (
-                  <Text color="dimmed" align="center" py="lg">
-                    Nenhum vídeo adicionado. Clique em &quot;Adicionar Vídeo&quot; para
-                    incluir vídeos.
-                  </Text>
-                )}
-              </Card>
-
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Group position="apart" mb="lg">
-                  <Title order={3}>Links de Trabalho</Title>
-                  <Button
-                    leftIcon={<IconPlus size={16} />}
-                    variant="outline"
-                    onClick={adicionarLinkTrabalho}
-                    styles={{
-                      root: {
-                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                        },
-                      },
-                    }}
-                  >
-                    Adicionar Link
-                  </Button>
-                </Group>
-
-                <TextInput
-                  label="Link de Trabalho 1"
-                  placeholder="https://exemplo.com"
-                  {...form.getInputProps('link_trabalho_1')}
-                  mb="md"
-                />
-
-                <TextInput
-                  label="Link de Trabalho 2"
-                  placeholder="https://exemplo.com"
-                  {...form.getInputProps('link_trabalho_2')}
-                  mb="md"
-                />
-
-                {linksTrabalho.map((link, index) => (
-                  <div key={index} style={{ position: 'relative', marginBottom: '15px' }}>
-                    <TextInput
-                      label={`Link de Trabalho ${index + 3}`}
-                      placeholder="https://exemplo.com"
-                      value={link}
-                      onChange={(e) => atualizarLinkTrabalho(e.target.value, index)}
-                      rightSection={
-                        <ActionIcon
-                          color="red"
-                          onClick={() => removerLinkTrabalho(index)}
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      }
-                    />
-                  </div>
-                ))}
               </Card>
             </Tabs.Panel>
 
@@ -1669,76 +1714,6 @@ export default function EditarCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
-              </Card>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="idiomas-veiculos">
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Title order={3} mb="lg">
-                  Idiomas
-                </Title>
-
-                <MultiSelect
-                  label="Idiomas"
-                  placeholder="Selecione os idiomas"
-                  data={[
-                    { value: 'portugues', label: 'Português' },
-                    { value: 'ingles', label: 'Inglês' },
-                    { value: 'espanhol', label: 'Espanhol' },
-                    { value: 'frances', label: 'Francês' },
-                    { value: 'italiano', label: 'Italiano' },
-                    { value: 'alemao', label: 'Alemão' },
-                    { value: 'japones', label: 'Japonês' },
-                    { value: 'mandarim', label: 'Mandarim' },
-                    { value: 'russo', label: 'Russo' },
-                    { value: 'arabe', label: 'Árabe' },
-                  ]}
-                  searchable
-                  clearable
-                  {...form.getInputProps('idiomas')}
-                  mb="xl"
-                />
-              </Card>
-
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Title order={3} mb="lg">
-                  Carteira de Habilitação
-                </Title>
-
-                <MultiSelect
-                  label="Categorias"
-                  placeholder="Selecione as categorias"
-                  data={[
-                    { value: 'A', label: 'A - Motocicletas' },
-                    { value: 'B', label: 'B - Carros de passeio' },
-                    { value: 'C', label: 'C - Veículos de carga acima de 3,5 ton' },
-                    { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
-                    { value: 'E', label: 'E - Veículos com reboque' },
-                  ]}
-                  searchable
-                  clearable
-                  {...form.getInputProps('habilitacao_categorias')}
-                  mb="md"
-                />
-
-                <DateInput
-                  label="Validade da CNH"
-                  placeholder="Selecione a data"
-                  valueFormat="DD/MM/YYYY"
-                  {...form.getInputProps('habilitacao_validade')}
-                  mb="lg"
-                />
-              </Card>
-
-              <Card withBorder p="xl" radius="md" mb="xl">
-                <Title order={3} mb="lg">
-                  Veículos
-                </Title>
-
-                <Switch
-                  label="Possui veículo próprio"
-                  {...form.getInputProps('possui_veiculo', { type: 'checkbox' })}
-                />
               </Card>
             </Tabs.Panel>
           </Tabs>

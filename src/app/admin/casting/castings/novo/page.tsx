@@ -93,7 +93,7 @@ export default function NovoCasting() {
       nome_artistico: '',
       genero: 'masculino',
       categoria: '',
-      habilidades: [],
+      habilidades: [] as string[],
       natural_de: '',
       nacionalidade: 'Brasileira',
       etnia: '',
@@ -121,14 +121,13 @@ export default function NovoCasting() {
       RG: '',
       CPF: '',
       tem_passaporte: false,
+      passaporte: '',
+      validade_passaporte: '',
       CNH: '',
       CNPJ: '',
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
-
-      // Biografia e Experiência
-      curriculum_artistico: '',
 
       // Mídia
       link_monologo: '',
@@ -137,14 +136,16 @@ export default function NovoCasting() {
 
       // Contato
       email: '',
-      telefone: '',
-      celular: '',
-      emergencia_nome: '',
-      emergencia_telefone: '',
+      celular_whatsapp: '',
+      link_instagram: '',
+      link_imdb: '',
+      website: '',
+      contato_emergencia_nome: '',
+      contato_emergencia_telefone: '',
 
       // Endereço e Informações Financeiras
-      CEP: '',
-      rua: '',
+      cep: '',
+      logradouro: '',
       numero: '',
       complemento: '',
       bairro: '',
@@ -187,7 +188,11 @@ export default function NovoCasting() {
     content: form.getInputProps('experiencia').value,
     onUpdate: ({ editor }) =>
       form.getInputProps('experiencia').onChange(editor.getHTML()),
-    immediatelyRender: false, // Corrige o problema de hidratação SSR
+    editorProps: {
+      attributes: {
+        class: 'min-h-[150px]',
+      },
+    },
   });
 
   // Carregar dados iniciais (categorias, funções, etc.)
@@ -689,7 +694,7 @@ export default function NovoCasting() {
         </Group>
 
         <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Tabs defaultValue="endereco" mb="xl">
+          <Tabs defaultValue="informacoes-basicas" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
                 Informações Básicas
@@ -697,23 +702,20 @@ export default function NovoCasting() {
               <Tabs.Tab value="caracteristicas" icon={<IconInfoCircle size={14} />}>
                 Características
               </Tabs.Tab>
+              <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
+                Mídia
+              </Tabs.Tab>
               <Tabs.Tab value="documentos" icon={<IconId size={14} />}>
                 Documentos
               </Tabs.Tab>
               <Tabs.Tab value="biografia" icon={<IconAward size={14} />}>
                 Biografia
               </Tabs.Tab>
-              <Tabs.Tab value="midia" icon={<IconMovie size={14} />}>
-                Mídia
-              </Tabs.Tab>
               <Tabs.Tab value="contato" icon={<IconMail size={14} />}>
                 Contato
               </Tabs.Tab>
               <Tabs.Tab value="endereco" icon={<IconCreditCard size={14} />}>
                 Endereço e Finanças
-              </Tabs.Tab>
-              <Tabs.Tab value="idiomas" icon={<IconEdit size={14} />}>
-                Idiomas e Veículos
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="informacoes-basicas">
@@ -937,6 +939,214 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 )}
+
+                <Divider my="md" label="Idiomas" labelPosition="center" />
+                <MultiSelect
+                  label="Idiomas"
+                  placeholder="Selecione os idiomas"
+                  data={[
+                    { value: 'portugues', label: 'Português' },
+                    { value: 'ingles', label: 'Inglês' },
+                    { value: 'espanhol', label: 'Espanhol' },
+                    { value: 'frances', label: 'Francês' },
+                    { value: 'italiano', label: 'Italiano' },
+                    { value: 'alemao', label: 'Alemão' },
+                    { value: 'mandarim', label: 'Mandarim' },
+                    { value: 'japones', label: 'Japonês' },
+                    { value: 'russo', label: 'Russo' },
+                    { value: 'arabe', label: 'Árabe' },
+                    { value: 'hungaro', label: 'Húngaro' },
+                    { value: 'outros', label: 'Outros' },
+                  ]}
+                  searchable
+                  clearable
+                  {...form.getInputProps('idiomas')}
+                  mb="xl"
+                />
+              </Card>
+            </Tabs.Panel>
+            <Tabs.Panel value="midia">
+              <Card withBorder p="xl" radius="md" mb="md">
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Fotos</Title>
+                  <Button
+                    leftIcon={<IconPlus size={16} />}
+                    variant="outline"
+                    onClick={adicionarFoto}
+                    styles={{
+                      root: {
+                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                        transition: 'transform 0.3s, box-shadow 0.3s',
+                        '&:hover': {
+                          transform: 'translateY(-3px)',
+                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    Adicionar Foto
+                  </Button>
+                </Group>
+
+                {fotosAdicionais.length === 0 ? (
+                  <Text color="dimmed" align="center" py="lg">
+                    Nenhuma foto adicional. Clique em &quot;Adicionar Foto&quot; para
+                    incluir mais fotos.
+                  </Text>
+                ) : (
+                  fotosAdicionais.map((foto, index) => (
+                    <Card key={index} withBorder p="md" radius="md" mb="md">
+                      <Group position="apart" mb="xs">
+                        <Text weight={500}>Foto {index + 1}</Text>
+                        <ActionIcon color="red" onClick={() => removerFoto(index)}>
+                          <IconTrash size={16} />
+                        </ActionIcon>
+                      </Group>
+
+                      <FileInput
+                        label="Imagem"
+                        description="Selecione uma imagem"
+                        accept="image/png,image/jpeg,image/webp"
+                        icon={<IconUpload size={14} />}
+                        value={foto}
+                        onChange={(file) => atualizarFoto(file, index)}
+                        mb="md"
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      />
+
+                      <TextInput
+                        label="Legenda"
+                        placeholder="Legenda da foto"
+                        value={legendasFotos[index] || ''}
+                        onChange={(e) => atualizarLegenda(e.target.value, index)}
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      />
+                    </Card>
+                  ))
+                )}
+
+                <Group position="apart" mb="lg">
+                  <Title order={3}>Links de Mídia</Title>
+                </Group>
+
+                <>
+                  <Group position="apart" mb="lg">
+                    <Title order={4}>Link de Monólogo</Title>
+                  </Group>
+                  <TextInput
+                    label="Link de Monólogo"
+                    placeholder="URL do monólogo ou apresentação"
+                    icon={<IconMovie size={14} />}
+                    {...form.getInputProps('link_monologo')}
+                    mb="xs"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  {form.values.link_monologo && (
+                    <VideoPreview url={form.values.link_monologo} height={280} />
+                  )}
+                </>
+
+                <Divider my="md" label="Links de Trabalho" labelPosition="center" />
+
+                {/* Links de Trabalho 1 e 2 (já existentes no form) */}
+                <SimpleGrid cols={2} mb="md">
+                  <TextInput
+                    label="Link de Trabalho 1"
+                    placeholder="URL de algum trabalho realizado"
+                    icon={<IconMovie size={14} />}
+                    {...form.getInputProps('link_trabalho_1')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  {form.values.link_trabalho_1 && (
+                    <VideoPreview url={form.values.link_trabalho_1} height={280} />
+                  )}
+
+                  <TextInput
+                    label="Link de Trabalho 2"
+                    placeholder="URL de outro trabalho realizado"
+                    icon={<IconMovie size={14} />}
+                    {...form.getInputProps('link_trabalho_2')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  {form.values.link_trabalho_2 && (
+                    <VideoPreview url={form.values.link_trabalho_2} height={280} />
+                  )}
+                </SimpleGrid>
+
+                {/* Links de Trabalho adicionais (3 a 7) */}
+                {linksTrabalho.map(
+                  (link, index) =>
+                    index >= 2 && (
+                      <Box key={`trabalho_${index + 1}`} mb="md">
+                        <Group position="apart" mb="xs">
+                          <Text weight={500}>Link de Trabalho {index + 1}</Text>
+                          <ActionIcon
+                            color="red"
+                            onClick={() => {
+                              const novosLinks = [...linksTrabalho];
+                              novosLinks.splice(index, 1);
+                              setLinksTrabalho(novosLinks);
+                            }}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
+                        <TextInput
+                          placeholder={`URL do trabalho ${index + 1}`}
+                          icon={<IconMovie size={14} />}
+                          value={link}
+                          onChange={(e) => {
+                            const novosLinks = [...linksTrabalho];
+                            novosLinks[index] = e.target.value;
+                            setLinksTrabalho(novosLinks);
+                          }}
+                          ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                        />
+                        {link && <VideoPreview url={link} height={280} />}
+                      </Box>
+                    ),
+                )}
+
+                {/* Botão para adicionar mais links de trabalho */}
+                {linksTrabalho.length < 9 && (
+                  <Group position="center" mt="md">
+                    <Button
+                      leftIcon={<IconPlus size={16} />}
+                      variant="outline"
+                      onClick={() => {
+                        // Verificar se o último link foi preenchido
+                        const ultimoLink = linksTrabalho[linksTrabalho.length - 1];
+                        if (!ultimoLink) {
+                          notifications.show({
+                            title: 'Campo vazio',
+                            message: 'Preencha o link atual antes de adicionar outro.',
+                            color: 'yellow',
+                          });
+                          return;
+                        }
+
+                        // Adicionar novo link vazio
+                        setLinksTrabalho([...linksTrabalho, '']);
+                      }}
+                      styles={{
+                        root: {
+                          borderColor: isDark
+                            ? '#9333ea !important'
+                            : '#7e22ce !important',
+                          color: isDark ? '#9333ea !important' : '#7e22ce !important',
+                          transition: 'transform 0.3s, box-shadow 0.3s',
+                          '&:hover': {
+                            transform: 'translateY(-3px)',
+                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+                          },
+                        },
+                      }}
+                    >
+                      Adicionar Link de Trabalho
+                    </Button>
+                  </Group>
+                )}
               </Card>
             </Tabs.Panel>
 
@@ -971,10 +1181,50 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <TextInput
+                    label="PIS"
+                    placeholder="Número do PIS"
+                    icon={<IconId size={14} />}
+                    {...form.getInputProps('PIS')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                </SimpleGrid>
+
+                <SimpleGrid cols={3} mb="md">
+                  <TextInput
                     label="CNH"
                     placeholder="Número da CNH"
                     {...form.getInputProps('CNH')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                  />
+                  <MultiSelect
+                    label="Categorias"
+                    placeholder="Selecione as categorias"
+                    data={[
+                      { value: 'A', label: 'A - Motos' },
+                      { value: 'B', label: 'B - Carros' },
+                      { value: 'C', label: 'C - Veículos de carga acima de 3,5t' },
+                      { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
+                      {
+                        value: 'E',
+                        label: 'E - Veículos com unidade acoplada acima de 6t',
+                      },
+                    ]}
+                    searchable
+                    clearable
+                    {...form.getInputProps('habilitacao_categorias')}
+                    mb="md"
+                  />
+
+                  <DateInput
+                    label="Validade da CNH"
+                    placeholder="Selecione a data"
+                    valueFormat="DD/MM/YYYY"
+                    {...form.getInputProps('habilitacao_validade')}
+                    mb="md"
+                    popoverProps={{
+                      zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
+                      withinPortal: true, // Renderiza o calendário dentro de um portal para evitar problemas de z-index
+                    }}
                   />
                 </SimpleGrid>
 
@@ -1101,197 +1351,6 @@ export default function NovoCasting() {
 
                   <RichTextEditor.Content />
                 </RichTextEditor>
-              </Card>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="midia">
-              <Card withBorder p="xl" radius="md" mb="md">
-                <Group position="apart" mb="lg">
-                  <Title order={3}>Fotos Adicionais</Title>
-                  <Button
-                    leftIcon={<IconPlus size={16} />}
-                    variant="outline"
-                    onClick={adicionarFoto}
-                    styles={{
-                      root: {
-                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                        },
-                      },
-                    }}
-                  >
-                    Adicionar Foto
-                  </Button>
-                </Group>
-
-                {fotosAdicionais.length === 0 ? (
-                  <Text color="dimmed" align="center" py="lg">
-                    Nenhuma foto adicional. Clique em &quot;Adicionar Foto&quot; para
-                    incluir mais fotos.
-                  </Text>
-                ) : (
-                  fotosAdicionais.map((foto, index) => (
-                    <Card key={index} withBorder p="md" radius="md" mb="md">
-                      <Group position="apart" mb="xs">
-                        <Text weight={500}>Foto {index + 1}</Text>
-                        <ActionIcon color="red" onClick={() => removerFoto(index)}>
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Group>
-
-                      <FileInput
-                        label="Imagem"
-                        description="Selecione uma imagem"
-                        accept="image/png,image/jpeg,image/webp"
-                        icon={<IconUpload size={14} />}
-                        value={foto}
-                        onChange={(file) => atualizarFoto(file, index)}
-                        mb="md"
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-
-                      <TextInput
-                        label="Legenda"
-                        placeholder="Legenda da foto"
-                        value={legendasFotos[index] || ''}
-                        onChange={(e) => atualizarLegenda(e.target.value, index)}
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-                    </Card>
-                  ))
-                )}
-              </Card>
-
-              <Card withBorder p="xl" radius="md" mb="md">
-                <Group position="apart" mb="lg">
-                  <Title order={3}>Links de Mídia</Title>
-                </Group>
-
-                <div>
-                  <Group position="apart" mb="lg">
-                    <Title order={4}>Link de Monólogo</Title>
-                  </Group>
-                  <TextInput
-                    label="Link de Monólogo"
-                    placeholder="URL do monólogo ou apresentação"
-                    icon={<IconMovie size={14} />}
-                    {...form.getInputProps('link_monologo')}
-                    mb="xs"
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                  {form.values.link_monologo && (
-                    <VideoPreview url={form.values.link_monologo} height={280} />
-                  )}
-                </div>
-
-                <Divider my="md" label="Links de Trabalho" labelPosition="center" />
-
-                {/* Links de Trabalho 1 e 2 (já existentes no form) */}
-                <SimpleGrid cols={2} mb="md">
-                  <div>
-                    <TextInput
-                      label="Link de Trabalho 1"
-                      placeholder="URL de algum trabalho realizado"
-                      icon={<IconMovie size={14} />}
-                      {...form.getInputProps('link_trabalho_1')}
-                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                    />
-                    {form.values.link_trabalho_1 && (
-                      <VideoPreview url={form.values.link_trabalho_1} height={280} />
-                    )}
-                  </div>
-
-                  <div>
-                    <TextInput
-                      label="Link de Trabalho 2"
-                      placeholder="URL de outro trabalho realizado"
-                      icon={<IconMovie size={14} />}
-                      {...form.getInputProps('link_trabalho_2')}
-                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                    />
-                    {form.values.link_trabalho_2 && (
-                      <VideoPreview url={form.values.link_trabalho_2} height={280} />
-                    )}
-                  </div>
-                </SimpleGrid>
-
-                {/* Links de Trabalho adicionais (3 a 7) */}
-                {linksTrabalho.map(
-                  (link, index) =>
-                    index >= 2 && (
-                      <Box key={`trabalho_${index + 1}`} mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>Link de Trabalho {index + 1}</Text>
-                          <ActionIcon
-                            color="red"
-                            onClick={() => {
-                              const novosLinks = [...linksTrabalho];
-                              novosLinks.splice(index, 1);
-                              setLinksTrabalho(novosLinks);
-                            }}
-                          >
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
-                        <TextInput
-                          placeholder={`URL do trabalho ${index + 1}`}
-                          icon={<IconMovie size={14} />}
-                          value={link}
-                          onChange={(e) => {
-                            const novosLinks = [...linksTrabalho];
-                            novosLinks[index] = e.target.value;
-                            setLinksTrabalho(novosLinks);
-                          }}
-                          ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                        />
-                        {link && <VideoPreview url={link} height={280} />}
-                      </Box>
-                    ),
-                )}
-
-                {/* Botão para adicionar mais links de trabalho */}
-                {linksTrabalho.length < 9 && (
-                  <Group position="center" mt="md">
-                    <Button
-                      leftIcon={<IconPlus size={16} />}
-                      variant="outline"
-                      onClick={() => {
-                        // Verificar se o último link foi preenchido
-                        const ultimoLink = linksTrabalho[linksTrabalho.length - 1];
-                        if (!ultimoLink) {
-                          notifications.show({
-                            title: 'Campo vazio',
-                            message: 'Preencha o link atual antes de adicionar outro.',
-                            color: 'yellow',
-                          });
-                          return;
-                        }
-
-                        // Adicionar novo link vazio
-                        setLinksTrabalho([...linksTrabalho, '']);
-                      }}
-                      styles={{
-                        root: {
-                          borderColor: isDark
-                            ? '#9333ea !important'
-                            : '#7e22ce !important',
-                          color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                          transition: 'transform 0.3s, box-shadow 0.3s',
-                          '&:hover': {
-                            transform: 'translateY(-3px)',
-                            boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                          },
-                        },
-                      }}
-                    >
-                      Adicionar Link de Trabalho
-                    </Button>
-                  </Group>
-                )}
               </Card>
             </Tabs.Panel>
 
@@ -1483,133 +1542,6 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
-              </Card>
-            </Tabs.Panel>
-
-            <Tabs.Panel value="idiomas">
-              <Card withBorder p="xl" radius="md" mb="md">
-                <Title order={3} mb="lg">
-                  Idiomas
-                </Title>
-
-                <MultiSelect
-                  label="Idiomas"
-                  placeholder="Selecione os idiomas que domina"
-                  data={[
-                    { value: 'portugues', label: 'Português' },
-                    { value: 'ingles', label: 'Inglês' },
-                    { value: 'espanhol', label: 'Espanhol' },
-                    { value: 'frances', label: 'Francês' },
-                    { value: 'italiano', label: 'Italiano' },
-                    { value: 'alemao', label: 'Alemão' },
-                    { value: 'mandarim', label: 'Mandarim' },
-                    { value: 'japones', label: 'Japonês' },
-                    { value: 'russo', label: 'Russo' },
-                    { value: 'arabe', label: 'Árabe' },
-                    { value: 'hungaro', label: 'Húngaro' },
-                    { value: 'outros', label: 'Outros' },
-                  ]}
-                  {...form.getInputProps('idiomas')}
-                  mb="md"
-                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                />
-
-                <Divider my="md" label="Veículos" labelPosition="center" />
-
-                <Card withBorder p="sm" radius="md" mb="md">
-                  <Title order={4} mb="sm">
-                    Habilitação
-                  </Title>
-
-                  <MultiSelect
-                    label="Categorias de Habilitação"
-                    placeholder="Selecione as categorias de habilitação que possui"
-                    data={[
-                      { value: 'A', label: 'A - Motos' },
-                      { value: 'B', label: 'B - Carros' },
-                      { value: 'C', label: 'C - Veículos de carga acima de 3,5t' },
-                      { value: 'D', label: 'D - Veículos com mais de 8 passageiros' },
-                      {
-                        value: 'E',
-                        label: 'E - Veículos com unidade acoplada acima de 6t',
-                      },
-                    ]}
-                    {...form.getInputProps('habilitacao_categorias')}
-                    mb="md"
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <DateInput
-                    label="Validade da CNH"
-                    placeholder="Data de validade da CNH"
-                    valueFormat="DD/MM/YYYY"
-                    {...form.getInputProps('habilitacao_validade')}
-                    mb="md"
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                    popoverProps={{
-                      zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
-                      withinPortal: true, // Renderiza o calendário dentro de um portal para evitar problemas de z-index
-                    }}
-                  />
-                </Card>
-
-                <Group position="apart" mb="lg">
-                  <Title order={4}>Veículos</Title>
-                  <Button
-                    leftIcon={<IconPlus size={16} />}
-                    variant="outline"
-                    onClick={adicionarVideo}
-                    styles={{
-                      root: {
-                        borderColor: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        color: isDark ? '#9333ea !important' : '#7e22ce !important',
-                        transition: 'transform 0.3s, box-shadow 0.3s',
-                        '&:hover': {
-                          transform: 'translateY(-3px)',
-                          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
-                        },
-                      },
-                    }}
-                  >
-                    Adicionar Veículo
-                  </Button>
-                </Group>
-
-                {videos.length === 0 ? (
-                  <Text color="dimmed" align="center" py="lg">
-                    Nenhum veículo adicionado. Clique em &quot;Adicionar Veículo&quot;
-                    para incluir os veículos do casting.
-                  </Text>
-                ) : (
-                  videos.map((video, index) => (
-                    <Card key={index} withBorder p="md" radius="md" mb="md">
-                      <Group position="apart" mb="xs">
-                        <Text weight={500}>Veículo {index + 1}</Text>
-                        <ActionIcon color="red" onClick={() => removerVideo(index)}>
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Group>
-
-                      <TextInput
-                        label="Marca e Modelo"
-                        placeholder="Ex: Honda Civic, Yamaha Factor, etc."
-                        value={video}
-                        onChange={(e) => atualizarVideo(e.target.value, index)}
-                        icon={<IconCar size={14} />}
-                        mb="md"
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-
-                      <TextInput
-                        label="Ano"
-                        placeholder="Ano do veículo"
-                        value={descricaoVideos[index] || ''}
-                        onChange={(e) => atualizarDescricaoVideo(e.target.value, index)}
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-                    </Card>
-                  ))
-                )}
               </Card>
             </Tabs.Panel>
           </Tabs>

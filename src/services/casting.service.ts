@@ -128,7 +128,7 @@ export interface CastingDetalhado extends CastingResumido {
 
   // Contato
   email?: string;
-  telefone_1?: string;
+  telefone?: string;
   telefone_2?: string;
   contato_emergencia_nome?: string;
   contato_emergencia_telefone?: string;
