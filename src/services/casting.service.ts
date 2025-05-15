@@ -107,6 +107,7 @@ export interface CastingDetalhado {
   razao_social?: string;
   inscricao_estadual?: string;
   possui_nota_propria?: boolean;
+  possui_exclusividade?: boolean;
 
   //biografia e experiencia
   biografia?: string;
@@ -443,7 +444,7 @@ export const CastingService = {
     console.log(`Enviando vídeo para casting ${castingId}`, video);
 
     const response = await api.post<Video>(
-      `/api/casting/castings/${castingId}/videos/`,
+      `/api/casting/castings/${castingId}/add_video/`,
       video,
       {
         headers: {

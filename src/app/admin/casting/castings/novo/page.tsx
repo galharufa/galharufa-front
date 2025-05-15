@@ -27,6 +27,7 @@ import {
   Divider,
   SimpleGrid,
   Box,
+  Flex,
 } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -46,9 +47,11 @@ import Image from 'next/image';
 import { notifications } from '@mantine/notifications';
 import {
   banksList,
+  castingType,
   corCabelo,
   errorToast,
   genderData,
+  languages,
   successToast,
   tipoCabelo,
 } from '@/utils';
@@ -134,6 +137,13 @@ export default function NovoCasting() {
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
+
+      // Campos de exclusividade do casting
+      exclusividade_outro_agente: false,
+      info_exclusividade: '',
+      aceita_figuracao: false,
+      outras_plataformas_busca_elenco: false,
+      info_outras_plataformas_descricao: '',
 
       // Biografia e Experiência
       biografia: '',
@@ -422,7 +432,6 @@ export default function NovoCasting() {
       formData.set('categoria', values.categoria);
 
       // Tipo (categoria)
-      if (values.tipo) formData.set('tipo', values.tipo);
 
       // Naturalidade e informações de origem
       if (values.natural_de) formData.set('natural_de', values.natural_de);
@@ -456,37 +465,24 @@ export default function NovoCasting() {
       if (values.RG) formData.set('RG', values.RG);
       if (values.CPF) formData.set('CPF', values.CPF);
       formData.set('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
+      if (values.passaporte) formData.set('passaporte', values.passaporte);
+      if (values.validade_passaporte)
+        formData.set('validade_passaporte', values.validade_passaporte);
       if (values.CNPJ) formData.set('CNPJ', values.CNPJ);
       if (values.razao_social) formData.set('razao_social', values.razao_social);
       if (values.inscricao_estadual)
         formData.set('inscricao_estadual', values.inscricao_estadual);
       formData.set('possui_nota_propria', values.possui_nota_propria ? 'true' : 'false');
-      if (values.cnh) formData.set('cnh', values.cnh);
+      if (values.CNH) formData.set('CNH', values.CNH);
+      if (values.PIS) formData.set('PIS', values.PIS);
 
       // Currículo e habilidades
       if (values.habilidades)
         formData.set('habilidades', JSON.stringify(values.habilidades));
       if (values.habilidade_especifica)
-        formData.set('habilidade_especifica', values.habilidade_especifica);
-      if (values.outros_esportes) formData.set('outros_esportes', values.outros_esportes);
-      if (values.outras_modalidades_circenses)
-        formData.set('outras_modalidades_circenses', values.outras_modalidades_circenses);
-      if (values.outros_instrumentos)
         formData.set('outros_instrumentos', values.outros_instrumentos);
       if (values.terno) formData.set('terno', values.terno);
       if (values.camisa) formData.set('camisa', values.camisa);
-
-      // Links de mídia
-      // if (values.link_trabalho_1) formData.set('link_trabalho_1', values.link_trabalho_1);
-      // if (values.link_trabalho_2) formData.set('link_trabalho_2', values.link_trabalho_2);
-
-      // // Links de trabalho adicionais (3 a 7)
-      // linksTrabalho.forEach((link, index) => {
-      //   if (index >= 2 && link) {
-      //     // A partir do link 3 (índice 2)
-      //     formData.set(`link_trabalho_${index + 1}`, link);
-      //   }
-      // });
 
       // Contato
       if (values.celular_whatsapp)
@@ -496,12 +492,22 @@ export default function NovoCasting() {
       if (values.link_instagram) formData.set('link_instagram', values.link_instagram);
 
       // Exclusividade e informações adicionais
+      formData.set(
+        'exclusividade_outro_agente',
+        values.exclusividade_outro_agente ? 'true' : 'false',
+      );
       if (values.info_exclusividade)
         formData.set('info_exclusividade', values.info_exclusividade);
+      formData.set('aceita_figuracao', values.aceita_figuracao ? 'true' : 'false');
       formData.set(
-        'exclusividade_outro_age',
-        values.exclusividade_outro_age ? 'true' : 'false',
+        'outras_plataformas_busca_elenco',
+        values.outras_plataformas_busca_elenco ? 'true' : 'false',
       );
+      if (values.info_outras_plataformas_descricao)
+        formData.set(
+          'info_outras_plataformas_descricao',
+          values.info_outras_plataformas_descricao,
+        );
 
       // Informações bancárias
       if (values.pix_tipo) formData.set('pix_tipo', values.pix_tipo);
@@ -787,10 +793,7 @@ export default function NovoCasting() {
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
-                    data={categorias.map((cat) => ({
-                      value: cat.id.toString(),
-                      label: cat.nome,
-                    }))}
+                    data={castingType}
                     required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
@@ -1022,20 +1025,7 @@ export default function NovoCasting() {
                 <MultiSelect
                   label="Idiomas"
                   placeholder="Selecione os idiomas"
-                  data={[
-                    { value: 'portugues', label: 'Português' },
-                    { value: 'ingles', label: 'Inglês' },
-                    { value: 'espanhol', label: 'Espanhol' },
-                    { value: 'frances', label: 'Francês' },
-                    { value: 'italiano', label: 'Italiano' },
-                    { value: 'alemao', label: 'Alemão' },
-                    { value: 'mandarim', label: 'Mandarim' },
-                    { value: 'japones', label: 'Japonês' },
-                    { value: 'russo', label: 'Russo' },
-                    { value: 'arabe', label: 'Árabe' },
-                    { value: 'hungaro', label: 'Húngaro' },
-                    { value: 'outros', label: 'Outros' },
-                  ]}
+                  data={languages}
                   searchable
                   clearable
                   {...form.getInputProps('idiomas')}
@@ -1342,36 +1332,100 @@ export default function NovoCasting() {
                   labelPosition="center"
                 />
 
-                <SimpleGrid cols={3} mb="md">
-                  <TextInput
-                    label="CNPJ"
-                    placeholder="Número do CNPJ"
-                    icon={<IconCreditCard size={14} />}
-                    {...form.getInputProps('CNPJ')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Razão Social"
-                    placeholder="Razão Social da empresa"
-                    {...form.getInputProps('razao_social')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Inscrição Estadual"
-                    placeholder="Número da Inscrição Estadual"
-                    {...form.getInputProps('inscricao_estadual')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                </SimpleGrid>
-
                 <Switch
                   label="Possui Nota Própria"
                   {...form.getInputProps('possui_nota_propria', { type: 'checkbox' })}
                   mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
+
+                {form.values.possui_nota_propria && (
+                  <SimpleGrid cols={3} mb="md">
+                    <TextInput
+                      label="CNPJ"
+                      placeholder="Número do CNPJ"
+                      icon={<IconCreditCard size={14} />}
+                      {...form.getInputProps('CNPJ')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+
+                    <TextInput
+                      label="Razão Social"
+                      placeholder="Razão Social da empresa"
+                      {...form.getInputProps('razao_social')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+
+                    <TextInput
+                      label="Inscrição Estadual"
+                      placeholder="Número da Inscrição Estadual"
+                      {...form.getInputProps('inscricao_estadual')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+                  </SimpleGrid>
+                )}
+
+                <Divider
+                  my="md"
+                  label="Informações sobre Exclusividade"
+                  labelPosition="center"
+                />
+                <Switch
+                  label="Possui exclusividade com outro agente/agência para conteúdo ou publicidade?"
+                  {...form.getInputProps('exclusividade_outro_agente', {
+                    type: 'checkbox',
+                  })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+
+                {form.values.exclusividade_outro_agente && (
+                  <Flex align="end" gap="md">
+                    <TextInput
+                      label="Informe com qual agência você tem exclusividade"
+                      placeholder="BAA, outras..."
+                      icon={<IconCreditCard size={14} />}
+                      {...form.getInputProps('info_exclusividade')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      style={{ flexGrow: 1 }} // ocupa o espaço restante
+                    />
+                    <Box pt={22}>
+                      <Switch
+                        label="Aceita figuração?"
+                        {...form.getInputProps('aceita_figuracao', {
+                          type: 'checkbox',
+                        })}
+                        mb="md"
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      />
+                    </Box>
+                  </Flex>
+                )}
+                <Divider
+                  my="md"
+                  label="Informações sobre outras plataformas"
+                  labelPosition="center"
+                />
+                <Switch
+                  label="Está registrado em alguma outra plataforma de busca de elenco?"
+                  {...form.getInputProps('outras_plataformas_busca_elenco', {
+                    type: 'checkbox',
+                  })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+
+                {form.values.outras_plataformas_busca_elenco && (
+                  <SimpleGrid cols={1} mb="md">
+                    <TextInput
+                      label="Informe quais outras plataformas"
+                      placeholder="Elenco Digital, etc"
+                      icon={<IconCreditCard size={14} />}
+                      {...form.getInputProps('info_outras_plataformas_descricao')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+                  </SimpleGrid>
+                )}
               </Card>
             </Tabs.Panel>
 
@@ -1464,7 +1518,7 @@ export default function NovoCasting() {
                 <SimpleGrid cols={2} mb="md">
                   <TextInput
                     label="Instagram"
-                    placeholder="@usuario"
+                    placeholder="Url completa com instagram.com"
                     icon={<IconBrandInstagram size={16} />}
                     {...form.getInputProps('link_instagram')}
                     mb="md"
@@ -1486,7 +1540,7 @@ export default function NovoCasting() {
                   <TextInput
                     label="Nome do Contato de Emergência"
                     placeholder="Nome completo"
-                    {...form.getInputProps('emergencia_nome')}
+                    {...form.getInputProps('contato_emergencia_nome')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
@@ -1494,7 +1548,7 @@ export default function NovoCasting() {
                     label="Telefone de Emergência"
                     placeholder="Número de telefone com DDD"
                     icon={<IconPhone size={14} />}
-                    {...form.getInputProps('emergencia_telefone')}
+                    {...form.getInputProps('contato_emergencia_telefone')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
@@ -1630,7 +1684,7 @@ export default function NovoCasting() {
                   <TextInput
                     label="PIX"
                     placeholder="Chave PIX"
-                    {...form.getInputProps('pix')}
+                    {...form.getInputProps('pix_chave')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>

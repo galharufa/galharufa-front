@@ -170,6 +170,7 @@ export const languages = [
   { value: 'russo', label: 'Russo' },
   { value: 'arabe', label: 'Árabe' },
   { value: 'hungaro', label: 'Húngaro' },
+  { value: 'outros', label: 'Outros' },
 ];
 
 export const languagesMap: Record<string, string> = {

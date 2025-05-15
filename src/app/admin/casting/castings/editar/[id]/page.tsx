@@ -27,6 +27,7 @@ import {
   Divider,
   SimpleGrid,
   Box,
+  Flex,
 } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -54,6 +55,8 @@ import {
   etny,
   nationality,
   banksList,
+  languages,
+  castingType,
 } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 
@@ -166,6 +169,13 @@ export default function EditarCasting() {
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
+
+      // Campos de exclusividade do casting
+      exclusividade_outro_agente: false,
+      info_exclusividade: '',
+      aceita_figuracao: false,
+      outras_plataformas_busca_elenco: false,
+      info_outras_plataformas_descricao: '',
 
       // Biografia e Experiência
       biografia: '',
@@ -826,10 +836,7 @@ export default function EditarCasting() {
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
-                    data={categorias.map((cat) => ({
-                      value: cat.id.toString(),
-                      label: cat.nome,
-                    }))}
+                    data={castingType}
                     required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
@@ -1066,20 +1073,7 @@ export default function EditarCasting() {
                 <MultiSelect
                   label="Idiomas"
                   placeholder="Selecione os idiomas"
-                  data={[
-                    { value: 'portugues', label: 'Português' },
-                    { value: 'ingles', label: 'Inglês' },
-                    { value: 'espanhol', label: 'Espanhol' },
-                    { value: 'frances', label: 'Francês' },
-                    { value: 'italiano', label: 'Italiano' },
-                    { value: 'alemao', label: 'Alemão' },
-                    { value: 'mandarim', label: 'Mandarim' },
-                    { value: 'japones', label: 'Japonês' },
-                    { value: 'russo', label: 'Russo' },
-                    { value: 'arabe', label: 'Árabe' },
-                    { value: 'hungaro', label: 'Húngaro' },
-                    { value: 'outros', label: 'Outros' },
-                  ]}
+                  data={languages}
                   searchable
                   clearable
                   {...form.getInputProps('idiomas')}
@@ -1444,36 +1438,100 @@ export default function EditarCasting() {
                   labelPosition="center"
                 />
 
-                <SimpleGrid cols={3} mb="md">
-                  <TextInput
-                    label="CNPJ"
-                    placeholder="Número do CNPJ"
-                    icon={<IconCreditCard size={14} />}
-                    {...form.getInputProps('CNPJ')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Razão Social"
-                    placeholder="Razão Social da empresa"
-                    {...form.getInputProps('razao_social')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-
-                  <TextInput
-                    label="Inscrição Estadual"
-                    placeholder="Número da Inscrição Estadual"
-                    {...form.getInputProps('inscricao_estadual')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                  />
-                </SimpleGrid>
-
                 <Switch
                   label="Possui Nota Própria"
                   {...form.getInputProps('possui_nota_propria', { type: 'checkbox' })}
                   mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
+
+                {form.values.possui_nota_propria && (
+                  <SimpleGrid cols={3} mb="md">
+                    <TextInput
+                      label="CNPJ"
+                      placeholder="Número do CNPJ"
+                      icon={<IconCreditCard size={14} />}
+                      {...form.getInputProps('CNPJ')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+
+                    <TextInput
+                      label="Razão Social"
+                      placeholder="Razão Social da empresa"
+                      {...form.getInputProps('razao_social')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+
+                    <TextInput
+                      label="Inscrição Estadual"
+                      placeholder="Número da Inscrição Estadual"
+                      {...form.getInputProps('inscricao_estadual')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+                  </SimpleGrid>
+                )}
+
+                <Divider
+                  my="md"
+                  label="Informações sobre Exclusividade"
+                  labelPosition="center"
+                />
+                <Switch
+                  label="Possui exclusividade com outro agente/agência para conteúdo ou publicidade?"
+                  {...form.getInputProps('exclusividade_outro_agente', {
+                    type: 'checkbox',
+                  })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+
+                {form.values.exclusividade_outro_agente && (
+                  <Flex align="end" gap="md">
+                    <TextInput
+                      label="Informe com qual agência você tem exclusividade"
+                      placeholder="BAA, outras..."
+                      icon={<IconCreditCard size={14} />}
+                      {...form.getInputProps('info_exclusividade')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      style={{ flexGrow: 1 }} // ocupa o espaço restante
+                    />
+                    <Box pt={22}>
+                      <Switch
+                        label="Aceita figuração?"
+                        {...form.getInputProps('aceita_figuracao', {
+                          type: 'checkbox',
+                        })}
+                        mb="md"
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      />
+                    </Box>
+                  </Flex>
+                )}
+                <Divider
+                  my="md"
+                  label="Informações sobre outras plataformas"
+                  labelPosition="center"
+                />
+                <Switch
+                  label="Está registrado em alguma outra plataforma de busca de elenco?"
+                  {...form.getInputProps('outras_plataformas_busca_elenco', {
+                    type: 'checkbox',
+                  })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+
+                {form.values.outras_plataformas_busca_elenco && (
+                  <SimpleGrid cols={1} mb="md">
+                    <TextInput
+                      label="Informe quais outras plataformas"
+                      placeholder="Elenco Digital, etc"
+                      icon={<IconCreditCard size={14} />}
+                      {...form.getInputProps('info_outras_plataformas_descricao')}
+                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                    />
+                  </SimpleGrid>
+                )}
               </Card>
             </Tabs.Panel>
 
@@ -1724,7 +1782,7 @@ export default function EditarCasting() {
                   <TextInput
                     label="PIX"
                     placeholder="Chave PIX"
-                    {...form.getInputProps('pix')}
+                    {...form.getInputProps('pix_chave')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
