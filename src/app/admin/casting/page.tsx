@@ -414,7 +414,7 @@ export default function CastingAdmin() {
                             )}
                           </td>
                           <td>{casting.nome}</td>
-                          <td>{casting.categoria_nome}</td>
+                          <td>{casting.categoria}</td>
                           <td>
                             {casting.ativo ? (
                               <Text color="green">Ativo</Text>
