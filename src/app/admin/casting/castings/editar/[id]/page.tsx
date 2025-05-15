@@ -594,7 +594,6 @@ export default function EditarCasting() {
             : values.data_nascimento,
         );
       }
-      if (values.ano) formData.append('ano', String(values.ano));
 
       // Características físicas
       if (values.altura) formData.append('altura', String(values.altura));
