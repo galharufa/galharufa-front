@@ -150,7 +150,7 @@ export default function CastingPage() {
               direction="up"
             >
               <span className="bg-white/20 text-white px-3 py-1 rounded-full text-sm">
-                {casting.categoria_nome}
+                {/* {casting.categoria_nome} */}
               </span>
             </AnimatedSection>
           </div>
