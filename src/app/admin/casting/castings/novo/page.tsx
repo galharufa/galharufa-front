@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 'use client';
 
-import React, { useState, useCallback, useMemo, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import {
   Container,
@@ -111,7 +111,6 @@ export default function NovoCasting() {
 
       // Características Físicas
       data_nascimento: null as Date | null,
-      ano: new Date().getFullYear() - 20,
       altura: '',
       peso: '',
       manequim: '',
@@ -128,15 +127,20 @@ export default function NovoCasting() {
       DRT: '',
       RG: '',
       CPF: '',
-      tem_passaporte: false,
-      passaporte: '',
-      validade_passaporte: '',
       CNH: '',
       CNPJ: '',
       PIS: '',
+      tem_passaporte: false,
+      passaporte: '',
+      validade_passaporte: null as Date | null,
       razao_social: '',
       inscricao_estadual: '',
       possui_nota_propria: false,
+
+      // Idiomas
+      idiomas: [] as string[],
+      habilitacao_categorias: [] as string[],
+      habilitacao_validade: null as Date | null,
 
       // Campos de exclusividade do casting
       exclusividade_outro_agente: false,
@@ -171,12 +175,7 @@ export default function NovoCasting() {
       agencia: '',
       conta: '',
       tipo_conta: '',
-      pix: '',
-
-      // Idiomas
-      idiomas: [] as string[],
-      habilitacao_categorias: [] as string[],
-      habilitacao_validade: null as Date | null,
+      pix_chave: '',
     },
     validate: {
       // nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
@@ -444,7 +443,7 @@ export default function NovoCasting() {
             ? values.data_nascimento.toISOString().split('T')[0]
             : values.data_nascimento,
         );
-      if (values.ano) formData.set('ano', String(values.ano));
+      // if (values.ano) formData.set('ano', String(values.ano));
 
       // Características físicas - campos obrigatórios
       formData.set('altura', values.altura);
@@ -467,20 +466,31 @@ export default function NovoCasting() {
       formData.set('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
       if (values.passaporte) formData.set('passaporte', values.passaporte);
       if (values.validade_passaporte)
-        formData.set('validade_passaporte', values.validade_passaporte);
+        formData.set(
+          'validade_passaporte',
+          values.validade_passaporte instanceof Date
+            ? values.validade_passaporte.toISOString().split('T')[0]
+            : values.validade_passaporte,
+        );
       if (values.CNPJ) formData.set('CNPJ', values.CNPJ);
       if (values.razao_social) formData.set('razao_social', values.razao_social);
       if (values.inscricao_estadual)
         formData.set('inscricao_estadual', values.inscricao_estadual);
       formData.set('possui_nota_propria', values.possui_nota_propria ? 'true' : 'false');
       if (values.CNH) formData.set('CNH', values.CNH);
+      if (values.habilitacao_validade)
+        formData.set(
+          'habilitacao_validade',
+          values.habilitacao_validade instanceof Date
+            ? values.habilitacao_validade.toISOString().split('T')[0]
+            : values.habilitacao_validade,
+        );
       if (values.PIS) formData.set('PIS', values.PIS);
 
       // Currículo e habilidades
       if (values.habilidades)
         formData.set('habilidades', JSON.stringify(values.habilidades));
-      if (values.habilidade_especifica)
-        formData.set('outros_instrumentos', values.outros_instrumentos);
+
       if (values.terno) formData.set('terno', values.terno);
       if (values.camisa) formData.set('camisa', values.camisa);
 
@@ -510,7 +520,6 @@ export default function NovoCasting() {
         );
 
       // Informações bancárias
-      if (values.pix_tipo) formData.set('pix_tipo', values.pix_tipo);
       if (values.pix_chave) formData.set('pix_chave', values.pix_chave);
       if (values.dados_bancarios_id)
         formData.set('dados_bancarios_id', values.dados_bancarios_id);
@@ -793,7 +802,10 @@ export default function NovoCasting() {
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
-                    data={castingType}
+                    data={categorias.map((cat) => ({
+                      value: cat.id.toString(),
+                      label: cat.nome,
+                    }))}
                     required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
@@ -1648,7 +1660,7 @@ export default function NovoCasting() {
                     data={banksList}
                     searchable
                     nothingFound="Nada encontrado..."
-                    {...form.getInputProps('categoria')}
+                    {...form.getInputProps('banco')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 

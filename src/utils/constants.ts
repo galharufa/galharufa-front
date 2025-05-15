@@ -1,21 +1,21 @@
 /* eslint-disable camelcase */
-export const castingType = [
-  { value: 'ator_exclusivo', label: 'Atores exclusivos' },
-  { value: 'ator_nao_exclusivo', label: 'Atores não exclusivos' },
-  { value: 'influencer', label: 'Influencers' },
-  { value: 'talento', label: 'Talentos' },
-  { value: 'infantil', label: 'Infantil' },
-  { value: 'criativo', label: 'Criativos' },
-];
+// export const castingType = [
+//   { value: 'ator_exclusivo', label: 'Atores exclusivos' },
+//   { value: 'ator_nao_exclusivo', label: 'Atores não exclusivos' },
+//   { value: 'influencer', label: 'Influencers' },
+//   { value: 'talento', label: 'Talentos' },
+//   { value: 'infantil', label: 'Infantil' },
+//   { value: 'criativo', label: 'Criativos' },
+// ];
 
-export const tipoMap: Record<string, string> = {
-  ator_exclusivo: 'Ator Exclusivo',
-  ator_nao_exclusivo: 'Ator Não Exclusivo',
-  influencer: 'Influencer',
-  talento: 'Talento',
-  infantil: 'Infantil',
-  criativo: 'Criativo',
-};
+// export const tipoMap: Record<string, string> = {
+//   ator_exclusivo: 'Ator Exclusivo',
+//   ator_nao_exclusivo: 'Ator Não Exclusivo',
+//   influencer: 'Influencer',
+//   talento: 'Talento',
+//   infantil: 'Infantil',
+//   criativo: 'Criativo',
+// };
 
 export const etny = [
   { value: 'albina', label: 'Albina' },
@@ -63,7 +63,7 @@ export const banksList = [
   { value: '218', label: 'Banco Bonsucesso' },
   { value: '224', label: 'Banco Fibra' },
   { value: '237', label: 'Bradesco' },
-  { value: '260', label: 'Nu Pagamentos S.A.' },
+  { value: '260', label: 'Nu Pagamentos S.A. / Nubank' },
   { value: '263', label: 'Banco Cacique' },
   { value: '265', label: 'Banco Fator' },
   { value: '318', label: 'Banco BMG' },

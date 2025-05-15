@@ -836,7 +836,10 @@ export default function EditarCasting() {
                   <Select
                     label="Categoria"
                     placeholder="Selecione uma categoria"
-                    data={castingType}
+                    data={categorias.map((cat) => ({
+                      value: cat.id.toString(),
+                      label: cat.nome,
+                    }))}
                     required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
