@@ -169,9 +169,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
                           <h3 className="text-white text-xl font-semibold">
                             {casting.nome_artistico}
                           </h3>
-                          <p className="text-gray-300 text-sm">
-                            {casting.categoria_nome}
-                          </p>
+                          <p className="text-gray-300 text-sm">{casting.categoria}</p>
                         </div>
                       </div>
                     </Link>
