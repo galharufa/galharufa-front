@@ -47,7 +47,6 @@ import Image from 'next/image';
 import { notifications } from '@mantine/notifications';
 import {
   banksList,
-  castingType,
   corCabelo,
   errorToast,
   genderData,

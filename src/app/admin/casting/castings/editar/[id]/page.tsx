@@ -160,7 +160,7 @@ export default function EditarCasting() {
       CPF: '',
       tem_passaporte: false,
       passaporte: '',
-      validade_passaporte: '',
+      validade_passaporte: null as Date | null,
       CNH: '',
       CNPJ: '',
       PIS: '',
@@ -281,6 +281,10 @@ export default function EditarCasting() {
           ? new Date(castingResponse.habilitacao_validade)
           : null;
 
+        const passaporteValidade = castingResponse.validade_passaporte
+          ? new Date(castingResponse.validade_passaporte)
+          : null;
+
         form.setValues({
           nome: castingResponse.nome || '',
           nome_artistico: castingResponse.nome_artistico || '',
@@ -316,9 +320,6 @@ export default function EditarCasting() {
           autoriza_imagem_site: castingResponse.autoriza_imagem_site ?? true,
 
           data_nascimento: dataNascimento,
-          ano: castingResponse.ano
-            ? Number(castingResponse.ano)
-            : new Date().getFullYear() - 20,
           altura: castingResponse.altura ? Number(castingResponse.altura) || 0 : 0,
           peso: castingResponse.peso ? Number(castingResponse.peso) || 0 : 0,
           manequim: castingResponse.manequim ? Number(castingResponse.manequim) || 0 : 0,
@@ -341,7 +342,7 @@ export default function EditarCasting() {
 
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
-          validade_passaporte: castingResponse.validade_passaporte || '',
+          validade_passaporte: passaporteValidade,
           razao_social: castingResponse.razao_social || '',
           inscricao_estadual: castingResponse.inscricao_estadual || '',
           possui_nota_propria: castingResponse.possui_nota_propria || false,
