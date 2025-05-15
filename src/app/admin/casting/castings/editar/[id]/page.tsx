@@ -670,7 +670,7 @@ export default function EditarCasting() {
       if (values.agencia) formData.append('agencia', values.agencia);
       if (values.conta) formData.append('conta', values.conta);
       if (values.tipo_conta) formData.append('tipo_conta', values.tipo_conta);
-      if (values.pix) formData.append('pix', values.pix);
+      if (values.pix_chave) formData.append('pix_chave', values.pix_chave);
 
       // Idiomas e veículos
       if (values.idiomas) formData.append('idiomas', JSON.stringify(values.idiomas));
