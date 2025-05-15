@@ -99,9 +99,9 @@ export default function CastingPage() {
     );
   }
 
-  const tipoCasting = casting.tipo
-    ? tipoMap[casting.tipo] || casting.tipo
-    : 'Não informado';
+  // const tipoCasting = casting.tipo
+  //   ? tipoMap[casting.tipo] || casting.tipo
+  //   : 'Não informado';
   const nacionalidadeCasting = casting.nacionalidade
     ? nacionalidadeMap[casting.nacionalidade] || casting.nacionalidade
     : 'Não informado';
@@ -170,7 +170,7 @@ export default function CastingPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Tipo</h3>
-                  <p className="text-black dark:text-white">{tipoCasting}</p>
+                  <p className="text-black dark:text-white">CategoriaNome</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
                   <p className="text-black dark:text-white">{casting.DRT}</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
