@@ -142,7 +142,6 @@ export default function EditarCasting() {
 
       // Características Físicas
       data_nascimento: null as Date | null,
-      ano: new Date().getFullYear() - 20,
       altura: 0,
       peso: 0,
       manequim: 0,

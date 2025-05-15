@@ -137,7 +137,7 @@ export interface CastingDetalhado {
   agencia?: string;
   conta?: string;
   tipo_conta?: string;
-  pix?: string;
+  pix_chave?: string;
 
   // Habilitação e veículos
   habilitacao_categorias?: string[];
