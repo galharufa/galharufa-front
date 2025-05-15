@@ -56,7 +56,6 @@ import {
   nationality,
   banksList,
   languages,
-  castingType,
 } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 

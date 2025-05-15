@@ -11,7 +11,7 @@ import AnimatedImage from '@/components/shared/AnimatedImage';
 import { CastingDetalhado, CastingService } from '@/services';
 import parse from 'html-react-parser';
 import {
-  tipoMap,
+  // tipoMap,
   etniaMap,
   tipoCabeloMap,
   genderMap,
