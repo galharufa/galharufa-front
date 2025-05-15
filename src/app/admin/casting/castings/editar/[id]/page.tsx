@@ -201,7 +201,7 @@ export default function EditarCasting() {
       agencia: '',
       conta: '',
       tipo_conta: '',
-      pix: '',
+      pix_chave: '',
 
       // Idiomas e Veículos
       idiomas: [] as string[],
@@ -367,7 +367,7 @@ export default function EditarCasting() {
           agencia: castingResponse.agencia || '',
           conta: castingResponse.conta || '',
           tipo_conta: castingResponse.tipo_conta || '',
-          pix: castingResponse.pix || '',
+          pix_chave: castingResponse.pix_chave || '',
 
           idiomas: (castingResponse.idiomas as []) || [],
           habilitacao_categorias: castingResponse.habilitacao_categorias || [],
