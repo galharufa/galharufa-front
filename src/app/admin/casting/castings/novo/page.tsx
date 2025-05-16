@@ -485,6 +485,10 @@ export default function NovoCasting() {
             : values.habilitacao_validade,
         );
       if (values.PIS) formData.set('PIS', values.PIS);
+      if (values.contato_emergencia_nome)
+        formData.set('contato_emergencia_nome', values.contato_emergencia_nome);
+      if (values.contato_emergencia_telefone)
+        formData.set('contato_emergencia_telefone', values.contato_emergencia_telefone);
 
       // Currículo e habilidades
       if (values.habilidades)
@@ -499,6 +503,7 @@ export default function NovoCasting() {
       if (values.email) formData.set('email', values.email);
       if (values.link_imdb) formData.set('link_imdb', values.link_imdb);
       if (values.link_instagram) formData.set('link_instagram', values.link_instagram);
+      if (values.website) formData.set('website', values.website);
 
       // Exclusividade e informações adicionais
       formData.set(
@@ -567,6 +572,72 @@ export default function NovoCasting() {
         errorToast('Você precisa estar autenticado para criar um casting');
         router.push('/admin/login');
         return;
+      }
+
+      // 1️⃣ Enviar casting principal
+      const response = await api.post('/api/casting/castings/', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const casting = response.data;
+      const castingId = casting.id;
+
+      if (values.pix_chave) {
+        await api.post(
+          '/api/casting/dados-bancarios/',
+          {
+            casting: castingId,
+            banco: values.banco || '',
+            agencia: values.agencia || 0,
+            conta: values.conta || 0,
+            digito: values.digito || 0,
+            tipo_conta: values.tipo_conta || '',
+            pix_chave: values.pix_chave,
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+      }
+
+      if (values.idiomas?.length > 0) {
+        await api.post(
+          '/api/casting/idiomas/',
+          {
+            casting: castingId,
+            ingles: values.idiomas.includes('ingles'),
+            nivel_ingles: values.nivel_ingles || 'fluente',
+            portugues: values.idiomas.includes('portugues'),
+            nivel_portugues: values.nivel_portugues || 'fluente',
+            outros_idiomas: values.outros_idiomas || '',
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
+      }
+
+      if (values.cep) {
+        await api.post(
+          '/api/casting/endereco/',
+          {
+            casting: castingId,
+            cep: values.cep,
+            logradouro: values.logradouro || '',
+            numero: values.numero || '',
+            complemento: values.complemento || '',
+            bairro: values.bairro || '',
+            cidade: values.cidade || '',
+            estado: values.estado || '',
+            pais: values.pais || '',
+          },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          },
+        );
       }
 
       // Verificar se o FormData foi criado corretamente - outra forma de debug
