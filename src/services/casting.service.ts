@@ -46,7 +46,7 @@ export interface DadosBancarios {
   agencia: string;
   conta: string;
   tipo_conta: string;
-  pix_chave: string; // ou pix_chave, se você quiser padronizar
+  pix_chave: string;
 }
 
 type NivelIdioma = 'basico' | 'intermediário' | 'avancado' | 'Fluente';
@@ -135,6 +135,12 @@ export interface CastingDetalhado {
   inscricao_estadual?: string;
   possui_nota_propria?: boolean;
   possui_exclusividade?: boolean;
+
+  exclusividade_outro_agente?: boolean;
+  info_exclusividade?: string;
+  aceita_figuracao?: boolean;
+  outras_plataformas_busca_elenco?: boolean;
+  info_outras_plataformas_descricao?: string;
 
   //biografia e experiencia
   biografia?: string;

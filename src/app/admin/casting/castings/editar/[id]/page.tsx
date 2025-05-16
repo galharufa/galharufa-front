@@ -239,6 +239,14 @@ export default function EditarCasting() {
     }
   };
 
+  function parseJsonArray(field: any): string[] {
+    try {
+      return field ? JSON.parse(field) : [];
+    } catch {
+      return [];
+    }
+  }
+
   const dadosCarregados = useRef(false);
 
   // Carregar dados iniciais (categorias, funções, etc.)
@@ -297,21 +305,7 @@ export default function EditarCasting() {
                 ? String(castingResponse.categoria)
                 : '',
 
-          // 🔧 Corrigido: habilidades agora faz parse corretamente
-          habilidades: (() => {
-            try {
-              if (
-                Array.isArray(castingResponse.habilidades) &&
-                castingResponse.habilidades.length > 0
-              ) {
-                return JSON.parse(castingResponse.habilidades[0]);
-              }
-            } catch (e) {
-              console.warn('Erro ao fazer parse de habilidades:', e);
-            }
-            return [];
-          })(),
-
+          habilidades: parseJsonArray(castingResponse.habilidades),
           natural_de: castingResponse.natural_de || '',
           nacionalidade: castingResponse.nacionalidade || 'Brasileira',
           etnia: castingResponse.etnia || '',
@@ -347,6 +341,13 @@ export default function EditarCasting() {
           razao_social: castingResponse.razao_social || '',
           inscricao_estadual: castingResponse.inscricao_estadual || '',
           possui_nota_propria: castingResponse.possui_nota_propria || false,
+          exclusividade_outro_agente: castingResponse.exclusividade_outro_agente || false,
+          info_exclusividade: castingResponse.info_exclusividade || '',
+          aceita_figuracao: castingResponse.aceita_figuracao || false,
+          outras_plataformas_busca_elenco:
+            castingResponse.outras_plataformas_busca_elenco || false,
+          info_outras_plataformas_descricao:
+            castingResponse.info_outras_plataformas_descricao || '',
 
           biografia: castingResponse.biografia || '',
           experiencia: castingResponse.experiencia || '',
@@ -357,6 +358,7 @@ export default function EditarCasting() {
           contato_emergencia_nome: castingResponse.contato_emergencia_nome || '',
           contato_emergencia_telefone: castingResponse.contato_emergencia_telefone || '',
 
+          //endereço
           cep: castingResponse.endereco?.cep || '',
           logradouro: castingResponse.endereco?.logradouro || '',
           numero: castingResponse.endereco?.numero || '',
@@ -364,6 +366,8 @@ export default function EditarCasting() {
           bairro: castingResponse.endereco?.bairro || '',
           cidade: castingResponse.endereco?.cidade || '',
           estado: castingResponse.endereco?.estado || '',
+
+          //dados bancarios
           banco: castingResponse.dados_bancarios?.banco || '',
           agencia: castingResponse.dados_bancarios?.agencia || '',
           conta: castingResponse.dados_bancarios?.conta || '',
@@ -371,10 +375,12 @@ export default function EditarCasting() {
           pix_chave: castingResponse.dados_bancarios?.pix_chave || '',
 
           idiomas: extrairIdiomasAtivos(castingResponse.idiomas),
-          habilitacao_categorias: castingResponse.habilitacao_categorias || [],
+          habilitacao_categorias: parseJsonArray(castingResponse.habilitacao_categorias),
           habilitacao_validade: habilitacaoValidade,
         });
-        console.log(castingResponse);
+        // console.log(castingResponse);
+        console.log('Endereço retornado:', castingResponse.endereco);
+        console.log('Dados Bancários retornado:', castingResponse.dados_bancarios);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
         errorToast('Erro ao carregar dados do casting');
