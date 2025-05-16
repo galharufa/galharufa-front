@@ -68,8 +68,12 @@ export const AuthService = {
   },
 
   async logout(): Promise<void> {
+    const API_URL =
+      process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/';
+    const baseURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+
     try {
-      await api.post('${baseURL}/api/accounts/logout/', {
+      await api.post(`${baseURL}/api/accounts/logout/`, {
         withCredentials: true, // Permitir envio de cookies e credenciais
       });
     } catch (error) {

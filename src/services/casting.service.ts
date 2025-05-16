@@ -57,6 +57,7 @@ export interface Idioma {
 
 export interface CastingResumido extends CastingDetalhado {
   nome_artistico: string;
+  categoria_nome: string;
 }
 
 export interface CastingDetalhado {
@@ -65,6 +66,7 @@ export interface CastingDetalhado {
   nome_artistico: string;
   genero: string;
   categoria: string;
+  categoria_nome: string;
   etnia: string | null;
   data_nascimento: string;
   data_cadastro: string;

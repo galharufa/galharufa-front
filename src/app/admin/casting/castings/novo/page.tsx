@@ -100,6 +100,7 @@ export default function NovoCasting() {
       nome_artistico: '',
       genero: 'masculino',
       categoria: '',
+      categoria_nome: '',
       habilidades: [] as string[],
       natural_de: '',
       nacionalidade: 'Brasileira',
