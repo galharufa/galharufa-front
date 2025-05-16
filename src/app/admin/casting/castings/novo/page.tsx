@@ -623,7 +623,7 @@ export default function NovoCasting() {
 
       if (values.cep) {
         await api.post(
-          '/api/casting/endereco/',
+          '/api/casting/enderecos/',
           {
             casting: castingId,
             cep: values.cep,
