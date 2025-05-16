@@ -339,6 +339,7 @@ export default function EditarCasting() {
           CNH: castingResponse.CNH || '',
           PIS: castingResponse.PIS || '',
           website: castingResponse.website || '',
+          celular_whatsapp: castingResponse.celular_whatsapp,
 
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
@@ -356,23 +357,24 @@ export default function EditarCasting() {
           contato_emergencia_nome: castingResponse.contato_emergencia_nome || '',
           contato_emergencia_telefone: castingResponse.contato_emergencia_telefone || '',
 
-          cep: castingResponse.cep || '',
-          logradouro: castingResponse.logradouro || '',
-          numero: castingResponse.numero || '',
-          complemento: castingResponse.complemento || '',
-          bairro: castingResponse.bairro || '',
-          cidade: castingResponse.cidade || '',
-          estado: castingResponse.estado || '',
-          banco: castingResponse.banco || '',
-          agencia: castingResponse.agencia || '',
-          conta: castingResponse.conta || '',
-          tipo_conta: castingResponse.tipo_conta || '',
-          pix_chave: castingResponse.pix_chave || '',
+          cep: castingResponse.endereco?.cep || '',
+          logradouro: castingResponse.endereco?.logradouro || '',
+          numero: castingResponse.endereco?.numero || '',
+          complemento: castingResponse.endereco?.complemento || '',
+          bairro: castingResponse.endereco?.bairro || '',
+          cidade: castingResponse.endereco?.cidade || '',
+          estado: castingResponse.endereco?.estado || '',
+          banco: castingResponse.dados_bancarios?.banco || '',
+          agencia: castingResponse.dados_bancarios?.agencia || '',
+          conta: castingResponse.dados_bancarios?.conta || '',
+          tipo_conta: castingResponse.dados_bancarios?.tipo_conta || '',
+          pix_chave: castingResponse.dados_bancarios?.pix_chave || '',
 
-          idiomas: (castingResponse.idiomas as []) || [],
+          idiomas: extrairIdiomasAtivos(castingResponse.idiomas),
           habilitacao_categorias: castingResponse.habilitacao_categorias || [],
           habilitacao_validade: habilitacaoValidade,
         });
+        console.log(castingResponse);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
         errorToast('Erro ao carregar dados do casting');
@@ -533,8 +535,26 @@ export default function EditarCasting() {
     setDescricaoVideos(novasDescricoes);
   };
 
+  const extrairIdiomasAtivos = (idiomasObj: any): string[] => {
+    const idiomasDisponiveis = [
+      'ingles',
+      'portugues',
+      'espanhol',
+      'frances',
+      'italiano',
+      'alemao',
+      'mandarim',
+      'japones',
+      'russo',
+      'arabe',
+      'hungaro',
+    ];
+
+    return idiomasDisponiveis.filter((idioma) => idiomasObj?.[idioma] === true);
+  };
+
   // Função para salvar as alterações
-  const handleSubmit = async (values: typeof form.values) => {
+  const handleSubmitUpdate = async (values: typeof form.values) => {
     if (!casting) return;
 
     try {
@@ -785,7 +805,7 @@ export default function EditarCasting() {
           <Title order={2}>Editar Casting</Title>
         </Group>
 
-        <form onSubmit={form.onSubmit(handleSubmit)}>
+        <form onSubmit={form.onSubmit(handleSubmitUpdate)}>
           <Tabs defaultValue="informacoes-basicas" mb="xl">
             <Tabs.List mb="md">
               <Tabs.Tab value="informacoes-basicas" icon={<IconUser size={14} />}>
@@ -1747,7 +1767,7 @@ export default function EditarCasting() {
                     data={banksList}
                     searchable
                     nothingFound="Nada encontrado..."
-                    {...form.getInputProps('categoria')}
+                    {...form.getInputProps('banco')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 

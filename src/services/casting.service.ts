@@ -28,6 +28,27 @@ export interface Video {
   ordem: number;
 }
 
+export interface Endereco {
+  id: string;
+  cep: string;
+  estado: string;
+  cidade: string;
+  bairro: string;
+  logradouro: string;
+  numero: string;
+  complemento: string;
+  pais: string;
+}
+
+export interface DadosBancarios {
+  id: string;
+  banco: string;
+  agencia: string;
+  conta: string;
+  tipo_conta: string;
+  pix_chave: string; // ou pix_chave, se você quiser padronizar
+}
+
 type NivelIdioma = 'basico' | 'intermediário' | 'avancado' | 'Fluente';
 
 export interface Idioma {
@@ -79,6 +100,10 @@ export interface CastingDetalhado {
   ativo: boolean;
   autoriza_imagem_site: boolean;
 
+  //outras tabelas
+  endereco?: Endereco;
+  dados_bancarios?: DadosBancarios;
+
   // Dados de naturalidade
   natural_de?: string;
   nacionalidade: string | null;
@@ -123,23 +148,6 @@ export interface CastingDetalhado {
   website?: string;
   contato_emergencia_nome?: string;
   contato_emergencia_telefone?: string;
-
-  // Endereço
-  cep?: string;
-  logradouro?: string;
-  numero?: string;
-  complemento?: string;
-  bairro?: string;
-  cidade?: string;
-  estado?: string;
-  pais?: string;
-
-  // Finanças
-  banco?: string;
-  agencia?: string;
-  conta?: string;
-  tipo_conta?: string;
-  pix_chave?: string;
 
   // Habilitação e veículos
   habilitacao_categorias?: string[];
