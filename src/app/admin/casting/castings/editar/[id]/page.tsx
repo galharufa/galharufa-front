@@ -585,7 +585,7 @@ export default function EditarCasting() {
       if (values.nacionalidade) formData.append('nacionalidade', values.nacionalidade);
       if (values.etnia) formData.append('etnia', values.etnia);
 
-      // Data de nascimento e ano
+      // Data de nascimento
       if (values.data_nascimento) {
         formData.append(
           'data_nascimento',

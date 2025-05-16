@@ -443,7 +443,6 @@ export default function NovoCasting() {
             ? values.data_nascimento.toISOString().split('T')[0]
             : values.data_nascimento,
         );
-      // if (values.ano) formData.set('ano', String(values.ano));
 
       // Características físicas - campos obrigatórios
       formData.set('altura', values.altura);
@@ -484,6 +483,11 @@ export default function NovoCasting() {
           values.habilitacao_validade instanceof Date
             ? values.habilitacao_validade.toISOString().split('T')[0]
             : values.habilitacao_validade,
+        );
+      if (values.habilitacao_categorias)
+        formData.append(
+          'habilitacao_categorias',
+          JSON.stringify(values.habilitacao_categorias),
         );
       if (values.PIS) formData.set('PIS', values.PIS);
       if (values.contato_emergencia_nome)
