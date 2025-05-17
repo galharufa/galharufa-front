@@ -671,8 +671,6 @@ export default function NovoCasting() {
       const casting = response.data;
       const castingId = casting.id;
 
-      successToast('Casting cadastrado com sucesso!');
-
       if (values.pix_chave) {
         await api.post(
           '/api/casting/dados-bancarios/',
@@ -730,20 +728,11 @@ export default function NovoCasting() {
         );
       }
 
-      // Verificar se o FormData foi criado corretamente - outra forma de debug
-      let formDataContent = '';
-      for (const [key, value] of formData.entries()) {
-        if (typeof value === 'string') {
-          formDataContent += `${key}: ${value}\n`;
-        } else {
-          formDataContent += `${key}: [Arquivo: ${value.name} - ${(value.size / 1024).toFixed(2)} KB]\n`;
-        }
-      }
+      successToast('Casting cadastrado com sucesso!');
 
       // Enviar para o backend
       try {
         // Usando a instância de API configurada no projeto
-        // Ajustar a URL para usar o proxy local que configuramos no next.config.ts
         const apiUrl = '/api/casting/castings/';
         console.log('Enviando dados para:', apiUrl);
 
@@ -760,20 +749,7 @@ export default function NovoCasting() {
         }
 
         // Usar a URL relativa para aproveitar o proxy configurado no next.config.ts
-        console.log('Enviando dados para o backend...');
         try {
-          const response = await api.post('/api/casting/castings/', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              Authorization: `Bearer ${token}`,
-            },
-            // Aumentar o timeout para uploads grandes
-            timeout: 60000, // 60 segundos
-          });
-
-          console.log('Resposta do servidor:', response.data);
-          const casting = response.data;
-
           // Adicionar fotos adicionais
           if (compressedFotos.length > 0 && casting && casting.id) {
             console.log('Adicionando fotos adicionais para o casting ID:', casting.id);
@@ -900,6 +876,7 @@ export default function NovoCasting() {
       errorToast('Falha ao processar formulário. Tente novamente.');
     } finally {
       console.log('Finalizando processo de salvamento');
+      successToast('Casting cadastrado com sucesso!');
       setIsSubmitting(false);
     }
   };
