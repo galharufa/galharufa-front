@@ -6,6 +6,25 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { RichTextEditor, Link } from '@mantine/tiptap';
+import { useEditor } from '@tiptap/react';
+import Highlight from '@tiptap/extension-highlight';
+import StarterKit from '@tiptap/starter-kit';
+import Underline from '@tiptap/extension-underline';
+import TextAlign from '@tiptap/extension-text-align';
+import Placeholder from '@tiptap/extension-placeholder';
+import { DateInput } from '@mantine/dates';
+import { useForm } from '@mantine/form';
+import { useAuth } from '@/hooks/useAuth';
+import AdminNavbar from '../../../components/AdminNavbar';
+import { CastingService, api } from '@/services';
+import VideoPreview from '@/components/shared/VideoPreview';
+import ImagePreview from '@/components/shared/ImagePreview';
+import Image from 'next/image';
+import { notifications } from '@mantine/notifications';
+import { SearchZipCode } from '@/components/shared/SearchZipCode';
+import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
+import { compressImage } from '@/utils/imageCompression';
 import {
   Container,
   Title,
@@ -31,22 +50,6 @@ import {
   Stack,
   Checkbox,
 } from '@mantine/core';
-import { RichTextEditor, Link } from '@mantine/tiptap';
-import { useEditor } from '@tiptap/react';
-import Highlight from '@tiptap/extension-highlight';
-import StarterKit from '@tiptap/starter-kit';
-import Underline from '@tiptap/extension-underline';
-import TextAlign from '@tiptap/extension-text-align';
-import Placeholder from '@tiptap/extension-placeholder';
-import { DateInput } from '@mantine/dates';
-import { useForm } from '@mantine/form';
-import { useAuth } from '@/hooks/useAuth';
-import AdminNavbar from '../../../components/AdminNavbar';
-import { CastingService, api } from '@/services';
-import VideoPreview from '@/components/shared/VideoPreview';
-import ImagePreview from '@/components/shared/ImagePreview';
-import Image from 'next/image';
-import { notifications } from '@mantine/notifications';
 import {
   banksList,
   corCabelo,
@@ -59,8 +62,6 @@ import {
   tipoCabelo,
   warningToast,
 } from '@/utils';
-import { compressImage } from '@/utils/imageCompression';
-import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
 import {
   IconUpload,
   IconPlus,
@@ -78,7 +79,6 @@ import {
   IconMap,
   IconLink,
 } from '@tabler/icons-react';
-import { SearchZipCode } from '../../../../../components/shared/SearchZipCode';
 
 export default function NovoCasting() {
   const { isAuthenticated, isLoading: authLoading } = useAuth();
@@ -200,6 +200,7 @@ export default function NovoCasting() {
       pix_chave: '',
     },
     validate: {
+      //‼️‼️‼️‼️‼️‼️
       // nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
       // categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
       // altura: (value) => (!value ? 'A altura é obrigatória' : null),
@@ -250,6 +251,11 @@ export default function NovoCasting() {
       try {
         const categoriasData = await CastingService.getCategorias({ ordering: 'nome' });
         setCategorias(categoriasData.results || []);
+        notifications.show({
+          title: 'Dados',
+          message: 'Dados carregados com sucesso!',
+          color: 'green',
+        });
       } catch (error) {
         console.error('Falha ao carregar dados iniciais:', error);
         notifications.show({
@@ -295,6 +301,13 @@ export default function NovoCasting() {
     // Adiciona nova foto e legenda
     setFotosAdicionais([...fotosAdicionais, null as unknown as File]);
     setLegendasFotos([...legendasFotos, '']);
+
+    // Notificação de sucesso
+    notifications.show({
+      title: 'Foto adicionada',
+      message: 'Nova foto foi adicionada com sucesso!',
+      color: 'green',
+    });
   };
 
   const removerFoto = (index: number) => {
@@ -306,6 +319,13 @@ export default function NovoCasting() {
 
     setFotosAdicionais(novasFotos);
     setLegendasFotos(novasLegendas);
+
+    // Notificação de sucesso
+    notifications.show({
+      title: 'Foto removida',
+      message: 'Foto removida com sucesso!',
+      color: 'green',
+    });
   };
 
   const atualizarFoto = (file: File | null, index: number) => {
@@ -314,12 +334,22 @@ export default function NovoCasting() {
     const novasFotos = [...fotosAdicionais];
     novasFotos[index] = file;
     setFotosAdicionais(novasFotos);
+    notifications.show({
+      title: 'Foto atualizada',
+      message: 'Foto atualizada com sucesso!',
+      color: 'green',
+    });
   };
 
   const atualizarLegenda = (legenda: string, index: number) => {
     const novasLegendas = [...legendasFotos];
     novasLegendas[index] = legenda;
     setLegendasFotos(novasLegendas);
+    notifications.show({
+      title: 'Legenda atualizada',
+      message: 'Legenda atualizada com sucesso!',
+      color: 'green',
+    });
   };
 
   // Funções para gerenciar vídeos
@@ -355,6 +385,12 @@ export default function NovoCasting() {
     // Adiciona novo campo vazio
     setVideos([...videos, '']);
     setDescricaoVideos([...descricaoVideos, '']);
+    // Notificação de sucesso
+    notifications.show({
+      title: 'Vídeo adicionada',
+      message: 'Novo vídeo foi adicionada com sucesso!',
+      color: 'green',
+    });
   };
 
   const removerVideo = (index: number) => {
@@ -365,18 +401,33 @@ export default function NovoCasting() {
     const novasDescricoes = [...descricaoVideos];
     novasDescricoes.splice(index, 1);
     setDescricaoVideos(novasDescricoes);
+    notifications.show({
+      title: 'Vídeo Removido',
+      message: 'Vídeo removido com sucesso!',
+      color: 'green',
+    });
   };
 
   const atualizarVideo = (valor: string, index: number) => {
     const novosVideos = [...videos];
     novosVideos[index] = valor;
     setVideos(novosVideos);
+    notifications.show({
+      title: 'Vídeo atualizado',
+      message: 'Vídeo foi atualizado com sucesso!',
+      color: 'green',
+    });
   };
 
   const atualizarDescricaoVideo = (valor: string, index: number) => {
     const novasDescricoes = [...descricaoVideos];
     novasDescricoes[index] = valor;
     setDescricaoVideos(novasDescricoes);
+    notifications.show({
+      title: 'Descrição atualizada',
+      message: 'Descrição foi atualizada com sucesso!',
+      color: 'green',
+    });
   };
 
   // Função para salvar o casting
@@ -738,11 +789,13 @@ export default function NovoCasting() {
                 // Verificar se o ID do casting está definido
                 if (!casting.id) {
                   console.error('ID do casting indefinido ao adicionar foto');
+                  errorToast('ID do casting indefinido ao adicionar foto');
                   return null;
                 }
                 return await CastingService.adicionarFoto(casting.id, fotoFormData);
               } catch (error) {
                 console.error('Erro ao adicionar foto:', error);
+                errorToast('Erro ao adicionar foto: ' + error);
                 return null;
               }
             });
@@ -750,6 +803,7 @@ export default function NovoCasting() {
             await Promise.all(fotosPromises.filter(Boolean));
           } else if (compressedFotos.length > 0) {
             console.error('Não foi possível adicionar fotos: ID do casting indefinido');
+            errorToast('Não foi possível adicionar fotos: ID do casting indefinido');
           }
 
           // Adicionar vídeos
@@ -762,6 +816,8 @@ export default function NovoCasting() {
                 // Verificar se o ID do casting está definido
                 if (!casting.id) {
                   console.error('ID do casting indefinido ao adicionar vídeo');
+                  errorToast('ID do casting indefinido ao adicionar vídeo');
+
                   return null;
                 }
                 return await CastingService.adicionarVideo(casting.id, {
@@ -771,6 +827,7 @@ export default function NovoCasting() {
                 });
               } catch (error) {
                 console.error('Erro ao adicionar vídeo:', error);
+                errorToast('Erro ao adicionar vídeo: ' + error);
                 return null;
               }
             });
@@ -778,6 +835,7 @@ export default function NovoCasting() {
             await Promise.all(videosPromises.filter(Boolean));
           } else if (videos.length > 0) {
             console.error('Não foi possível adicionar vídeos: ID do casting indefinido');
+            errorToast('Não foi possível adicionar vídeos: ID do casting indefinido');
           }
 
           console.log(formData);
@@ -785,6 +843,7 @@ export default function NovoCasting() {
           router.push('/admin/casting');
         } catch (apiError: any) {
           console.error('Erro na chamada da API:', apiError);
+          errorToast('Erro na chamada da API: ' + apiError);
 
           if (apiError.response) {
             console.error('Resposta de erro do servidor:', apiError.response.data);
@@ -811,9 +870,11 @@ export default function NovoCasting() {
         } else if (error.request) {
           // Requisição foi feita mas não houve resposta
           console.error('Sem resposta do servidor:', error.request);
+          errorToast('Erro ao processar formulário:' + error);
         } else {
           // Erro durante a configuração da requisição
-          console.error('Erro de configuração da requisição:', error.message);
+          console.error('Erro de configuração da requisição: ', error.message);
+          errorToast('Erro de configuração da requisição: ' + error.message);
         }
 
         // Verificar se é erro de autenticação
@@ -829,8 +890,12 @@ export default function NovoCasting() {
       }
     } catch (error: unknown) {
       console.error('Erro ao processar formulário:', error);
+      errorToast(`Falha ao processar: ${error || 'Erro desconhecido'}`);
       if (error instanceof Error) {
         console.error('Detalhes do erro:', error.stack);
+        errorToast(
+          `Falha ao processar: ${error.stack || error.message || 'Erro desconhecido'}`,
+        );
       }
       errorToast('Falha ao processar formulário. Tente novamente.');
     } finally {
@@ -855,6 +920,11 @@ export default function NovoCasting() {
   }
 
   if (!isAuthenticated) {
+    notifications.show({
+      title: 'Acesso negado',
+      message: 'Você precisa estar logado para acessar esta área.',
+      color: 'red',
+    });
     return null;
   }
 
