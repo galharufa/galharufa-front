@@ -28,6 +28,8 @@ import {
   SimpleGrid,
   Box,
   Flex,
+  Stack,
+  Checkbox,
 } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -56,6 +58,9 @@ import {
   nationality,
   banksList,
   languages,
+  languagesLevel,
+  corOlhos,
+  tipoCabelo,
 } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 
@@ -76,6 +81,7 @@ import {
   IconBrandWhatsapp,
   IconMap,
 } from '@tabler/icons-react';
+import { Idiomas } from '@/services/casting.service';
 
 export default function EditarCasting() {
   const params = useParams();
@@ -91,6 +97,7 @@ export default function EditarCasting() {
   const [categorias, setCategorias] = useState<any[]>([]);
   const [casting, setCasting] = useState<CastingDetalhado | null>(null);
   const [loadingCep, setLoadingCep] = useState(false);
+  const [previewFotoPrincipal, setPreviewFotoPrincipal] = useState<string | null>(null);
 
   // Fotos
   const [fotosExistentes, setFotosExistentes] = useState<Foto[]>([]);
@@ -105,24 +112,22 @@ export default function EditarCasting() {
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
   const [videosNovos, setVideosNovos] = useState<{ titulo: string; url: string }[]>([]);
 
-  // Estado para os links de trabalho dinâmicos
-  const [linksTrabalho, setLinksTrabalho] = useState<string[]>([]);
+  const [idiomasSelecionados, setIdiomasSelecionados] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [idiomasNiveis, setIdiomasNiveis] = useState<Record<string, string>>({});
+  const [idiomasOutros, setIdiomasOutros] = useState('');
 
-  // Funções para gerenciar links de trabalho
-  const adicionarLinkTrabalho = () => {
-    setLinksTrabalho([...linksTrabalho, '']);
-  };
-
-  const atualizarLinkTrabalho = (valor: string, index: number) => {
-    const novosLinks = [...linksTrabalho];
-    novosLinks[index] = valor;
-    setLinksTrabalho(novosLinks);
-  };
-
-  const removerLinkTrabalho = (index: number) => {
-    const novosLinks = [...linksTrabalho];
-    novosLinks.splice(index, 1);
-    setLinksTrabalho(novosLinks);
+  const toggleIdioma = (idioma: string, checked: boolean) => {
+    setIdiomasSelecionados((prev) => ({ ...prev, [idioma]: checked }));
+    if (!checked) {
+      setIdiomasNiveis((prev) => {
+        const newState = { ...prev };
+        delete newState[`nivel_${idioma}`];
+        return newState;
+      });
+      if (idioma === 'outros') setIdiomasOutros('');
+    }
   };
 
   const form = useForm({
@@ -188,7 +193,7 @@ export default function EditarCasting() {
       contato_emergencia_nome: '',
       contato_emergencia_telefone: '',
 
-      // Endereço e Informações Financeiras
+      // Endereço (flattened)
       cep: '',
       logradouro: '',
       numero: '',
@@ -197,15 +202,42 @@ export default function EditarCasting() {
       cidade: '',
       estado: '',
       pais: 'Brasil',
+
+      // Dados bancários (flattened)
       banco: '',
       agencia: '',
       conta: '',
       tipo_conta: '',
       pix_chave: '',
 
-      // Idiomas e Veículos
-      idiomas: [] as string[],
-      habilitacao_categorias: [] as string[],
+      // Idiomas (mantido como objeto, pois já usa em grupo)
+      idiomas: {
+        portugues: false,
+        nivel_portugues: '',
+        ingles: false,
+        nivel_ingles: '',
+        espanhol: false,
+        nivel_espanhol: '',
+        frances: false,
+        nivel_frances: '',
+        italiano: false,
+        nivel_italiano: '',
+        alemao: false,
+        nivel_alemao: '',
+        mandarim: false,
+        nivel_mandarim: '',
+        japones: false,
+        nivel_japones: '',
+        russo: false,
+        nivel_russo: '',
+        arabe: false,
+        nivel_arabe: '',
+        hungaro: false,
+        nivel_hungaro: '',
+        outros_idiomas: '',
+      },
+
+      habilitacao_categorias: [],
       habilitacao_validade: null as Date | null,
     },
     validate: {
@@ -225,6 +257,7 @@ export default function EditarCasting() {
         class: 'min-h-[150px]', // ou qualquer classe Tailwind para altura inicial
       },
     },
+    immediatelyRender: false, // ✅ isso remove os avisos de SSR
   });
 
   //Limpa / adiciona mascara ao campo de CEP para api conseguir calcular
@@ -235,11 +268,12 @@ export default function EditarCasting() {
     if (valor.length === 8) {
       form.setFieldValue('cep', valor.replace(/(\d{5})(\d{3})/, '$1-$2'));
     } else {
-      alert('CEP inválido. Use o formato 00000-000.');
+      alert('CEP inválido. Use o formato 00000000, sem espaços ou traços');
     }
   };
 
   function parseJsonArray(field: any): string[] {
+    if (Array.isArray(field)) return field;
     try {
       return field ? JSON.parse(field) : [];
     } catch {
@@ -334,6 +368,7 @@ export default function EditarCasting() {
           PIS: castingResponse.PIS || '',
           website: castingResponse.website || '',
           celular_whatsapp: castingResponse.celular_whatsapp,
+          habilitacao_validade: habilitacaoValidade,
 
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
@@ -374,13 +409,12 @@ export default function EditarCasting() {
           tipo_conta: castingResponse.dados_bancarios?.tipo_conta || '',
           pix_chave: castingResponse.dados_bancarios?.pix_chave || '',
 
-          idiomas: extrairIdiomasAtivos(castingResponse.idiomas),
           habilitacao_categorias: parseJsonArray(castingResponse.habilitacao_categorias),
-          habilitacao_validade: habilitacaoValidade,
+
+          idiomas: castingResponse.idiomas as Idiomas,
         });
         // console.log(castingResponse);
-        console.log('Endereço retornado:', castingResponse.endereco);
-        console.log('Dados Bancários retornado:', castingResponse.dados_bancarios);
+        console.log('Casting Response retornado:', castingResponse);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
         errorToast('Erro ao carregar dados do casting');
@@ -541,24 +575,6 @@ export default function EditarCasting() {
     setDescricaoVideos(novasDescricoes);
   };
 
-  const extrairIdiomasAtivos = (idiomasObj: any): string[] => {
-    const idiomasDisponiveis = [
-      'ingles',
-      'portugues',
-      'espanhol',
-      'frances',
-      'italiano',
-      'alemao',
-      'mandarim',
-      'japones',
-      'russo',
-      'arabe',
-      'hungaro',
-    ];
-
-    return idiomasDisponiveis.filter((idioma) => idiomasObj?.[idioma] === true);
-  };
-
   // Função para salvar as alterações
   const handleSubmitUpdate = async (values: typeof form.values) => {
     if (!casting) return;
@@ -656,15 +672,9 @@ export default function EditarCasting() {
 
       // Currículo e habilidades
       if (values.habilidades)
-        formData.append('habilidades', JSON.stringify(values.habilidades));
-
-      // Links de trabalho adicionais
-      linksTrabalho.forEach((link, index) => {
-        if (index >= 2 && link) {
-          // A partir do link 3 (índice 2)
-          formData.append(`link_trabalho_${index + 1}`, link);
-        }
-      });
+        values.habilidades.forEach((habilidade) => {
+          formData.append('habilidades', habilidade);
+        });
 
       // Contato
       if (values.celular_whatsapp)
@@ -681,30 +691,33 @@ export default function EditarCasting() {
           values.contato_emergencia_telefone,
         );
 
-      // Endereço
-      if (values.cep) formData.append('cep', values.cep);
-      if (values.logradouro) formData.append('rua', values.logradouro);
-      if (values.numero) formData.append('numero', values.numero);
-      if (values.complemento) formData.append('complemento', values.complemento);
-      if (values.bairro) formData.append('bairro', values.bairro);
-      if (values.cidade) formData.append('cidade', values.cidade);
-      if (values.estado) formData.append('estado', values.estado);
-      if (values.pais) formData.append('pais', values.pais);
+      // ✅ Endereço (usa .entries com prefixo "endereco.")
+      formData.append('endereco.cep', values.cep || '');
+      formData.append('endereco.logradouro', values.logradouro || '');
+      formData.append('endereco.numero', values.numero || '');
+      formData.append('endereco.complemento', values.complemento || '');
+      formData.append('endereco.bairro', values.bairro || '');
+      formData.append('endereco.cidade', values.cidade || '');
+      formData.append('endereco.estado', values.estado || '');
 
-      // Informações bancárias
-      if (values.banco) formData.append('banco', values.banco);
-      if (values.agencia) formData.append('agencia', values.agencia);
-      if (values.conta) formData.append('conta', values.conta);
-      if (values.tipo_conta) formData.append('tipo_conta', values.tipo_conta);
-      if (values.pix_chave) formData.append('pix_chave', values.pix_chave);
+      // ✅ Dados bancários
+      formData.append('dados_bancarios.banco', values.banco || '');
+      formData.append('dados_bancarios.agencia', values.agencia || '');
+      formData.append('dados_bancarios.conta', values.conta || '');
+      formData.append('dados_bancarios.tipo_conta', values.tipo_conta || '');
+      formData.append('dados_bancarios.pix_chave', values.pix_chave || '');
 
-      // Idiomas e veículos
-      if (values.idiomas) formData.append('idiomas', JSON.stringify(values.idiomas));
+      // ✅ Idiomas
+      Object.entries(values.idiomas || {}).forEach(([key, value]) => {
+        if (value !== undefined && value !== null)
+          formData.append(`idiomas.${key}`, value.toString());
+      });
+
       if (values.habilitacao_categorias)
-        formData.append(
-          'habilitacao_categorias',
-          JSON.stringify(values.habilitacao_categorias),
-        );
+        values.habilitacao_categorias.forEach((cat) => {
+          formData.append('habilitacao_categorias', cat);
+        });
+
       if (values.habilitacao_validade) {
         formData.append(
           'habilitacao_validade',
@@ -878,10 +891,14 @@ export default function EditarCasting() {
                     {...form.getInputProps('genero')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                  <TextInput
+                  <Select
                     label="Naturalidade"
+                    searchable
                     placeholder="Natural de (município/estado)"
+                    nothingFound="Não encontrado"
                     {...form.getInputProps('natural_de')}
+                    data={estados}
+                    clearable
                     mb="md"
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -924,11 +941,40 @@ export default function EditarCasting() {
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
                       {...form.getInputProps('foto_principal')}
+                      onChange={(file) => {
+                        form.setFieldValue('foto_principal', file);
+                        setPreviewFotoPrincipal(file ? URL.createObjectURL(file) : null);
+                      }}
                       ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     />
                   </div>
 
-                  {casting.foto_principal && (
+                  {previewFotoPrincipal ? (
+                    // MOSTRA SOMENTE O PREVIEW SE ELE EXISTIR
+                    <div>
+                      <Text size="sm" weight={500} mb={5}>
+                        Pré-visualização
+                      </Text>
+                      <div
+                        style={{
+                          width: 300,
+                          height: 150,
+                          position: 'relative',
+                          overflow: 'hidden',
+                          borderRadius: '4px',
+                        }}
+                      >
+                        <Image
+                          src={previewFotoPrincipal}
+                          alt="Pré-visualização da foto principal"
+                          style={{ objectFit: 'cover' }}
+                          fill
+                          sizes="300px"
+                        />
+                      </div>
+                    </div>
+                  ) : casting.foto_principal ? (
+                    // SE NÃO TEM PREVIEW, MOSTRA A FOTO ORIGINAL DO BACKEND
                     <div>
                       <Text size="sm" weight={500} mb={5}>
                         Foto Atual <br />
@@ -952,7 +998,7 @@ export default function EditarCasting() {
                         />
                       </div>
                     </div>
-                  )}
+                  ) : null}
                 </Group>
 
                 <Switch
@@ -965,6 +1011,16 @@ export default function EditarCasting() {
                 <Switch
                   label="Autoriza imagem no site"
                   {...form.getInputProps('autoriza_imagem_site', { type: 'checkbox' })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+
+                <Switch
+                  label="Aceita figuração?"
+                  {...form.getInputProps('aceita_figuracao', {
+                    type: 'checkbox',
+                  })}
+                  mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
               </Card>
@@ -1011,29 +1067,29 @@ export default function EditarCasting() {
                 </SimpleGrid>
 
                 <SimpleGrid cols={4} mb="md">
-                  <NumberInput
+                  <TextInput
                     label="Manequim"
-                    placeholder="Tamanho do manequim"
+                    placeholder="Tamanho do manequim (número)"
                     {...form.getInputProps('manequim')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Sapato"
-                    placeholder="Número do sapato"
+                    placeholder="Número do sapato (número)"
                     {...form.getInputProps('sapato')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                  <NumberInput
+                  <TextInput
                     label="Terno"
-                    placeholder="Tamanho do terno"
+                    placeholder="Tamanho do terno (número)"
                     {...form.getInputProps('terno')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Camisa"
-                    placeholder="Tamanho da camisa"
+                    placeholder="Tamanho da camisa (número)"
                     {...form.getInputProps('camisa')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1043,15 +1099,7 @@ export default function EditarCasting() {
                   <Select
                     label="Cor dos Olhos"
                     placeholder="Selecione a cor dos olhos"
-                    data={[
-                      { value: 'castanho', label: 'Castanho' },
-                      { value: 'azul', label: 'Azul' },
-                      { value: 'verde', label: 'Verde' },
-                      { value: 'preto', label: 'Preto' },
-                      { value: 'mel', label: 'Mel' },
-                      { value: 'cinza', label: 'Cinza' },
-                      { value: 'castanho_esverdeado', label: 'Castanho Esverdeado' },
-                    ]}
+                    data={corOlhos}
                     {...form.getInputProps('olhos')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1059,14 +1107,7 @@ export default function EditarCasting() {
                   <Select
                     label="Tipo de Cabelo"
                     placeholder="Selecione o tipo de cabelo"
-                    data={[
-                      { value: 'liso', label: 'Liso' },
-                      { value: 'ondulado', label: 'Ondulado' },
-                      { value: 'cacheado', label: 'Cacheado' },
-                      { value: 'crespo', label: 'Crespo' },
-                      { value: 'careca', label: 'Careca' },
-                      { value: 'outro', label: 'Outro' },
-                    ]}
+                    data={tipoCabelo}
                     {...form.getInputProps('tipo_cabelo')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1097,15 +1138,48 @@ export default function EditarCasting() {
                   />
                 )}
                 <Divider my="md" label="Idiomas" labelPosition="center" />
-                <MultiSelect
-                  label="Idiomas"
-                  placeholder="Selecione os idiomas"
-                  data={languages}
-                  searchable
-                  clearable
-                  {...form.getInputProps('idiomas')}
-                  mb="xl"
-                />
+                <Stack spacing="sm">
+                  <Text size="sm" weight={500}>
+                    Idiomas
+                  </Text>
+
+                  {languages.map(({ value, label }) => (
+                    <Group key={value} position="apart" grow>
+                      <Checkbox
+                        label={label}
+                        checked={idiomasSelecionados[value] || false}
+                        onChange={(event) =>
+                          toggleIdioma(value, event.currentTarget.checked)
+                        }
+                      />
+
+                      {idiomasSelecionados[value] && value !== 'outros' && (
+                        <Select
+                          data={languagesLevel}
+                          placeholder="Nível"
+                          value={idiomasNiveis[`nivel_${value}`] || ''}
+                          onChange={(nivel) =>
+                            setIdiomasNiveis((prev) => ({
+                              ...prev,
+                              [`nivel_${value}`]: nivel || '',
+                            }))
+                          }
+                          withinPortal
+                        />
+                      )}
+
+                      {idiomasSelecionados[value] && value === 'outros' && (
+                        <TextInput
+                          placeholder="Descreva os idiomas e níveis"
+                          value={idiomasOutros}
+                          onChange={(event) =>
+                            setIdiomasOutros(event.currentTarget.value)
+                          }
+                        />
+                      )}
+                    </Group>
+                  ))}
+                </Stack>
               </Card>
             </Tabs.Panel>
 
@@ -1317,6 +1391,15 @@ export default function EditarCasting() {
                           </Group>
 
                           <TextInput
+                            label="URL"
+                            placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
+                            value={video.url}
+                            onChange={(e) => atualizarVideo('url', e.target.value, index)}
+                          />
+
+                          {video.url && <VideoPreview url={video.url} height={150} />}
+
+                          <TextInput
                             label="Título"
                             placeholder="Título do vídeo"
                             value={video.titulo}
@@ -1325,15 +1408,6 @@ export default function EditarCasting() {
                             }
                             mb="md"
                           />
-
-                          <TextInput
-                            label="URL"
-                            placeholder="URL do vídeo (YouTube, Vimeo, etc.)"
-                            value={video.url}
-                            onChange={(e) => atualizarVideo('url', e.target.value, index)}
-                          />
-
-                          {video.url && <VideoPreview url={video.url} height={150} />}
                         </Card>
                       ))}
                     </SimpleGrid>
@@ -1522,16 +1596,6 @@ export default function EditarCasting() {
                       ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       style={{ flexGrow: 1 }} // ocupa o espaço restante
                     />
-                    <Box pt={22}>
-                      <Switch
-                        label="Aceita figuração?"
-                        {...form.getInputProps('aceita_figuracao', {
-                          type: 'checkbox',
-                        })}
-                        mb="md"
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-                    </Box>
                   </Flex>
                 )}
                 <Divider

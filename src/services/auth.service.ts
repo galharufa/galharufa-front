@@ -109,4 +109,56 @@ export const AuthService = {
   isAuthenticated(): boolean {
     return !!localStorage.getItem('accessToken');
   },
+  isAccessTokenNearExpiry(): boolean {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return true;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000;
+      const timeLeft = exp - Date.now();
+
+      return timeLeft < 5 * 60 * 1000; // menos de 5 minutos
+    } catch {
+      return true;
+    }
+  },
+
+  async refreshAccessToken(): Promise<string> {
+    const refresh =
+      localStorage.getItem('refreshToken') || sessionStorage.getItem('refreshToken');
+
+    if (!refresh) throw new Error('Refresh token não encontrado');
+
+    const API_URL =
+      process.env.NEXT_PUBLIC_API_URL || 'https://api.agenciagalharufa.com.br/';
+    const baseURL = API_URL.endsWith('/') ? API_URL.slice(0, -1) : API_URL;
+
+    const response = await axios.post(`${baseURL}/api/token/refresh/`, {
+      refresh,
+    });
+
+    const newAccess = response.data.access;
+    localStorage.setItem('accessToken', newAccess);
+    return newAccess;
+  },
+
+  scheduleTokenWarning(onWarn?: () => void): void {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000;
+      const warningTime = exp - Date.now() - 5 * 60 * 1000;
+
+      if (warningTime > 0) {
+        setTimeout(() => {
+          if (onWarn) onWarn();
+        }, warningTime);
+      }
+    } catch (err) {
+      console.error('Erro ao programar aviso de expiração de token:', err);
+    }
+  },
 };

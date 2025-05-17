@@ -390,7 +390,7 @@ export default function CastingAdmin() {
                               >
                                 <Image
                                   src={casting.foto_principal}
-                                  alt={casting.nome}
+                                  alt={casting.nome_artistico}
                                   fill
                                   style={{ objectFit: 'cover' }}
                                 />
@@ -413,7 +413,7 @@ export default function CastingAdmin() {
                               </div>
                             )}
                           </td>
-                          <td>{casting.nome}</td>
+                          <td>{casting.nome_artistico}</td>
                           <td>{casting.categoria_nome}</td>
                           <td>
                             {casting.ativo ? (

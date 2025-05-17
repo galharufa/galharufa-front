@@ -1,11 +1,13 @@
 'use client';
 
 import { AppShell, MantineProvider, ColorSchemeProvider } from '@mantine/core';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useColorScheme } from '@mantine/hooks';
 import { AuthProvider } from '@/hooks/useAuth';
+import { AuthService } from '@/services/auth.service';
 // Removendo import de Notifications para evitar duplicação de toasts
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { notifications } from '@mantine/notifications';
 
 // Criando o cliente de consulta para React Query
 const queryClient = new QueryClient();
@@ -18,6 +20,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const newColorScheme = value || (colorScheme === 'dark' ? 'light' : 'dark');
     setColorScheme(newColorScheme);
   };
+
+  useEffect(() => {
+    AuthService.scheduleTokenWarning(() => {
+      notifications.show({
+        title: 'Sessão prestes a expirar',
+        message: 'Deseja continuar logado?',
+        color: 'yellow',
+      });
+    });
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>

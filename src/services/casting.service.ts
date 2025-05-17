@@ -51,7 +51,7 @@ export interface DadosBancarios {
 
 type NivelIdioma = 'basico' | 'intermediário' | 'avancado' | 'Fluente';
 
-export interface Idioma {
+export interface Idiomas {
   ingles: boolean;
   nivel_ingles?: NivelIdioma;
   portugues: boolean;
@@ -93,7 +93,7 @@ export interface CastingDetalhado {
   data_cadastro: string;
   data_atualizacao: string;
   habilidades: string[];
-  idiomas: Idioma[];
+  idiomas: Idiomas;
   foto_principal: string;
   fotos?: Foto[];
   videos?: Video[];

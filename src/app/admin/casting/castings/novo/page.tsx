@@ -28,6 +28,8 @@ import {
   SimpleGrid,
   Box,
   Flex,
+  Stack,
+  Checkbox,
 } from '@mantine/core';
 import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
@@ -50,9 +52,12 @@ import {
   corCabelo,
   errorToast,
   genderData,
+  infoToast,
   languages,
+  languagesLevel,
   successToast,
   tipoCabelo,
+  warningToast,
 } from '@/utils';
 import { compressImage } from '@/utils/imageCompression';
 import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
@@ -90,8 +95,24 @@ export default function NovoCasting() {
   const [previewFotoPrincipal, setPreviewFotoPrincipal] = useState<string | null>(null);
   const [videos, setVideos] = useState<string[]>([]);
   const [descricaoVideos, setDescricaoVideos] = useState<string[]>([]);
-  const [linksTrabalho, setLinksTrabalho] = useState<string[]>(['', '']);
+  const [idiomasSelecionados, setIdiomasSelecionados] = useState<Record<string, boolean>>(
+    {},
+  );
+  const [idiomasNiveis, setIdiomasNiveis] = useState<Record<string, string>>({});
+  const [idiomasOutros, setIdiomasOutros] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const toggleIdioma = (idioma: string, checked: boolean) => {
+    setIdiomasSelecionados((prev) => ({ ...prev, [idioma]: checked }));
+    if (!checked) {
+      setIdiomasNiveis((prev) => {
+        const newState = { ...prev };
+        delete newState[`nivel_${idioma}`];
+        return newState;
+      });
+      if (idioma === 'outros') setIdiomasOutros('');
+    }
+  };
 
   const form = useForm({
     initialValues: {
@@ -171,6 +192,7 @@ export default function NovoCasting() {
       cidade: '',
       estado: '',
       pais: 'Brasil',
+      //dados financeiros
       banco: '',
       agencia: '',
       conta: '',
@@ -207,6 +229,7 @@ export default function NovoCasting() {
         class: 'min-h-[150px]',
       },
     },
+    immediatelyRender: false, // ✅ isso remove os avisos de SSR
   });
 
   //Limpa / adiciona mascara ao campo de CEP para api conseguir calcular
@@ -358,6 +381,7 @@ export default function NovoCasting() {
 
   // Função para salvar o casting
   const handleSubmit = async (values: any) => {
+    if (isSubmitting) return;
     setIsSubmitting(true);
     console.log('Iniciando salvamento de casting com valores:', values);
     try {
@@ -371,6 +395,7 @@ export default function NovoCasting() {
           values.foto_principal = compressedImage;
         } catch (compressionError) {
           console.warn('Erro ao comprimir a foto principal:', compressionError);
+          warningToast('Erro ao comprimir a foto principal. Usando original.');
           // Continua com a foto original se houver erro na compressão
         }
       }
@@ -386,42 +411,45 @@ export default function NovoCasting() {
             });
           } catch (compressionError) {
             console.warn(`Erro ao comprimir a foto adicional ${i}:`, compressionError);
+            warningToast(`Erro ao comprimir a foto adicional ${i + 1}. Usando original.`);
+
             // Continua com a foto original se houver erro na compressão
           }
         }
       }
-      // Verificar se os campos obrigatórios estão preenchidos
-      console.log('Verificando campos obrigatórios...');
-      const camposObrigatorios = {
-        nome: values.nome,
-        categoria: values.categoria,
-        altura: values.altura,
-        peso: values.peso,
-        biografia: values.biografia,
-        experiencia: values.experiencia,
-        foto_principal: values.foto_principal,
-      };
+      // ‼️‼️‼️Verificar se os campos obrigatórios estão preenchidos‼️‼️‼️
+      // console.log('Verificando campos obrigatórios...');
+      // const camposObrigatorios = {
+      //   nome: values.nome,
+      //   categoria: values.categoria,
+      //   altura: values.altura,
+      //   peso: values.peso,
+      //   biografia: values.biografia,
+      //   experiencia: values.experiencia,
+      //   foto_principal: values.foto_principal,
+      // };
 
-      // Garantir que o conteúdo do editor seja utilizado para experiencia
-      if (editor && !values.experiencia) {
-        values.experiencia = editor.getHTML();
-        camposObrigatorios.experiencia = editor.getHTML();
-      }
+      // // Garantir que o conteúdo do editor seja utilizado para experiencia
+      // if (editor && !values.experiencia) {
+      //   values.experiencia = editor.getHTML();
+      //   camposObrigatorios.experiencia = editor.getHTML();
+      // }
 
-      const camposFaltantes = Object.entries(camposObrigatorios)
-        .filter(([_, value]) => !value)
-        .map(([key]) => key);
+      // const camposFaltantes = Object.entries(camposObrigatorios)
+      //   .filter(([_, value]) => !value)
+      //   .map(([key]) => key);
 
-      if (camposFaltantes.length > 0) {
-        console.error('Campos obrigatórios faltando:', camposFaltantes);
-        errorToast(
-          `Por favor, preencha os campos obrigatórios: ${camposFaltantes.join(', ')}`,
-        );
-        return;
-      }
-      console.log('Todos os campos obrigatórios estão preenchidos.');
+      // if (camposFaltantes.length > 0) {
+      //   console.error('Campos obrigatórios faltando:', camposFaltantes);
+      //   errorToast(
+      //     `Por favor, preencha os campos obrigatórios: ${camposFaltantes.join(', ')}`,
+      //   );
+      //   return;
+      // }
+      // console.log('Todos os campos obrigatórios estão preenchidos.');
 
       // Criar FormData para envio de arquivos
+      infoToast('Enviando casting para o servidor...');
       const formData = new FormData();
 
       // Adicionar campos básicos manualmente
@@ -449,6 +477,8 @@ export default function NovoCasting() {
       formData.set('peso', values.peso);
       if (values.manequim) formData.set('manequim', String(values.manequim));
       if (values.sapato) formData.set('sapato', String(values.sapato));
+      if (values.terno) formData.set('terno', values.terno);
+      if (values.camisa) formData.set('camisa', values.camisa);
       if (values.olhos) formData.set('olhos', values.olhos);
       if (values.tipo_cabelo) formData.set('tipo_cabelo', values.tipo_cabelo);
       if (values.cor_cabelo) formData.set('cor_cabelo', values.cor_cabelo);
@@ -477,6 +507,7 @@ export default function NovoCasting() {
         formData.set('inscricao_estadual', values.inscricao_estadual);
       formData.set('possui_nota_propria', values.possui_nota_propria ? 'true' : 'false');
       if (values.CNH) formData.set('CNH', values.CNH);
+
       if (values.habilitacao_validade)
         formData.set(
           'habilitacao_validade',
@@ -489,18 +520,28 @@ export default function NovoCasting() {
           'habilitacao_categorias',
           JSON.stringify(values.habilitacao_categorias),
         );
+
       if (values.PIS) formData.set('PIS', values.PIS);
       if (values.contato_emergencia_nome)
         formData.set('contato_emergencia_nome', values.contato_emergencia_nome);
       if (values.contato_emergencia_telefone)
         formData.set('contato_emergencia_telefone', values.contato_emergencia_telefone);
 
-      // Currículo e habilidades
+      // Habilidades;
       if (values.habilidades)
         formData.set('habilidades', JSON.stringify(values.habilidades));
 
-      if (values.terno) formData.set('terno', values.terno);
-      if (values.camisa) formData.set('camisa', values.camisa);
+      (values.dados_bancarios || []).forEach((item: any) => {
+        formData.append('dados_bancarios', item);
+      });
+
+      (values.endereco || []).forEach((item: any) => {
+        formData.append('endereco', item);
+      });
+
+      (values.idiomas || []).forEach((item: any) => {
+        formData.append('endereco', item);
+      });
 
       // Contato
       if (values.celular_whatsapp)
@@ -530,10 +571,10 @@ export default function NovoCasting() {
 
       // Informações bancárias
       if (values.pix_chave) formData.set('pix_chave', values.pix_chave);
-      if (values.dados_bancarios_id)
-        formData.set('dados_bancarios_id', values.dados_bancarios_id);
 
       // IDs relacionados
+      if (values.dados_bancarios_id)
+        formData.set('dados_bancarios_id', values.dados_bancarios_id);
       if (values.endereco_id) formData.set('endereco_id', values.endereco_id);
       if (values.idiomas_id) formData.set('idiomas_id', values.idiomas_id);
       if (values.usuario_id) formData.set('usuario_id', values.usuario_id);
@@ -548,17 +589,6 @@ export default function NovoCasting() {
         'autoriza_imagem_site',
         values.autoriza_imagem_site ? 'true' : 'false',
       );
-
-      // Tratar arrays
-      if (values.funcoes && values.funcoes.length > 0) {
-        values.funcoes.forEach((habilidade: string) => {
-          formData.append('funcoes', habilidade);
-        });
-      }
-
-      if (values.idiomas && values.idiomas.length > 0) {
-        formData.set('idiomas', JSON.stringify(values.idiomas));
-      }
 
       // Adicionar foto principal - campo obrigatório
       if (values.foto_principal) {
@@ -579,7 +609,7 @@ export default function NovoCasting() {
         return;
       }
 
-      // 1️⃣ Enviar casting principal
+      //  Enviar casting principal
       const response = await api.post('/api/casting/castings/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -589,6 +619,8 @@ export default function NovoCasting() {
 
       const casting = response.data;
       const castingId = casting.id;
+
+      successToast('Casting cadastrado com sucesso!');
 
       if (values.pix_chave) {
         await api.post(
@@ -608,16 +640,18 @@ export default function NovoCasting() {
         );
       }
 
-      if (values.idiomas?.length > 0) {
+      const idiomasAtivos = Object.entries(idiomasSelecionados || {}).filter(
+        ([_, ativo]) => ativo,
+      );
+
+      if (idiomasAtivos) {
         await api.post(
           '/api/casting/idiomas/',
           {
             casting: castingId,
-            ingles: values.idiomas.includes('ingles'),
-            nivel_ingles: values.nivel_ingles || 'fluente',
-            portugues: values.idiomas.includes('portugues'),
-            nivel_portugues: values.nivel_portugues || 'fluente',
-            outros_idiomas: values.outros_idiomas || '',
+            ...idiomasSelecionados,
+            ...idiomasNiveis,
+            outros_idiomas: idiomasOutros || '',
           },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -746,6 +780,7 @@ export default function NovoCasting() {
             console.error('Não foi possível adicionar vídeos: ID do casting indefinido');
           }
 
+          console.log(formData);
           successToast('Casting cadastrado com sucesso!');
           router.push('/admin/casting');
         } catch (apiError: any) {
@@ -760,6 +795,9 @@ export default function NovoCasting() {
         }
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
+        errorToast(
+          `Falha ao cadastrar: ${error?.response?.data?.detail || error.message || 'Erro desconhecido'}`,
+        );
         console.error('Stack de erro:', error.stack);
 
         // Log detalhado dos erros
@@ -811,7 +849,7 @@ export default function NovoCasting() {
           height: '100vh',
         }}
       >
-        <Loader size="xl" />
+        <Loader variant="bars" size="xl" />
       </div>
     );
   }
@@ -863,14 +901,12 @@ export default function NovoCasting() {
                   <TextInput
                     label="Nome"
                     placeholder="Nome completo"
-                    required
                     {...form.getInputProps('nome')}
                   />
 
                   <TextInput
                     label="Nome Artístico"
                     placeholder="Nome artístico"
-                    required
                     {...form.getInputProps('nome_artistico')}
                   />
 
@@ -881,7 +917,6 @@ export default function NovoCasting() {
                       value: cat.id.toString(),
                       label: cat.nome,
                     }))}
-                    required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -940,7 +975,7 @@ export default function NovoCasting() {
                 <Group align="flex-start" mb="md" mt="md">
                   <div style={{ flex: 1 }}>
                     <FileInput
-                      label="Foto Principal"
+                      label="Foto Principal (horizontal)"
                       description="Selecione uma imagem para a foto principal - formato landscape (JPG, PNG, WebP)"
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
@@ -990,6 +1025,15 @@ export default function NovoCasting() {
                 <Switch
                   label="Autoriza imagem no site"
                   {...form.getInputProps('autoriza_imagem_site', { type: 'checkbox' })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+                <Switch
+                  label="Aceita figuração?"
+                  {...form.getInputProps('aceita_figuracao', {
+                    type: 'checkbox',
+                  })}
+                  mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
               </Card>
@@ -1109,15 +1153,49 @@ export default function NovoCasting() {
                 )}
 
                 <Divider my="md" label="Idiomas" labelPosition="center" />
-                <MultiSelect
-                  label="Idiomas"
-                  placeholder="Selecione os idiomas"
-                  data={languages}
-                  searchable
-                  clearable
-                  {...form.getInputProps('idiomas')}
-                  mb="xl"
-                />
+
+                <Stack spacing="sm">
+                  <Text size="sm" weight={500}>
+                    Idiomas
+                  </Text>
+
+                  {languages.map(({ value, label }) => (
+                    <Group key={value} position="apart" grow>
+                      <Checkbox
+                        label={label}
+                        checked={idiomasSelecionados[value] || false}
+                        onChange={(event) =>
+                          toggleIdioma(value, event.currentTarget.checked)
+                        }
+                      />
+
+                      {idiomasSelecionados[value] && value !== 'outros' && (
+                        <Select
+                          data={languagesLevel}
+                          placeholder="Nível"
+                          value={idiomasNiveis[`nivel_${value}`] || ''}
+                          onChange={(nivel) =>
+                            setIdiomasNiveis((prev) => ({
+                              ...prev,
+                              [`nivel_${value}`]: nivel || '',
+                            }))
+                          }
+                          withinPortal
+                        />
+                      )}
+
+                      {idiomasSelecionados[value] && value === 'outros' && (
+                        <TextInput
+                          placeholder="Descreva os idiomas e níveis"
+                          value={idiomasOutros}
+                          onChange={(event) =>
+                            setIdiomasOutros(event.currentTarget.value)
+                          }
+                        />
+                      )}
+                    </Group>
+                  ))}
+                </Stack>
               </Card>
             </Tabs.Panel>
             <Tabs.Panel value="midia">
@@ -1264,40 +1342,6 @@ export default function NovoCasting() {
                       </Card>
                     ))}
                   </SimpleGrid>
-                )}
-
-                {/* Links de Trabalho adicionais (3 a 7) */}
-                {linksTrabalho.map(
-                  (link, index) =>
-                    index >= 2 && (
-                      <Box key={`trabalho_${index + 1}`} mb="md">
-                        <Group position="apart" mb="xs">
-                          <Text weight={500}>Link de Trabalho {index + 1}</Text>
-                          <ActionIcon
-                            color="red"
-                            onClick={() => {
-                              const novosLinks = [...linksTrabalho];
-                              novosLinks.splice(index, 1);
-                              setLinksTrabalho(novosLinks);
-                            }}
-                          >
-                            <IconTrash size={16} />
-                          </ActionIcon>
-                        </Group>
-                        <TextInput
-                          placeholder={`URL do trabalho ${index + 1}`}
-                          icon={<IconMovie size={14} />}
-                          value={link}
-                          onChange={(e) => {
-                            const novosLinks = [...linksTrabalho];
-                            novosLinks[index] = e.target.value;
-                            setLinksTrabalho(novosLinks);
-                          }}
-                          ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                        />
-                        {link && <VideoPreview url={link} height={280} />}
-                      </Box>
-                    ),
                 )}
               </Card>
             </Tabs.Panel>
@@ -1476,16 +1520,6 @@ export default function NovoCasting() {
                       ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       style={{ flexGrow: 1 }} // ocupa o espaço restante
                     />
-                    <Box pt={22}>
-                      <Switch
-                        label="Aceita figuração?"
-                        {...form.getInputProps('aceita_figuracao', {
-                          type: 'checkbox',
-                        })}
-                        mb="md"
-                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                      />
-                    </Box>
                   </Flex>
                 )}
                 <Divider
