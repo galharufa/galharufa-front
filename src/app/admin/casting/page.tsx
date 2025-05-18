@@ -389,8 +389,8 @@ export default function CastingAdmin() {
                                 }}
                               >
                                 <Image
-                                  src={casting.foto_principal}
                                   alt={casting.nome_artistico}
+                                  src={casting.foto_principal}
                                   fill
                                   style={{ objectFit: 'cover' }}
                                 />

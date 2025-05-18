@@ -25,7 +25,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
           {!isAdminRoute && !isAdminLoginPage && <Navbar />}
           <main className="min-h-screen">{children}</main>
           {!isAdminRoute && !isAdminLoginPage && <Footer />}
-          <Notifications position="bottom-right" />
+          <Notifications position="top-right" zIndex={2077} />
         </MantineProvider>
       </ThemeProvider>
     </AuthProvider>

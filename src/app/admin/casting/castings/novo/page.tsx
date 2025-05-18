@@ -251,11 +251,6 @@ export default function NovoCasting() {
       try {
         const categoriasData = await CastingService.getCategorias({ ordering: 'nome' });
         setCategorias(categoriasData.results || []);
-        notifications.show({
-          title: 'Dados',
-          message: 'Dados carregados com sucesso!',
-          color: 'green',
-        });
       } catch (error) {
         console.error('Falha ao carregar dados iniciais:', error);
         notifications.show({
@@ -301,13 +296,6 @@ export default function NovoCasting() {
     // Adiciona nova foto e legenda
     setFotosAdicionais([...fotosAdicionais, null as unknown as File]);
     setLegendasFotos([...legendasFotos, '']);
-
-    // Notificação de sucesso
-    notifications.show({
-      title: 'Foto adicionada',
-      message: 'Nova foto foi adicionada com sucesso!',
-      color: 'green',
-    });
   };
 
   const removerFoto = (index: number) => {
@@ -385,12 +373,6 @@ export default function NovoCasting() {
     // Adiciona novo campo vazio
     setVideos([...videos, '']);
     setDescricaoVideos([...descricaoVideos, '']);
-    // Notificação de sucesso
-    notifications.show({
-      title: 'Vídeo adicionada',
-      message: 'Novo vídeo foi adicionada com sucesso!',
-      color: 'green',
-    });
   };
 
   const removerVideo = (index: number) => {
@@ -728,8 +710,6 @@ export default function NovoCasting() {
         );
       }
 
-      successToast('Casting cadastrado com sucesso!');
-
       // Enviar para o backend
       try {
         // Usando a instância de API configurada no projeto
@@ -816,7 +796,9 @@ export default function NovoCasting() {
 
           console.log(formData);
           successToast('Casting cadastrado com sucesso!');
-          router.push('/admin/casting');
+          setTimeout(() => {
+            router.push('/admin/casting');
+          }, 600); // tempo suficiente pro usuário ver o toast
         } catch (apiError: any) {
           console.error('Erro na chamada da API:', apiError);
           errorToast('Erro na chamada da API: ' + apiError);
@@ -876,7 +858,6 @@ export default function NovoCasting() {
       errorToast('Falha ao processar formulário. Tente novamente.');
     } finally {
       console.log('Finalizando processo de salvamento');
-      successToast('Casting cadastrado com sucesso!');
       setIsSubmitting(false);
     }
   };
@@ -949,6 +930,7 @@ export default function NovoCasting() {
                     label="Nome"
                     placeholder="Nome completo"
                     {...form.getInputProps('nome')}
+                    required
                   />
 
                   <TextInput
@@ -964,6 +946,7 @@ export default function NovoCasting() {
                       value: cat.id.toString(),
                       label: cat.nome,
                     }))}
+                    required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1005,6 +988,7 @@ export default function NovoCasting() {
                     label="Habilidades"
                     searchable
                     clearable
+                    required
                     placeholder="Selecione uma ou mais habilidades"
                     data={habilidadesData}
                     {...form.getInputProps('habilidades')}
@@ -1023,6 +1007,7 @@ export default function NovoCasting() {
                   <div style={{ flex: 1 }}>
                     <FileInput
                       label="Foto Principal (horizontal)"
+                      required
                       description="Selecione uma imagem para a foto principal - formato landscape (JPG, PNG, WebP)"
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
@@ -1114,6 +1099,7 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     step={0.01}
                     {...form.getInputProps('altura')}
+                    required
                   />
                   <NumberInput
                     label="Peso (em kg)"
@@ -1121,6 +1107,7 @@ export default function NovoCasting() {
                     precision={1}
                     min={20}
                     max={200}
+                    required
                     {...form.getInputProps('peso')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1609,11 +1596,15 @@ export default function NovoCasting() {
                   minRows={4}
                   {...form.getInputProps('biografia')}
                   mb="md"
+                  required
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Text size="sm" fw={500} mb="xs">
-                  Experiências
+                  Experiências{' '}
+                  <Text span c="red">
+                    *
+                  </Text>
                 </Text>
                 <RichTextEditor editor={editor}>
                   <RichTextEditor.Toolbar sticky stickyOffset={60}>
