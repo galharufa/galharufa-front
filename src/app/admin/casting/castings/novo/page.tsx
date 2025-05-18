@@ -17,11 +17,13 @@ import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../components/AdminNavbar';
+// import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { warningToast, successToast, infoToast, errorToast } from '@/utils';
 import { CastingService, api } from '@/services';
 import VideoPreview from '@/components/shared/VideoPreview';
 import ImagePreview from '@/components/shared/ImagePreview';
 import Image from 'next/image';
-import { notifications } from '@mantine/notifications';
 import { SearchZipCode } from '@/components/shared/SearchZipCode';
 import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
 import { compressImage } from '@/utils/imageCompression';
@@ -41,11 +43,9 @@ import {
   FileInput,
   Tabs,
   Loader,
-  NumberInput,
   MultiSelect,
   Divider,
   SimpleGrid,
-  Box,
   Flex,
   Stack,
   Checkbox,
@@ -53,14 +53,10 @@ import {
 import {
   banksList,
   corCabelo,
-  errorToast,
   genderData,
-  infoToast,
   languages,
   languagesLevel,
-  successToast,
   tipoCabelo,
-  warningToast,
 } from '@/utils';
 import {
   IconUpload,
@@ -253,11 +249,7 @@ export default function NovoCasting() {
         setCategorias(categoriasData.results || []);
       } catch (error) {
         console.error('Falha ao carregar dados iniciais:', error);
-        notifications.show({
-          title: 'Erro',
-          message: 'Falha ao carregar dados iniciais. Tente novamente mais tarde.',
-          color: 'red',
-        });
+        errorToast('Falha ao carregar dados iniciais. Tente novamente mais tarde.');
       }
     };
 
@@ -274,22 +266,19 @@ export default function NovoCasting() {
   const adicionarFoto = () => {
     // Verifica se já atingiu o limite de 8 fotos
     if (fotosAdicionais.length >= 6) {
-      notifications.show({
-        title: 'Limite atingido',
-        message: 'Você já adicionou o número máximo de 6 fotos.',
-        color: 'yellow',
-      });
+      warningToast('Limite atingido', 'Você já adicionou o número máximo de 6 fotos');
+
       return;
     }
 
     // Verifica se a última foto adicionada está preenchida
     const ultimaFotoIndex = fotosAdicionais.length - 1;
     if (ultimaFotoIndex >= 0 && !fotosAdicionais[ultimaFotoIndex]) {
-      notifications.show({
-        title: 'Foto vazia',
-        message: 'Selecione uma imagem para a foto atual antes de adicionar outra.',
-        color: 'yellow',
-      });
+      warningToast(
+        'Foto vazia',
+        'Selecione uma imagem para a foto atual antes de adicionar outra.',
+      );
+
       return;
     }
 
@@ -307,13 +296,6 @@ export default function NovoCasting() {
 
     setFotosAdicionais(novasFotos);
     setLegendasFotos(novasLegendas);
-
-    // Notificação de sucesso
-    notifications.show({
-      title: 'Foto removida',
-      message: 'Foto removida com sucesso!',
-      color: 'green',
-    });
   };
 
   const atualizarFoto = (file: File | null, index: number) => {
@@ -322,22 +304,12 @@ export default function NovoCasting() {
     const novasFotos = [...fotosAdicionais];
     novasFotos[index] = file;
     setFotosAdicionais(novasFotos);
-    notifications.show({
-      title: 'Foto atualizada',
-      message: 'Foto atualizada com sucesso!',
-      color: 'green',
-    });
   };
 
   const atualizarLegenda = (legenda: string, index: number) => {
     const novasLegendas = [...legendasFotos];
     novasLegendas[index] = legenda;
     setLegendasFotos(novasLegendas);
-    notifications.show({
-      title: 'Legenda atualizada',
-      message: 'Legenda atualizada com sucesso!',
-      color: 'green',
-    });
   };
 
   // Funções para gerenciar vídeos
@@ -345,11 +317,7 @@ export default function NovoCasting() {
     const LIMITE_MAXIMO = 6;
 
     if (videos.length >= LIMITE_MAXIMO) {
-      notifications.show({
-        title: 'Limite atingido',
-        message: 'Você só pode adicionar até 6 vídeos',
-        color: 'yellow',
-      });
+      warningToast('Limite atingido', 'Você já adicionou o número máximo de 6 vídeos');
       return;
     }
     // Se o array está vazio, pode adicionar o primeiro vídeo sem validação
@@ -362,11 +330,7 @@ export default function NovoCasting() {
     // Se o último vídeo está vazio, bloqueia
     const ultimoVideo = videos[videos.length - 1];
     if (!ultimoVideo?.trim()) {
-      notifications.show({
-        title: 'Campo vazio',
-        message: 'Preencha o link atual antes de adicionar outro.',
-        color: 'yellow',
-      });
+      warningToast('Campo vazio', 'Preencha o link atual antes de adicionar outro.');
       return;
     }
 
@@ -383,33 +347,18 @@ export default function NovoCasting() {
     const novasDescricoes = [...descricaoVideos];
     novasDescricoes.splice(index, 1);
     setDescricaoVideos(novasDescricoes);
-    notifications.show({
-      title: 'Vídeo Removido',
-      message: 'Vídeo removido com sucesso!',
-      color: 'green',
-    });
   };
 
   const atualizarVideo = (valor: string, index: number) => {
     const novosVideos = [...videos];
     novosVideos[index] = valor;
     setVideos(novosVideos);
-    notifications.show({
-      title: 'Vídeo atualizado',
-      message: 'Vídeo foi atualizado com sucesso!',
-      color: 'green',
-    });
   };
 
   const atualizarDescricaoVideo = (valor: string, index: number) => {
     const novasDescricoes = [...descricaoVideos];
     novasDescricoes[index] = valor;
     setDescricaoVideos(novasDescricoes);
-    notifications.show({
-      title: 'Descrição atualizada',
-      message: 'Descrição foi atualizada com sucesso!',
-      color: 'green',
-    });
   };
 
   // Função para salvar o casting
@@ -795,10 +744,10 @@ export default function NovoCasting() {
           }
 
           console.log(formData);
-          successToast('Casting cadastrado com sucesso!');
+          successToast('Cadastrado!', 'Casting cadastrado com sucesso!');
           setTimeout(() => {
             router.push('/admin/casting');
-          }, 600); // tempo suficiente pro usuário ver o toast
+          }, 1500); // tempo suficiente pro usuário ver o toast
         } catch (apiError: any) {
           console.error('Erro na chamada da API:', apiError);
           errorToast('Erro na chamada da API: ' + apiError);
@@ -812,10 +761,16 @@ export default function NovoCasting() {
         }
       } catch (error: any) {
         console.error('Erro ao cadastrar casting:', error);
-        errorToast(
-          `Falha ao cadastrar: ${error?.response?.data?.detail || error.message || 'Erro desconhecido'}`,
-        );
         console.error('Stack de erro:', error.stack);
+
+        if (error.response?.status === 400 && error.response.data) {
+          const erros = error.response.data;
+          const primeiroCampo = Object.keys(erros)[0];
+          const mensagem = Array.isArray(erros[primeiroCampo])
+            ? erros[primeiroCampo][0]
+            : erros[primeiroCampo];
+          errorToast(`Erro: ${mensagem}`);
+        }
 
         // Log detalhado dos erros
         if (error.response) {
@@ -832,7 +787,7 @@ export default function NovoCasting() {
         } else {
           // Erro durante a configuração da requisição
           console.error('Erro de configuração da requisição: ', error.message);
-          errorToast('Erro de configuração da requisição: ' + error.message);
+          errorToast('Erro de configuração da requisição: ', error.message);
         }
 
         // Verificar se é erro de autenticação
@@ -878,11 +833,7 @@ export default function NovoCasting() {
   }
 
   if (!isAuthenticated) {
-    notifications.show({
-      title: 'Acesso negado',
-      message: 'Você precisa estar logado para acessar esta área.',
-      color: 'red',
-    });
+    errorToast('Acesso negado', 'Você precisa estar logado para acessar esta área.');
     return null;
   }
 
@@ -930,7 +881,7 @@ export default function NovoCasting() {
                     label="Nome"
                     placeholder="Nome completo"
                     {...form.getInputProps('nome')}
-                    required
+                    // required
                   />
 
                   <TextInput
@@ -946,7 +897,7 @@ export default function NovoCasting() {
                       value: cat.id.toString(),
                       label: cat.nome,
                     }))}
-                    required
+                    // required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -988,7 +939,7 @@ export default function NovoCasting() {
                     label="Habilidades"
                     searchable
                     clearable
-                    required
+                    // required
                     placeholder="Selecione uma ou mais habilidades"
                     data={habilidadesData}
                     {...form.getInputProps('habilidades')}
@@ -1007,7 +958,7 @@ export default function NovoCasting() {
                   <div style={{ flex: 1 }}>
                     <FileInput
                       label="Foto Principal (horizontal)"
-                      required
+                      // required
                       description="Selecione uma imagem para a foto principal - formato landscape (JPG, PNG, WebP)"
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
@@ -1090,24 +1041,22 @@ export default function NovoCasting() {
                     }}
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Altura (em metros)"
                     placeholder="Ex: 1.75"
-                    precision={2}
                     min={0.5}
                     max={2.5}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     step={0.01}
                     {...form.getInputProps('altura')}
-                    required
+                    // required
                   />
-                  <NumberInput
+                  <TextInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
-                    precision={1}
                     min={20}
                     max={200}
-                    required
+                    // required
                     {...form.getInputProps('peso')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1127,7 +1076,7 @@ export default function NovoCasting() {
                     {...form.getInputProps('sapato')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                  <NumberInput
+                  <TextInput
                     label="Terno"
                     placeholder="Tamanho do terno"
                     {...form.getInputProps('terno')}
@@ -1136,7 +1085,7 @@ export default function NovoCasting() {
 
                   <TextInput
                     label="Camisa"
-                    placeholder="Tamanho da camisa"
+                    placeholder="Tamanho (numérico) da camisa"
                     {...form.getInputProps('camisa')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1596,15 +1545,12 @@ export default function NovoCasting() {
                   minRows={4}
                   {...form.getInputProps('biografia')}
                   mb="md"
-                  required
+                  // required
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
                 <Text size="sm" fw={500} mb="xs">
-                  Experiências{' '}
-                  <Text span c="red">
-                    *
-                  </Text>
+                  Experiências
                 </Text>
                 <RichTextEditor editor={editor}>
                   <RichTextEditor.Toolbar sticky stickyOffset={60}>

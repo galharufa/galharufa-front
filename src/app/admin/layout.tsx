@@ -7,7 +7,9 @@ import { AuthProvider } from '@/hooks/useAuth';
 import { AuthService } from '@/services/auth.service';
 // Removendo import de Notifications para evitar duplicação de toasts
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { notifications } from '@mantine/notifications';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { warningToast } from '@/utils';
 
 // Criando o cliente de consulta para React Query
 const queryClient = new QueryClient();
@@ -23,11 +25,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   useEffect(() => {
     AuthService.scheduleTokenWarning(() => {
-      notifications.show({
-        title: 'Sessão prestes a expirar',
-        message: 'Deseja continuar logado?',
-        color: 'yellow',
-      });
+      warningToast('Deseja continuar logado?');
     });
   }, []);
 
@@ -40,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <AuthProvider>
             <AppShell padding={0}>
-              {/* Removido componente Notifications para evitar duplicação de toasts */}
+              <ToastContainer />
               {children}
             </AppShell>
           </AuthProvider>
