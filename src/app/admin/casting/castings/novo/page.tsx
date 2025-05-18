@@ -27,6 +27,7 @@ import Image from 'next/image';
 import { SearchZipCode } from '@/components/shared/SearchZipCode';
 import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
 import { compressImage } from '@/utils/imageCompression';
+import { isAxiosError } from 'axios';
 import {
   Container,
   Title,
@@ -763,15 +764,6 @@ export default function NovoCasting() {
         console.error('Erro ao cadastrar casting:', error);
         console.error('Stack de erro:', error.stack);
 
-        if (error.response?.status === 400 && error.response.data) {
-          const erros = error.response.data;
-          const primeiroCampo = Object.keys(erros)[0];
-          const mensagem = Array.isArray(erros[primeiroCampo])
-            ? erros[primeiroCampo][0]
-            : erros[primeiroCampo];
-          errorToast(`Erro: ${mensagem}`);
-        }
-
         // Log detalhado dos erros
         if (error.response) {
           // Resposta do servidor com status de erro
@@ -803,14 +795,29 @@ export default function NovoCasting() {
       }
     } catch (error: unknown) {
       console.error('Erro ao processar formulário:', error);
-      errorToast(`Falha ao processar: ${error || 'Erro desconhecido'}`);
-      if (error instanceof Error) {
-        console.error('Detalhes do erro:', error.stack);
-        errorToast(
-          `Falha ao processar: ${error.stack || error.message || 'Erro desconhecido'}`,
-        );
+
+      if (isAxiosError(error)) {
+        if (error.response?.status === 400 && error.response.data) {
+          const erros = error.response.data;
+
+          Object.entries(erros).forEach(([campo, mensagens]) => {
+            const mensagem = Array.isArray(mensagens) ? mensagens[0] : mensagens;
+            errorToast(mensagem, `Erro no campo "${campo}"`);
+          });
+          return;
+        }
+
+        // Outros erros de Axios
+        errorToast(error.message || 'Erro desconhecido', 'Erro ao processar');
+        return;
       }
-      errorToast('Falha ao processar formulário. Tente novamente.');
+
+      // Erro genérico
+      if (error instanceof Error) {
+        errorToast(error.message || 'Erro desconhecido', 'Erro ao processar');
+      } else {
+        errorToast('Erro inesperado. Tente novamente.', 'Erro');
+      }
     } finally {
       console.log('Finalizando processo de salvamento');
       setIsSubmitting(false);
@@ -881,7 +888,7 @@ export default function NovoCasting() {
                     label="Nome"
                     placeholder="Nome completo"
                     {...form.getInputProps('nome')}
-                    // required
+                    required
                   />
 
                   <TextInput
@@ -897,7 +904,7 @@ export default function NovoCasting() {
                       value: cat.id.toString(),
                       label: cat.nome,
                     }))}
-                    // required
+                    required
                     {...form.getInputProps('categoria')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -939,7 +946,7 @@ export default function NovoCasting() {
                     label="Habilidades"
                     searchable
                     clearable
-                    // required
+                    required
                     placeholder="Selecione uma ou mais habilidades"
                     data={habilidadesData}
                     {...form.getInputProps('habilidades')}
@@ -958,7 +965,7 @@ export default function NovoCasting() {
                   <div style={{ flex: 1 }}>
                     <FileInput
                       label="Foto Principal (horizontal)"
-                      // required
+                      required
                       description="Selecione uma imagem para a foto principal - formato landscape (JPG, PNG, WebP)"
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
@@ -1049,14 +1056,14 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     step={0.01}
                     {...form.getInputProps('altura')}
-                    // required
+                    required
                   />
                   <TextInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
                     min={20}
                     max={200}
-                    // required
+                    required
                     {...form.getInputProps('peso')}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
@@ -1545,7 +1552,7 @@ export default function NovoCasting() {
                   minRows={4}
                   {...form.getInputProps('biografia')}
                   mb="md"
-                  // required
+                  required
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />
 
