@@ -11,11 +11,9 @@ import AnimatedImage from '@/components/shared/AnimatedImage';
 import { CastingDetalhado, CastingService } from '@/services';
 import parse from 'html-react-parser';
 import {
-  // tipoMap,
   etniaMap,
   tipoCabeloMap,
   genderMap,
-  // languagesMap,
   corCabeloMap,
   nacionalidadeMap,
   corOlhosMap,
@@ -131,7 +129,7 @@ export default function CastingPage() {
         <div className="absolute inset-0">
           <Image
             src={casting.foto_principal}
-            alt={casting.nome_artistico}
+            alt={casting.nome}
             fill
             className="object-cover object-center"
             priority

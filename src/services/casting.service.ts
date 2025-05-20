@@ -84,7 +84,7 @@ export interface CastingResumido extends CastingDetalhado {
 export interface CastingDetalhado {
   id: string;
   nome: string;
-  nome_artistico?: string;
+  nome_artistico: string;
   genero?: string;
   categoria: string;
   categoria_nome?: string;
