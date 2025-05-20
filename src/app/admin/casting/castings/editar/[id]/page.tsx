@@ -22,7 +22,6 @@ import {
   FileInput,
   Tabs,
   Loader,
-  NumberInput,
   MultiSelect,
   Divider,
   SimpleGrid,
@@ -42,18 +41,18 @@ import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../../components/AdminNavbar';
 import { CastingService, type CastingDetalhado, type Foto, type Video } from '@/services';
+import 'react-toastify/dist/ReactToastify.css';
+import { warningToast, successToast, infoToast, errorToast } from '@/utils';
 import VideoPreview from '@/components/shared/VideoPreview';
 import ImagePreview from '@/components/shared/ImagePreview';
+import { compressImage } from '@/utils/imageCompression';
 import { SearchZipCode } from '@/components/shared/SearchZipCode';
 import Image from 'next/image';
-import { notifications } from '@mantine/notifications';
 import {
   corCabelo,
   estados,
-  errorToast,
   genderData,
   habilidadesData,
-  successToast,
   etny,
   nationality,
   banksList,
@@ -62,7 +61,6 @@ import {
   corOlhos,
   tipoCabelo,
 } from '@/utils';
-import { compressImage } from '@/utils/imageCompression';
 
 import {
   IconUpload,
@@ -81,7 +79,6 @@ import {
   IconBrandWhatsapp,
   IconMap,
 } from '@tabler/icons-react';
-import { Idiomas } from '@/services/casting.service';
 
 export default function EditarCasting() {
   const params = useParams();
@@ -163,15 +160,17 @@ export default function EditarCasting() {
       DRT: '',
       RG: '',
       CPF: '',
+      PIS: '',
       tem_passaporte: false,
       passaporte: '',
       validade_passaporte: null as Date | null,
       CNH: '',
+      habilitacao_categorias: [] as string[],
+      habilitacao_validade: null as Date | null,
+      possui_nota_propria: false,
       CNPJ: '',
-      PIS: '',
       razao_social: '',
       inscricao_estadual: '',
-      possui_nota_propria: false,
 
       // Campos de exclusividade do casting
       exclusividade_outro_agente: false,
@@ -210,12 +209,11 @@ export default function EditarCasting() {
       tipo_conta: '',
       pix_chave: '',
 
-      // Idiomas (mantido como objeto, pois já usa em grupo)
       idiomas: {
-        portugues: false,
-        nivel_portugues: '',
         ingles: false,
         nivel_ingles: '',
+        portugues: false,
+        nivel_portugues: '',
         espanhol: false,
         nivel_espanhol: '',
         frances: false,
@@ -236,9 +234,6 @@ export default function EditarCasting() {
         nivel_hungaro: '',
         outros_idiomas: '',
       },
-
-      habilitacao_categorias: [],
-      habilitacao_validade: null as Date | null,
     },
     validate: {
       // nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
@@ -254,10 +249,10 @@ export default function EditarCasting() {
       form.getInputProps('experiencia').onChange(editor.getHTML()),
     editorProps: {
       attributes: {
-        class: 'min-h-[150px]', // ou qualquer classe Tailwind para altura inicial
+        class: 'min-h-[150px]',
       },
     },
-    immediatelyRender: false, // ✅ isso remove os avisos de SSR
+    immediatelyRender: false,
   });
 
   //Limpa / adiciona mascara ao campo de CEP para api conseguir calcular
@@ -268,7 +263,7 @@ export default function EditarCasting() {
     if (valor.length === 8) {
       form.setFieldValue('cep', valor.replace(/(\d{5})(\d{3})/, '$1-$2'));
     } else {
-      alert('CEP inválido. Use o formato 00000000, sem espaços ou traços');
+      infoToast('CEP inválido. Use o formato 00000000, sem espaços ou traços');
     }
   };
 
@@ -291,11 +286,10 @@ export default function EditarCasting() {
         setCategorias(categoriasData.results || []);
       } catch (error) {
         console.error('Falha ao carregar dados iniciais:', error);
-        notifications.show({
-          title: 'Erro',
-          message: 'Falha ao carregar dados iniciais. Tente novamente mais tarde.',
-          color: 'red',
-        });
+        errorToast(
+          'Falha ao carregar dados iniciais. Tente novamente mais tarde.',
+          'Erro',
+        );
       }
     };
 
@@ -303,6 +297,7 @@ export default function EditarCasting() {
   }, []);
 
   useEffect(() => {
+    //carregamento de dados ocorre aqui
     const carregarDados = async () => {
       if (!isAuthenticated || !id || dadosCarregados.current) return;
 
@@ -326,6 +321,43 @@ export default function EditarCasting() {
         const passaporteValidade = castingResponse.validade_passaporte
           ? new Date(castingResponse.validade_passaporte)
           : null;
+
+        // Sincronizar checkboxes de idiomas
+        const idiomasData = castingResponse.idiomas;
+        if (idiomasData) {
+          const selecionados: Record<string, boolean> = {};
+          const niveis: Record<string, string> = {};
+
+          Object.entries(idiomasData).forEach(([key, value]) => {
+            if (
+              [
+                'ingles',
+                'portugues',
+                'espanhol',
+                'frances',
+                'italiano',
+                'alemao',
+                'mandarim',
+                'japones',
+                'russo',
+                'arabe',
+                'hungaro',
+                'outros',
+              ].includes(key) &&
+              value === true
+            ) {
+              selecionados[key] = true;
+            }
+
+            if (key.startsWith('nivel_') && value) {
+              niveis[key] = value;
+            }
+          });
+
+          setIdiomasSelecionados(selecionados);
+          setIdiomasNiveis(niveis);
+          setIdiomasOutros(idiomasData.outros_idiomas || '');
+        }
 
         form.setValues({
           nome: castingResponse.nome || '',
@@ -369,6 +401,7 @@ export default function EditarCasting() {
           website: castingResponse.website || '',
           celular_whatsapp: castingResponse.celular_whatsapp,
           habilitacao_validade: habilitacaoValidade,
+          habilitacao_categorias: parseJsonArray(castingResponse.habilitacao_categorias),
 
           tem_passaporte: castingResponse.tem_passaporte || false,
           passaporte: castingResponse.passaporte || '',
@@ -409,11 +442,32 @@ export default function EditarCasting() {
           tipo_conta: castingResponse.dados_bancarios?.tipo_conta || '',
           pix_chave: castingResponse.dados_bancarios?.pix_chave || '',
 
-          habilitacao_categorias: parseJsonArray(castingResponse.habilitacao_categorias),
-
-          idiomas: castingResponse.idiomas as Idiomas,
+          idiomas: {
+            ingles: castingResponse.idiomas?.ingles ?? false,
+            nivel_ingles: castingResponse.idiomas?.nivel_ingles ?? '',
+            portugues: castingResponse.idiomas?.portugues ?? false,
+            nivel_portugues: castingResponse.idiomas?.nivel_portugues ?? '',
+            espanhol: castingResponse.idiomas?.espanhol ?? false,
+            nivel_espanhol: castingResponse.idiomas?.nivel_espanhol ?? '',
+            frances: castingResponse.idiomas?.frances ?? false,
+            nivel_frances: castingResponse.idiomas?.nivel_frances ?? '',
+            italiano: castingResponse.idiomas?.italiano ?? false,
+            nivel_italiano: castingResponse.idiomas?.nivel_italiano ?? '',
+            alemao: castingResponse.idiomas?.alemao ?? false,
+            nivel_alemao: castingResponse.idiomas?.nivel_alemao ?? '',
+            mandarim: castingResponse.idiomas?.mandarim ?? false,
+            nivel_mandarim: castingResponse.idiomas?.nivel_mandarim ?? '',
+            japones: castingResponse.idiomas?.japones ?? false,
+            nivel_japones: castingResponse.idiomas?.nivel_japones ?? '',
+            russo: castingResponse.idiomas?.russo ?? false,
+            nivel_russo: castingResponse.idiomas?.nivel_russo ?? '',
+            arabe: castingResponse.idiomas?.arabe ?? false,
+            nivel_arabe: castingResponse.idiomas?.nivel_arabe ?? '',
+            hungaro: castingResponse.idiomas?.hungaro ?? false,
+            nivel_hungaro: castingResponse.idiomas?.nivel_hungaro ?? '',
+            outros_idiomas: castingResponse.idiomas?.outros_idiomas ?? '',
+          },
         });
-        // console.log(castingResponse);
         console.log('Casting Response retornado:', castingResponse);
       } catch (error) {
         console.error('Erro ao carregar dados:', error);
@@ -452,22 +506,18 @@ export default function EditarCasting() {
     const LIMITE_MAXIMO = 6;
     const totalFotos = fotosExistentes.length + fotosAdicionais.length;
     if (totalFotos >= LIMITE_MAXIMO) {
-      notifications.show({
-        title: 'Limite atingido',
-        message: 'Você já adicionou o número máximo de 6 fotos.',
-        color: 'yellow',
-      });
+      warningToast('Você já adicionou o número máximo de 6 fotos.', 'Limite atingido');
       return;
     }
 
     // Verifica se a última foto adicionada está preenchida
     const ultimaFotoIndex = fotosAdicionais.length - 1;
     if (ultimaFotoIndex >= 0 && !fotosAdicionais[ultimaFotoIndex]) {
-      notifications.show({
-        title: 'Foto vazia',
-        message: 'Selecione uma imagem para a foto atual antes de adicionar outra.',
-        color: 'yellow',
-      });
+      warningToast(
+        'Selecione uma imagem para a foto atual antes de adicionar outra.',
+        'Foto vazia',
+      );
+
       return;
     }
     setFotosAdicionais([...fotosAdicionais, null as unknown as File]);
@@ -512,22 +562,18 @@ export default function EditarCasting() {
     const totalVideos = videosExistentes.length + videosNovos.length;
 
     if (totalVideos >= LIMITE_MAXIMO) {
-      notifications.show({
-        title: 'Limite atingido',
-        message: 'Você só pode adicionar até 6 vídeos',
-        color: 'yellow',
-      });
+      warningToast('Você só pode adicionar até 6 vídeos', 'Limite atingido');
       return;
     }
 
     if (videosNovos.length > 0) {
       const ultimo = videosNovos[videosNovos.length - 1];
       if (!ultimo.titulo.trim() || !ultimo.url.trim()) {
-        notifications.show({
-          title: 'Campos obrigatórios',
-          message: 'Preencha o título e o link do último vídeo antes de adicionar outro.',
-          color: 'yellow',
-        });
+        warningToast(
+          'Preencha o título e o link do último vídeo antes de adicionar outro.',
+          'Campos obrigatórios',
+        );
+
         return;
       }
     }
@@ -626,6 +672,8 @@ export default function EditarCasting() {
       if (values.natural_de) formData.append('natural_de', values.natural_de);
       if (values.nacionalidade) formData.append('nacionalidade', values.nacionalidade);
       if (values.etnia) formData.append('etnia', values.etnia);
+      if (values.habilidades)
+        formData.append('habilidades', JSON.stringify(values.habilidades));
 
       // Data de nascimento
       if (values.data_nascimento) {
@@ -670,12 +718,6 @@ export default function EditarCasting() {
       );
       if (values.CNH) formData.append('CNH', values.CNH);
 
-      // Currículo e habilidades
-      if (values.habilidades)
-        values.habilidades.forEach((habilidade) => {
-          formData.append('habilidades', habilidade);
-        });
-
       // Contato
       if (values.celular_whatsapp)
         formData.append('celular_whatsapp', values.celular_whatsapp);
@@ -691,7 +733,6 @@ export default function EditarCasting() {
           values.contato_emergencia_telefone,
         );
 
-      // ✅ Endereço (usa .entries com prefixo "endereco.")
       formData.append('endereco.cep', values.cep || '');
       formData.append('endereco.logradouro', values.logradouro || '');
       formData.append('endereco.numero', values.numero || '');
@@ -700,23 +741,22 @@ export default function EditarCasting() {
       formData.append('endereco.cidade', values.cidade || '');
       formData.append('endereco.estado', values.estado || '');
 
-      // ✅ Dados bancários
       formData.append('dados_bancarios.banco', values.banco || '');
       formData.append('dados_bancarios.agencia', values.agencia || '');
       formData.append('dados_bancarios.conta', values.conta || '');
       formData.append('dados_bancarios.tipo_conta', values.tipo_conta || '');
       formData.append('dados_bancarios.pix_chave', values.pix_chave || '');
 
-      // ✅ Idiomas
       Object.entries(values.idiomas || {}).forEach(([key, value]) => {
         if (value !== undefined && value !== null)
           formData.append(`idiomas.${key}`, value.toString());
       });
 
       if (values.habilitacao_categorias)
-        values.habilitacao_categorias.forEach((cat) => {
-          formData.append('habilitacao_categorias', cat);
-        });
+        formData.append(
+          'habilitacao_categorias',
+          JSON.stringify(values.habilitacao_categorias),
+        );
 
       if (values.habilitacao_validade) {
         formData.append(
@@ -737,6 +777,7 @@ export default function EditarCasting() {
         'autoriza_imagem_site',
         values.autoriza_imagem_site ? 'true' : 'false',
       );
+      formData.append('aceita_figuracao', values.aceita_figuracao ? 'true' : 'false');
 
       // Adicionar foto principal se existir
       if (values.foto_principal) {
@@ -744,7 +785,16 @@ export default function EditarCasting() {
       }
 
       // Atualizar o casting
-      await CastingService.atualizarCasting(String(casting.id), formData);
+      // await CastingService.atualizarCasting(String(casting.id), formData);
+
+      const response = await CastingService.atualizarCasting(
+        String(casting.id),
+        formData,
+      );
+
+      if (response?.foto_principal) {
+        setPreviewFotoPrincipal(response.foto_principal);
+      }
 
       // Excluir fotos marcadas para exclusão
       const excluirFotosPromises = fotosParaExcluir.map((id) =>
@@ -945,12 +995,12 @@ export default function EditarCasting() {
                         form.setFieldValue('foto_principal', file);
                         setPreviewFotoPrincipal(file ? URL.createObjectURL(file) : null);
                       }}
-                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                      ref={undefined} // Corrigindo o problema de ref no React 19
                     />
                   </div>
 
+                  {/* Se tiver preview (imagem nova) */}
                   {previewFotoPrincipal ? (
-                    // MOSTRA SOMENTE O PREVIEW SE ELE EXISTIR
                     <div>
                       <Text size="sm" weight={500} mb={5}>
                         Pré-visualização
@@ -974,7 +1024,7 @@ export default function EditarCasting() {
                       </div>
                     </div>
                   ) : casting.foto_principal ? (
-                    // SE NÃO TEM PREVIEW, MOSTRA A FOTO ORIGINAL DO BACKEND
+                    // Se não tiver preview, exibe a do backend
                     <div>
                       <Text size="sm" weight={500} mb={5}>
                         Foto Atual <br />
@@ -991,7 +1041,7 @@ export default function EditarCasting() {
                       >
                         <Image
                           src={casting.foto_principal}
-                          alt={casting.nome_artistico}
+                          alt={casting.nome}
                           style={{ objectFit: 'cover' }}
                           fill
                           sizes="300px"
@@ -1045,20 +1095,19 @@ export default function EditarCasting() {
                     }}
                   />
 
-                  <NumberInput
+                  <TextInput
                     label="Altura (em metros)"
                     placeholder="Ex: 1.75"
-                    precision={2}
                     min={0.5}
                     max={2.5}
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     step={0.01}
+                    required
                     {...form.getInputProps('altura')}
                   />
-                  <NumberInput
+                  <TextInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
-                    precision={1}
                     min={20}
                     max={200}
                     {...form.getInputProps('peso')}
@@ -1157,7 +1206,7 @@ export default function EditarCasting() {
                         <Select
                           data={languagesLevel}
                           placeholder="Nível"
-                          value={idiomasNiveis[`nivel_${value}`] || ''}
+                          value={idiomasNiveis[`nivel_${value}`]}
                           onChange={(nivel) =>
                             setIdiomasNiveis((prev) => ({
                               ...prev,

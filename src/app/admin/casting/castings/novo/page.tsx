@@ -523,7 +523,7 @@ export default function NovoCasting() {
       });
 
       (values.idiomas || []).forEach((item: any) => {
-        formData.append('endereco', item);
+        formData.append('idiomas', item);
       });
 
       // Contato

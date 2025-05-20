@@ -48,32 +48,32 @@ export interface DadosBancarios {
   tipo_conta: string;
   pix_chave: string;
 }
-
-type NivelIdioma = 'basico' | 'intermediário' | 'avancado' | 'Fluente';
+export type NivelIdioma = 'basico' | 'intermediário' | 'avancado' | 'fluente' | 'nativo';
 
 export interface Idiomas {
   ingles: boolean;
-  nivel_ingles?: NivelIdioma;
+  nivel_ingles?: string;
   portugues: boolean;
-  nivel_portugues?: NivelIdioma;
+  nivel_portugues?: string;
   espanhol: boolean;
-  nivel_espanhol?: NivelIdioma;
+  nivel_espanhol?: string;
   frances: boolean;
-  nivel_frances?: NivelIdioma;
+  nivel_frances?: string;
   italiano: boolean;
-  nivel_italiano?: NivelIdioma;
+  nivel_italiano?: string;
   alemao: boolean;
-  nivel_alemao?: NivelIdioma;
+  nivel_alemao?: string;
   mandarim: boolean;
-  nivel_mandarin?: NivelIdioma;
+  nivel_mandarim?: string;
   japones: boolean;
-  nivel_japones?: NivelIdioma;
+  nivel_japones?: string;
   russo: boolean;
-  nivel_russo?: NivelIdioma;
+  nivel_russo?: string;
   arabe: boolean;
-  nivel_arabe?: NivelIdioma;
+  nivel_arabe?: string;
   hungaro: boolean;
-  nivel_hungaro?: NivelIdioma;
+  nivel_hungaro?: string;
+  outros_idiomas?: string;
 }
 
 export interface CastingResumido extends CastingDetalhado {
@@ -84,21 +84,21 @@ export interface CastingResumido extends CastingDetalhado {
 export interface CastingDetalhado {
   id: string;
   nome: string;
-  nome_artistico: string;
-  genero: string;
+  nome_artistico?: string;
+  genero?: string;
   categoria: string;
-  categoria_nome: string;
-  etnia: string | null;
-  data_nascimento: string;
+  categoria_nome?: string;
+  etnia?: string | null;
+  data_nascimento?: string;
   data_cadastro: string;
   data_atualizacao: string;
-  habilidades: string[];
-  idiomas: Idiomas;
+  habilidades?: string[];
+  idiomas?: Idiomas;
   foto_principal: string;
   fotos?: Foto[];
   videos?: Video[];
   ativo: boolean;
-  autoriza_imagem_site: boolean;
+  autoriza_imagem_site?: boolean;
 
   //outras tabelas
   endereco?: Endereco;
@@ -111,8 +111,8 @@ export interface CastingDetalhado {
   // Características físicas
   altura: string;
   peso: string;
-  olhos: string | null;
-  cor_cabelo: string | null;
+  olhos?: string | null;
+  cor_cabelo?: string | null;
   manequim?: string;
   sapato?: string;
   terno?: string;
@@ -143,7 +143,7 @@ export interface CastingDetalhado {
   info_outras_plataformas_descricao?: string;
 
   //biografia e experiencia
-  biografia?: string;
+  biografia: string;
   experiencia?: string;
 
   // Contato

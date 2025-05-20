@@ -72,18 +72,12 @@ export default function AdminNavbar() {
       label: 'Blog',
       link: '/admin/blog',
     },
-    // {
-    //   icon: IconSettings,
-    //   label: 'Configurações',
-    //   link: '/admin/configuracoes',
-    //   otherLink: '/admin/usuario',
-    // },
   ];
 
   return (
     <>
       <Navbar
-        fixed={true}
+        // fixed={true}
         width={{ base: 260 }}
         p="md"
         style={{
@@ -92,6 +86,9 @@ export default function AdminNavbar() {
             colorScheme === 'light'
               ? '3px 0px 15px -1px #E2E2E2'
               : '3px 0px 15px -1px #1D1C1C',
+          position: 'fixed',
+          top: 0,
+          zIndex: 1000,
         }}
       >
         <Navbar.Section grow>

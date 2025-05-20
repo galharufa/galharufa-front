@@ -6,7 +6,6 @@ import { ConfiguracoesService } from './configuracoes.service';
 import api from './api';
 
 // Exportar tipos
-import type { PaginatedResponse } from './casting.service';
 import type { Categoria as CategoriasCasting } from './casting.service';
 import type {
   Categoria as CategoriasBlog,
@@ -17,13 +16,17 @@ import type {
 } from './blog.service';
 import type { Configuracoes } from './configuracoes.service';
 import type { Servico, ServicoResumido } from './servicos.service';
-import type {
-  CastingResumido,
-  CastingDetalhado,
+import {
+  Categoria,
   Foto,
   Video,
-  Funcao,
-  Idioma,
+  Endereco,
+  DadosBancarios,
+  Idiomas,
+  CastingResumido,
+  CastingDetalhado,
+  PaginatedResponse,
+  NivelIdioma,
 } from './casting.service';
 
 export {
@@ -37,7 +40,7 @@ export {
 
 // Exportar tipos
 export type {
-  PaginatedResponse,
+  NivelIdioma,
   CategoriasCasting,
   CategoriasBlog,
   Tag,
@@ -46,11 +49,14 @@ export type {
   PostFiltros,
   Configuracoes,
   Servico,
-  Idioma,
   ServicoResumido,
-  CastingResumido,
-  CastingDetalhado,
+  Categoria,
   Foto,
   Video,
-  Funcao,
+  Endereco,
+  DadosBancarios,
+  Idiomas,
+  CastingResumido,
+  CastingDetalhado,
+  PaginatedResponse,
 };
