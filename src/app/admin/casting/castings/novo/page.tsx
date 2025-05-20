@@ -432,7 +432,7 @@ export default function NovoCasting() {
       // console.log('Todos os campos obrigatórios estão preenchidos.');
 
       // Criar FormData para envio de arquivos
-      infoToast('Enviando casting para o servidor...');
+      // infoToast('Enviando casting para o servidor...');
       const formData = new FormData();
 
       // Adicionar campos básicos manualmente
@@ -611,7 +611,6 @@ export default function NovoCasting() {
             banco: values.banco || '',
             agencia: values.agencia || 0,
             conta: values.conta || 0,
-            digito: values.digito || 0,
             tipo_conta: values.tipo_conta || '',
             pix_chave: values.pix_chave,
           },

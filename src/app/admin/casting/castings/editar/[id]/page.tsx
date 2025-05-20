@@ -40,7 +40,13 @@ import { DateInput } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../../../../components/AdminNavbar';
-import { CastingService, type CastingDetalhado, type Foto, type Video } from '@/services';
+import {
+  CastingService,
+  api,
+  type CastingDetalhado,
+  type Foto,
+  type Video,
+} from '@/services';
 import 'react-toastify/dist/ReactToastify.css';
 import { warningToast, successToast, infoToast, errorToast } from '@/utils';
 import VideoPreview from '@/components/shared/VideoPreview';
@@ -690,12 +696,12 @@ export default function EditarCasting() {
       if (values.peso) formData.append('peso', String(values.peso));
       if (values.manequim !== undefined)
         formData.append('manequim', String(values.manequim));
+      if (values.terno !== undefined) formData.append('terno', String(values.terno));
+      if (values.camisa !== undefined) formData.append('camisa', String(values.camisa));
       if (values.sapato !== undefined) formData.append('sapato', String(values.sapato));
       if (values.olhos) formData.append('olhos', values.olhos);
       if (values.tipo_cabelo) formData.append('tipo_cabelo', values.tipo_cabelo);
       if (values.cor_cabelo) formData.append('cor_cabelo', values.cor_cabelo);
-      if (values.terno !== undefined) formData.append('terno', String(values.terno));
-      if (values.camisa !== undefined) formData.append('camisa', String(values.camisa));
 
       // Tatuagens
       formData.append('tem_tatuagens', values.tem_tatuagens ? 'true' : 'false');
@@ -706,17 +712,43 @@ export default function EditarCasting() {
       if (values.DRT) formData.append('DRT', values.DRT);
       if (values.RG) formData.append('RG', values.RG);
       if (values.CPF) formData.append('CPF', values.CPF);
-      formData.append('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
+      if (values.CNH) formData.append('CNH', values.CNH);
       if (values.CNPJ) formData.append('CNPJ', values.CNPJ);
       if (values.PIS) formData.append('PIS', values.PIS);
-      if (values.razao_social) formData.append('razao_social', values.razao_social);
-      if (values.inscricao_estadual)
-        formData.append('inscricao_estadual', values.inscricao_estadual);
+      formData.append('tem_passaporte', values.tem_passaporte ? 'true' : 'false');
+      if (values.passaporte) formData.append('passaporte', values.passaporte);
+      if (values.validade_passaporte) {
+        formData.append(
+          'validade_passaporte',
+          values.validade_passaporte instanceof Date
+            ? values.validade_passaporte.toISOString().split('T')[0]
+            : values.validade_passaporte,
+        );
+      }
       formData.append(
         'possui_nota_propria',
         values.possui_nota_propria ? 'true' : 'false',
       );
-      if (values.CNH) formData.append('CNH', values.CNH);
+      if (values.razao_social) formData.append('razao_social', values.razao_social);
+      if (values.inscricao_estadual)
+        formData.append('inscricao_estadual', values.inscricao_estadual);
+
+      // Exclusividade / Plataformas
+      formData.append(
+        'exclusividade_outro_agente',
+        values.exclusividade_outro_agente ? 'true' : 'false',
+      );
+      if (values.info_exclusividade)
+        formData.append('info_exclusividade', values.info_exclusividade);
+      formData.append(
+        'outras_plataformas_busca_elenco',
+        values.outras_plataformas_busca_elenco ? 'true' : 'false',
+      );
+      if (values.info_outras_plataformas_descricao)
+        formData.append(
+          'info_outras_plataformas_descricao',
+          values.info_outras_plataformas_descricao,
+        );
 
       // Contato
       if (values.celular_whatsapp)
@@ -732,25 +764,6 @@ export default function EditarCasting() {
           'contato_emergencia_telefone',
           values.contato_emergencia_telefone,
         );
-
-      formData.append('endereco.cep', values.cep || '');
-      formData.append('endereco.logradouro', values.logradouro || '');
-      formData.append('endereco.numero', values.numero || '');
-      formData.append('endereco.complemento', values.complemento || '');
-      formData.append('endereco.bairro', values.bairro || '');
-      formData.append('endereco.cidade', values.cidade || '');
-      formData.append('endereco.estado', values.estado || '');
-
-      formData.append('dados_bancarios.banco', values.banco || '');
-      formData.append('dados_bancarios.agencia', values.agencia || '');
-      formData.append('dados_bancarios.conta', values.conta || '');
-      formData.append('dados_bancarios.tipo_conta', values.tipo_conta || '');
-      formData.append('dados_bancarios.pix_chave', values.pix_chave || '');
-
-      Object.entries(values.idiomas || {}).forEach(([key, value]) => {
-        if (value !== undefined && value !== null)
-          formData.append(`idiomas.${key}`, value.toString());
-      });
 
       if (values.habilitacao_categorias)
         formData.append(
@@ -784,9 +797,16 @@ export default function EditarCasting() {
         formData.append('foto_principal', values.foto_principal);
       }
 
-      // Atualizar o casting
-      // await CastingService.atualizarCasting(String(casting.id), formData);
+      // Verificar autenticação
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        errorToast('Você precisa estar autenticado para atualizar um casting');
+        router.push('/admin/login');
+        return;
+      }
 
+      const castingId = casting.id;
+      // Atualizar o casting
       const response = await CastingService.atualizarCasting(
         String(casting.id),
         formData,
@@ -794,6 +814,47 @@ export default function EditarCasting() {
 
       if (response?.foto_principal) {
         setPreviewFotoPrincipal(response.foto_principal);
+      }
+
+      // PATCH - Endereço
+      if (casting.endereco?.cep) {
+        await api.patch('/api/casting/enderecos/patch-enderecos/', {
+          casting: castingId,
+          cep: values.cep,
+          logradouro: values.logradouro || '',
+          numero: values.numero || '',
+          complemento: values.complemento || '',
+          bairro: values.bairro || '',
+          cidade: values.cidade || '',
+          estado: values.estado || '',
+          pais: values.pais || '',
+        });
+      }
+
+      // PATCH - Dados bancários
+      if (casting.dados_bancarios?.pix_chave) {
+        await api.patch('/api/casting/dados-bancarios/patch-dados-bancarios/', {
+          casting: castingId,
+          banco: values.banco || '',
+          agencia: values.agencia || '',
+          conta: values.conta || '',
+          tipo_conta: values.tipo_conta || '',
+          pix_chave: values.pix_chave || '',
+        });
+      }
+
+      const idiomasAtualizados = Object.entries(idiomasSelecionados || {}).filter(
+        ([_, ativo]) => ativo,
+      );
+
+      // PATCH - Idiomas
+      if (idiomasAtualizados) {
+        await api.patch('/api/casting/idiomas/patch-idiomas/', {
+          casting: castingId,
+          ...idiomasSelecionados,
+          ...idiomasNiveis,
+          outros_idiomas: idiomasOutros || '',
+        });
       }
 
       // Excluir fotos marcadas para exclusão

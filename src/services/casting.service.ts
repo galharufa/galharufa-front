@@ -416,6 +416,51 @@ export const CastingService = {
     return response.data;
   },
 
+  // PATCH - Endereço
+  async atualizarEndereco(castingId: string, data: Partial<Endereco>): Promise<Endereco> {
+    const response = await api.patch<Endereco>(
+      `/api/casting/enderecos/${castingId}/`,
+      { casting: castingId, ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      },
+    );
+    return response.data;
+  },
+
+  // PATCH - Dados Bancários
+  async atualizarDadosBancarios(
+    castingId: string,
+    data: Partial<DadosBancarios>,
+  ): Promise<DadosBancarios> {
+    const response = await api.patch<DadosBancarios>(
+      `/api/casting/dados-bancarios/${castingId}/`,
+      { casting: castingId, ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      },
+    );
+    return response.data;
+  },
+
+  // PATCH - Idiomas
+  async atualizarIdiomas(castingId: string, data: Partial<Idiomas>): Promise<Idiomas> {
+    const response = await api.patch<Idiomas>(
+      `/api/casting/idiomas/${castingId}/`,
+      { casting: castingId, ...data },
+      {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+        },
+      },
+    );
+    return response.data;
+  },
+
   async excluirCasting(id: string): Promise<void> {
     await api.delete(`/api/casting/castings/${id}/`);
   },
