@@ -163,6 +163,28 @@ export const languagesLevel = [
   { value: 'nativo', label: 'Nativo' },
 ];
 
+export const languagesMap: Record<string, string> = {
+  ingles: 'Inglês',
+  portugues: 'Português',
+  espanhol: 'Espanhol',
+  frances: 'Francês',
+  italiano: 'Italiano',
+  alemao: 'Alemão',
+  mandarim: 'Mandarim',
+  japones: 'Japonês',
+  russo: 'Russo',
+  arabe: 'Árabe',
+  hungaro: 'Húngaro',
+};
+
+export const languagesLevelMap: Record<string, string> = {
+  basico: 'Básico',
+  intermediario: 'Intermedário',
+  avancado: 'Avançado',
+  fluente: 'Fluente',
+  nativo: 'Nativo',
+};
+
 export const genderData = [
   { value: 'masculino', label: 'Masculino' },
   { value: 'feminino', label: 'Feminino' },

@@ -61,7 +61,7 @@ export default function Home() {
         <Hero />
         <AboutSection />
         <ServicesSection />
-        <CastingHighlights />
+        {/* <CastingHighlights /> */}
         <Clients />
         <ContactSection />
         <Analytics />

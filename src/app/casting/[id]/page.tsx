@@ -17,6 +17,8 @@ import {
   corCabeloMap,
   nacionalidadeMap,
   corOlhosMap,
+  languagesMap,
+  languagesLevelMap,
 } from '@/utils';
 import VideoPreview from '@/components/shared/VideoPreview';
 
@@ -232,17 +234,18 @@ export default function CastingPage() {
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
                     {casting.idiomas &&
                       Object.entries(casting.idiomas)
-                        .filter(
-                          ([, valor]) => typeof valor === 'boolean' && valor === true,
-                        )
-                        .map(([idioma], index) => {
+                        .filter(([, value]) => typeof value === 'boolean' && value)
+                        .map(([idioma]) => {
                           const nivelKey = `nivel_${idioma}` as keyof Idiomas;
                           const nivel = casting.idiomas?.[nivelKey] as string | undefined;
+                          const label = languagesMap[idioma] || idioma;
+                          const nivelLabel = nivel
+                            ? `(${languagesLevelMap[nivel] || nivel})`
+                            : '';
 
                           return (
-                            <p key={index} className="text-black dark:text-white">
-                              {idioma.charAt(0).toUpperCase() + idioma.slice(1)}{' '}
-                              {nivel ? `(${nivel})` : ''}
+                            <p key={idioma} className="text-black dark:text-white">
+                              {label} {nivelLabel}
                             </p>
                           );
                         })}

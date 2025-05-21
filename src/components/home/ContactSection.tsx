@@ -10,7 +10,7 @@ const ContactSection = () => {
   const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   return (
-    <section ref={ref} className="py-20 bg-white dark:bg-black">
+    <section ref={ref} className="py-20 bg-gray-100 dark:bg-gray-900">
       <div className="container-section">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
