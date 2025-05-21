@@ -107,6 +107,7 @@ export default function EditarCasting() {
   const [fotosParaExcluir, setFotosParaExcluir] = useState<number[]>([]);
   const [fotosAdicionais, setFotosAdicionais] = useState<(File | null)[]>([]);
   const [legendasFotos, setLegendasFotos] = useState<string[]>([]);
+  const [fotoInputKey, setFotoInputKey] = useState(Date.now());
 
   // Vídeos
   const [videosExistentes, setVideosExistentes] = useState<Video[]>([]);
@@ -900,9 +901,13 @@ export default function EditarCasting() {
 
       successToast('Casting atualizado com sucesso');
       router.push('/admin/casting');
-    } catch (error) {
-      console.error('Erro ao atualizar casting:', error);
-      errorToast('Erro ao atualizar casting');
+    } catch (error: any) {
+      if (error.response?.status === 413) {
+        errorToast('Imagem muito pesada! Reduza o tamanho antes de enviar.');
+      } else {
+        console.error('Erro ao atualizar casting:', error);
+        errorToast('Erro ao atualizar casting');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -1047,16 +1052,26 @@ export default function EditarCasting() {
                 <Group align="flex-start" mb="md">
                   <div style={{ flex: 1 }}>
                     <FileInput
+                      key={fotoInputKey} // força o re-render
                       label="Foto Principal (horizontal)"
-                      description="Selecione uma nova imagem para substituir a atual"
+                      description="Selecione uma nova imagem para substituir a atual / Máx: 1.2MB"
                       accept="image/png,image/jpeg,image/webp"
                       icon={<IconUpload size={14} />}
                       {...form.getInputProps('foto_principal')}
                       onChange={(file) => {
+                        if (file && file.size > 1.2 * 1024 * 1024) {
+                          errorToast('Imagem muito pesada! Máximo permitido: 1.2MB');
+                          // resetar o input para aceitar de novo
+                          form.setFieldValue('foto_principal', null);
+                          setPreviewFotoPrincipal(null);
+                          setFotoInputKey(Date.now());
+                          return;
+                        }
+
                         form.setFieldValue('foto_principal', file);
                         setPreviewFotoPrincipal(file ? URL.createObjectURL(file) : null);
                       }}
-                      ref={undefined} // Corrigindo o problema de ref no React 19
+                      ref={undefined}
                     />
                   </div>
 
@@ -1389,11 +1404,20 @@ export default function EditarCasting() {
 
                           <FileInput
                             label="Imagem"
-                            description="Selecione uma imagem"
+                            description="Selecione uma imagem / Máx: 1.2MB"
                             accept="image/png,image/jpeg,image/webp"
                             icon={<IconUpload size={14} />}
                             value={foto}
-                            onChange={(file) => atualizarFoto(file, index)}
+                            onChange={(file) => {
+                              if (file && file.size > 1.2 * 1024 * 1024) {
+                                errorToast(
+                                  'Imagem muito pesada! Máximo permitido: 1.2MB',
+                                );
+                                return;
+                              }
+
+                              atualizarFoto(file, index);
+                            }}
                             mb="md"
                           />
                           {foto && <ImagePreview file={foto} height={150} />}

@@ -8,7 +8,7 @@ import { FaArrowLeft, FaInstagram, FaImdb } from 'react-icons/fa';
 import AnimatedSection from '@/components/shared/AnimatedSection';
 import AnimatedText from '@/components/shared/AnimatedText';
 import AnimatedImage from '@/components/shared/AnimatedImage';
-import { CastingDetalhado, CastingService } from '@/services';
+import { CastingDetalhado, CastingService, Idiomas } from '@/services';
 import parse from 'html-react-parser';
 import {
   etniaMap,
@@ -168,7 +168,7 @@ export default function CastingPage() {
               <div className="space-y-4">
                 <div>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">Tipo</h3>
-                  <p className="text-black dark:text-white">CategoriaNome</p>
+                  <p className="text-black dark:text-white">{casting.categoria_nome}</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">DRT</h3>
                   <p className="text-black dark:text-white">{casting.DRT}</p>
                   <h3 className="text-sm text-gray-500 dark:text-gray-400">
@@ -228,19 +228,16 @@ export default function CastingPage() {
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Cabelos</h3>
                     <p className="text-black dark:text-white">{corCabeloCasting}</p>
                   </div>
-                  {/* <div>
+                  <div>
                     <h3 className="text-sm text-gray-500 dark:text-gray-400">Idiomas</h3>
-                    {casting.idiomas?.[0] &&
-                      Object.entries(casting.idiomas[0])
-                        .filter(([chave, valor]) => {
-                          return typeof valor === 'boolean' && valor === true;
-                        })
+                    {casting.idiomas &&
+                      Object.entries(casting.idiomas)
+                        .filter(
+                          ([, valor]) => typeof valor === 'boolean' && valor === true,
+                        )
                         .map(([idioma], index) => {
-                          const nivelKey = `nivel_${idioma}` as keyof Idioma;
-                          const idiomaKey = idioma as keyof Idioma;
-                          const nivel = casting.idiomas[0][nivelKey] as
-                            | string
-                            | undefined;
+                          const nivelKey = `nivel_${idioma}` as keyof Idiomas;
+                          const nivel = casting.idiomas?.[nivelKey] as string | undefined;
 
                           return (
                             <p key={index} className="text-black dark:text-white">
@@ -249,7 +246,7 @@ export default function CastingPage() {
                             </p>
                           );
                         })}
-                  </div> */}
+                  </div>
 
                   {casting.link_instagram && (
                     <div>
@@ -405,9 +402,9 @@ export default function CastingPage() {
                         alt={
                           foto.legenda || `${casting.nome_artistico} - Foto ${index + 1}`
                         }
-                        width={600}
-                        height={800}
-                        className="rounded-lg overflow-hidden w-full h-[300px] md:h-[400px]"
+                        width={700}
+                        height={1000}
+                        className="rounded-lg overflow-hidden w-full md:h-[500px]"
                         delay={index * 0.1}
                       />
                     ))}

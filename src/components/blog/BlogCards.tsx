@@ -158,7 +158,7 @@ const BlogCards = ({ filter }: BlogCardsProps) => {
                     className="col-span-1 sm:col-span-2 md:col-span-3 lg:col-span-4 text-center py-12"
                   >
                     <p className="text-gray-600 dark:text-gray-400">
-                      Nenhum casting encontrado para os filtros selecionados.
+                      Nenhum post encontrado para os filtros selecionados.
                     </p>
                   </motion.div>
                 )}
