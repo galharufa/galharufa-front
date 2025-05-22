@@ -251,149 +251,18 @@ export const CastingService = {
     }
   },
 
-  async getCasting(id: string): Promise<CastingDetalhado> {
+  async getCasting(slugOrId: string): Promise<CastingDetalhado> {
     try {
       // Verificar se o ID é válido
-      if (!id || id === 'undefined' || id === 'null') {
-        throw new Error('ID de casting inválido');
+      if (!slugOrId || slugOrId === 'undefined' || slugOrId === 'null') {
+        throw new Error('Slug ou ID inválido');
       }
 
       // Garantir que estamos usando o mesmo formato de URL que funciona em outras chamadas
-      const url = '/api/casting/castings/' + id + '/';
+      const url = '/api/casting/castings/' + slugOrId + '/';
 
       // Tentar fazer a requisição
       const response = await api.get<CastingDetalhado>(url);
-      return response.data;
-    } catch (error) {
-      throw error;
-    }
-  },
-
-  // Método para buscar casting pelo nome artístico (slug)
-  // async getCastingBySlug(slug: string): Promise<CastingDetalhado> {
-  //   try {
-  //     // Verificar se o slug é válido
-  //     if (!slug || slug === 'undefined' || slug === 'null') {
-  //       throw new Error('Nome artístico inválido');
-  //     }
-
-  //     // eslint-disable-next-line no-console
-  //     console.log('Procurando casting com nome_artistico:', slug);
-
-  //     // Primeiro, tentamos uma busca direta usando o nome_artistico como filtro
-  //     // Isso é mais eficiente quando a API suporta filtro exato
-  //     const exactMatchResponse = await api.get<PaginatedResponse<CastingResumido>>(
-  //       '/api/casting/castings/',
-  //       {
-  //         params: {
-  //           nome_artistico: slug,
-  //           limit: 10, // Limitamos a 10 resultados para esta busca inicial
-  //         },
-  //       },
-  //     );
-
-  //     // Se encontramos resultados, procuramos por uma correspondência exata
-  //     if (exactMatchResponse.data.results && exactMatchResponse.data.results.length > 0) {
-  //       // Verificamos se algum dos resultados tem o nome_artistico igual ao slug (decodificado)
-  //       const exactMatch = exactMatchResponse.data.results.find((cast) => {
-  //         if (!cast.nome_artistico) return false;
-
-  //         // Comparação mais flexível para lidar com caracteres especiais e espaços
-  //         const normalizedNomeArtistico = cast.nome_artistico.toLowerCase().trim();
-  //         const normalizedSlug = slug.toLowerCase().trim();
-
-  //         // eslint-disable-next-line no-console
-  //         console.log(`Comparando: "${normalizedNomeArtistico}" com "${normalizedSlug}"`);
-
-  //         return normalizedNomeArtistico === normalizedSlug;
-  //       });
-
-  //       if (exactMatch) {
-  //         // eslint-disable-next-line no-console
-  //         console.log(
-  //           'Casting encontrado por correspondência exata:',
-  //           exactMatch.id,
-  //           exactMatch.nome,
-  //         );
-  //         return await this.getCasting(exactMatch.id);
-  //       }
-  //     }
-
-  //     // Se não encontramos uma correspondência exata, implementamos uma busca paginada
-  //     let foundCasting = null;
-  //     let page = 1;
-  //     const pageSize = 50; // Tamanho da página para busca paginada
-
-  //     // Continuamos buscando enquanto houver mais páginas e não encontrarmos o casting
-  //     while (!foundCasting) {
-  //       // eslint-disable-next-line no-console
-  //       console.log(`Buscando página ${page} de castings...`);
-
-  //       const paginatedResponse = await api.get<PaginatedResponse<CastingResumido>>(
-  //         '/api/casting/castings/',
-  //         {
-  //           params: {
-  //             page,
-  //             limit: pageSize,
-  //           },
-  //         },
-  //       );
-
-  //       // Verificamos se temos resultados nesta página
-  //       if (
-  //         !paginatedResponse.data.results ||
-  //         paginatedResponse.data.results.length === 0
-  //       ) {
-  //         // Não há mais resultados, paramos a busca
-  //         break;
-  //       }
-
-  //       // Procuramos por uma correspondência nesta página
-  //       foundCasting = paginatedResponse.data.results.find((cast) => {
-  //         if (!cast.nome_artistico) return false;
-
-  //         // Comparação mais flexível para lidar com caracteres especiais e espaços
-  //         const normalizedNomeArtistico = cast.nome_artistico.toLowerCase().trim();
-  //         const normalizedSlug = slug.toLowerCase().trim();
-
-  //         return normalizedNomeArtistico === normalizedSlug;
-  //       });
-
-  //       // Se encontramos ou se não há mais páginas, paramos a busca
-  //       if (foundCasting || !paginatedResponse.data.next) {
-  //         break;
-  //       }
-
-  //       // Avançamos para a próxima página
-  //       page++;
-
-  //       // Limite de segurança - evita loops infinitos em caso de erro
-  //       if (page > 20) {
-  //         break;
-  //       }
-  //     }
-
-  //     // Se encontramos o casting, pegamos os detalhes completos
-  //     if (foundCasting) {
-  //       // eslint-disable-next-line no-console
-  //       console.log(
-  //         'Casting encontrado:',
-  //         foundCasting.id,
-  //         foundCasting.nome,
-  //         foundCasting.nome_artistico,
-  //       );
-  //       return await this.getCasting(foundCasting.id);
-  //     } else {
-  //       throw new Error('Casting não encontrado com este nome artístico');
-  //     }
-  //   } catch (error) {
-  //     throw error;
-  //   }
-  // },
-
-  async getCastingBySlug(slug: string): Promise<CastingDetalhado> {
-    try {
-      const response = await api.get<CastingDetalhado>(`/api/casting/castings/${slug}/`);
       return response.data;
     } catch (error) {
       throw error;
@@ -413,9 +282,12 @@ export const CastingService = {
     return response.data;
   },
 
-  async atualizarCasting(id: string, formData: FormData): Promise<CastingDetalhado> {
+  async atualizarCasting(
+    slugOrId: string,
+    formData: FormData,
+  ): Promise<CastingDetalhado> {
     const response = await api.patch<CastingDetalhado>(
-      `/api/casting/castings/${id}/`,
+      `/api/casting/castings/${slugOrId}/`,
       formData,
       {
         headers: {
@@ -501,8 +373,12 @@ export const CastingService = {
     return response.data;
   },
 
-  async excluirFoto(castingId: string, fotoId: number): Promise<void> {
-    await api.delete(`/api/casting/castings/${castingId}/fotos/${fotoId}/`);
+  async excluirFoto(castingId: string, fotoId: string): Promise<void> {
+    await api.delete(`/api/casting/castings/${castingId}/remove-foto/${fotoId}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
   },
 
   // Vídeos
@@ -526,7 +402,11 @@ export const CastingService = {
     return response.data;
   },
 
-  async excluirVideo(castingId: string, videoId: number): Promise<void> {
-    await api.delete(`/api/casting/castings/${castingId}/videos/${videoId}/`);
+  async excluirVideo(castingId: string, videoId: string): Promise<void> {
+    await api.delete(`/api/casting/castings/${castingId}/remove-video/${videoId}/`, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('accessToken')}`,
+      },
+    });
   },
 };

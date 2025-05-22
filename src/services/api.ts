@@ -2,6 +2,7 @@
 
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { errorToast } from '@/utils';
+import router from 'next/router'; // ou useNavigation se estiver no App Router
 
 // Verificar se estamos em ambiente de build do servidor
 const isServer = typeof window === 'undefined';
@@ -27,6 +28,18 @@ const api = axios.create({
   },
   withCredentials: !isBuild,
 });
+
+//interceptor que verifica se a sessão expirou e avisa no toast
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      errorToast('Sua sessão expirou. Faça login novamente.');
+      router.push('/admin/login');
+    }
+    return Promise.reject(error);
+  },
+);
 
 // Definir endpoints públicos que não requerem autenticação
 const PUBLIC_ENDPOINTS = [
