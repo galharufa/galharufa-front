@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { useEffect } from 'react';
 import { errorToast } from '../../utils';
 
@@ -46,7 +48,7 @@ export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) 
 
       fetchEndereco();
     }
-  }, [cep, onLoading, onResult]);
+  }, [cep]);
 
   return null;
 };

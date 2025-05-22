@@ -35,23 +35,12 @@ export default function CastingPage() {
       try {
         setLoading(true);
 
-        // O parâmetro agora pode ser um nome artístico (slug) ou um UUID
-        // Decodificamos a URL para lidar com espaços (%20) e outros caracteres especiais
-        const castingId = decodeURIComponent(String(params.id));
-        console.log('ID/slug decodificado:', castingId);
+        // Decodifica o parâmetro da URL (pode ser slug ou UUID)
+        const castingIdOrSlug = decodeURIComponent(String(params.id));
+        console.log('ID/slug decodificado:', castingIdOrSlug);
 
-        let response;
-
-        // Verificamos se parece um UUID (contém hífens e tem o tamanho adequado)
-        const isUuid = castingId.includes('-') && castingId.length > 30;
-
-        if (isUuid) {
-          // Se for UUID, usamos o método existente
-          response = await CastingService.getCasting(castingId);
-        } else {
-          // Se for nome artístico (slug), usamos um novo método
-          response = await CastingService.getCastingBySlug(castingId);
-        }
+        // Agora o backend aceita tanto UUID quanto slug no mesmo endpoint
+        const response = await CastingService.getCasting(castingIdOrSlug);
 
         setCasting(response);
         setApiError(false);
