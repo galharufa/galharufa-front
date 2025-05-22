@@ -38,7 +38,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
           <AuthProvider>
             <AppShell padding={0}>
-              <ToastContainer />
+              <ToastContainer toastStyle={{ zIndex: 9999 }} />
               {children}
             </AppShell>
           </AuthProvider>

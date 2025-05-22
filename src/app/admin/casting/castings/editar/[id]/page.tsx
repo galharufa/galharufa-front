@@ -818,89 +818,130 @@ export default function EditarCasting() {
       }
 
       // PATCH - Endereço
-      if (casting.endereco?.cep) {
-        await api.patch('/api/casting/enderecos/patch-enderecos/', {
-          casting: castingId,
-          cep: values.cep,
-          logradouro: values.logradouro || '',
-          numero: values.numero || '',
-          complemento: values.complemento || '',
-          bairro: values.bairro || '',
-          cidade: values.cidade || '',
-          estado: values.estado || '',
-          pais: values.pais || '',
-        });
+      try {
+        if (casting.endereco?.cep) {
+          await api.patch('/api/casting/enderecos/patch-enderecos/', {
+            casting: castingId,
+            cep: values.cep,
+            logradouro: values.logradouro || '',
+            numero: values.numero || '',
+            complemento: values.complemento || '',
+            bairro: values.bairro || '',
+            cidade: values.cidade || '',
+            estado: values.estado || '',
+            pais: values.pais || '',
+          });
+          successToast('Endereço atualizado com sucesso');
+        }
+      } catch (e) {
+        errorToast('Erro ao atualizar endereço');
       }
 
       // PATCH - Dados bancários
-      if (casting.dados_bancarios?.pix_chave) {
-        await api.patch('/api/casting/dados-bancarios/patch-dados-bancarios/', {
-          casting: castingId,
-          banco: values.banco || '',
-          agencia: values.agencia || '',
-          conta: values.conta || '',
-          tipo_conta: values.tipo_conta || '',
-          pix_chave: values.pix_chave || '',
-        });
+      try {
+        if (casting.dados_bancarios?.pix_chave) {
+          await api.patch('/api/casting/dados-bancarios/patch-dados-bancarios/', {
+            casting: castingId,
+            banco: values.banco || '',
+            agencia: values.agencia || '',
+            conta: values.conta || '',
+            tipo_conta: values.tipo_conta || '',
+            pix_chave: values.pix_chave || '',
+          });
+          successToast('Dados bancários atualizados com sucesso');
+        }
+      } catch (e) {
+        errorToast('Erro ao atualizar dados bancários');
       }
 
-      const idiomasAtualizados = Object.entries(idiomasSelecionados || {}).filter(
-        ([_, ativo]) => ativo,
-      );
-
       // PATCH - Idiomas
-      if (idiomasAtualizados) {
-        await api.patch('/api/casting/idiomas/patch-idiomas/', {
-          casting: castingId,
-          ...idiomasSelecionados,
-          ...idiomasNiveis,
-          outros_idiomas: idiomasOutros || '',
-        });
+      try {
+        const idiomasAtualizados = Object.entries(idiomasSelecionados || {}).filter(
+          ([_, ativo]) => ativo,
+        );
+
+        if (idiomasAtualizados.length > 0) {
+          await api.patch('/api/casting/idiomas/patch-idiomas/', {
+            casting: castingId,
+            ...idiomasSelecionados,
+            ...idiomasNiveis,
+            outros_idiomas: idiomasOutros || '',
+          });
+          successToast('Idiomas atualizados com sucesso');
+        }
+      } catch (e) {
+        errorToast('Erro ao atualizar idiomas');
       }
 
       // Excluir fotos marcadas para exclusão
-      const excluirFotosPromises = fotosParaExcluir.map((id) =>
-        CastingService.excluirFoto(casting.slug || String(casting.id), String(id)),
-      );
-
+      const excluirFotosPromises = fotosParaExcluir.map(async (id) => {
+        try {
+          await CastingService.excluirFoto(
+            casting.slug || String(casting.id),
+            String(id),
+          );
+          successToast(`Foto ${id} excluída com sucesso`);
+        } catch (error) {
+          errorToast(`Erro ao excluir a foto ${id}`);
+          console.error('Erro ao excluir foto:', error);
+        }
+      });
       await Promise.all(excluirFotosPromises);
 
       // Adicionar novas fotos
       const uploadFotosPromises = fotosAdicionais.map(async (foto, index) => {
         if (!foto) return null;
 
-        const fotoFormData = new FormData();
-        fotoFormData.append('imagem', foto);
-        fotoFormData.append('legenda', legendasFotos[index] || '');
-        fotoFormData.append('ordem', (fotosExistentes.length + index).toString());
+        try {
+          const fotoFormData = new FormData();
+          fotoFormData.append('imagem', foto);
+          fotoFormData.append('legenda', legendasFotos[index] || '');
+          fotoFormData.append('ordem', (fotosExistentes.length + index).toString());
 
-        return CastingService.adicionarFoto(String(casting.id), fotoFormData);
+          await CastingService.adicionarFoto(String(casting.id), fotoFormData);
+          successToast(`Foto ${index + 1} enviada com sucesso`);
+        } catch (error) {
+          errorToast(`Erro ao enviar a foto ${index + 1}`);
+        }
       });
-
       await Promise.all(uploadFotosPromises.filter(Boolean));
 
       // Excluir vídeos marcados para exclusão
-      const excluirVideosPromises = videosParaExcluir.map((id) =>
-        CastingService.excluirVideo(casting.slug || String(casting.id), String(id)),
-      );
-
+      const excluirVideosPromises = videosParaExcluir.map(async (id) => {
+        try {
+          await CastingService.excluirVideo(
+            casting.slug || String(casting.id),
+            String(id),
+          );
+          successToast(`Vídeo ${id} excluído com sucesso`);
+        } catch (error) {
+          errorToast(`Erro ao excluir o vídeo ${id}`);
+          console.error('Erro ao excluir vídeo:', error);
+        }
+      });
       await Promise.all(excluirVideosPromises);
 
       // Adicionar novos vídeos
       const uploadVideosPromises = videosNovos.map(async (video, index) => {
         if (!video.titulo || !video.url) return null;
 
-        return CastingService.adicionarVideo(casting.id, {
-          titulo: video.titulo,
-          url: video.url,
-          ordem: videosExistentes.length + index,
-        });
+        try {
+          await CastingService.adicionarVideo(casting.id, {
+            titulo: video.titulo,
+            url: video.url,
+            ordem: videosExistentes.length + index,
+          });
+          successToast(`Vídeo "${video.titulo}" adicionado com sucesso`);
+        } catch (error) {
+          errorToast(`Erro ao adicionar o vídeo "${video.titulo}"`);
+        }
       });
-
       await Promise.all(uploadVideosPromises.filter(Boolean));
 
       successToast('Casting atualizado com sucesso');
-      router.push('/admin/casting');
+      // setTimeout(() => {
+      //   router.push('/admin/casting');
+      // }, 2000); // 1 segundo é suficiente
     } catch (error: any) {
       if (error.response?.status === 413) {
         errorToast('Imagem muito pesada! Reduza o tamanho antes de enviar.');
