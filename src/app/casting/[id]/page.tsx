@@ -99,13 +99,9 @@ export default function CastingPage() {
     );
   }
 
-  // const tipoCasting = casting.tipo
-  //   ? tipoMap[casting.tipo] || casting.tipo
-  //   : 'Não informado';
   const nacionalidadeCasting = casting.nacionalidade
     ? nacionalidadeMap[casting.nacionalidade] || casting.nacionalidade
     : 'Não informado';
-
   const generoCasting = casting.genero
     ? genderMap[casting?.genero] || casting.genero
     : 'Não informado';

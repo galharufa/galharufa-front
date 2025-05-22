@@ -150,10 +150,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
                     layoutId={`casting-${casting.id}`}
                     className="group cursor-pointer opacity-70 hover:opacity-100 hover:cursor-pointer grayscale hover:grayscale-0"
                   >
-                    <Link
-                      href={`/casting/${slugify(casting.nome_artistico) || casting.id}`}
-                      passHref
-                    >
+                    <Link href={`/casting/${casting.slug || casting.id}`} passHref>
                       <div className="relative overflow-hidden rounded-xl w-full aspect-[3/4]">
                         <Image
                           src={
