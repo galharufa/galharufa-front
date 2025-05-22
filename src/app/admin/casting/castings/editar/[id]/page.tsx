@@ -939,9 +939,9 @@ export default function EditarCasting() {
       await Promise.all(uploadVideosPromises.filter(Boolean));
 
       successToast('Casting atualizado com sucesso');
-      // setTimeout(() => {
-      //   router.push('/admin/casting');
-      // }, 2000); // 1 segundo é suficiente
+      setTimeout(() => {
+        router.push('/admin/casting');
+      }, 2000); // 1 segundo é suficiente
     } catch (error: any) {
       if (error.response?.status === 413) {
         errorToast('Imagem muito pesada! Reduza o tamanho antes de enviar.');
