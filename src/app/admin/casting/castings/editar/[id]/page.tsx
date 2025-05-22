@@ -860,7 +860,7 @@ export default function EditarCasting() {
 
       // Excluir fotos marcadas para exclusão
       const excluirFotosPromises = fotosParaExcluir.map((id) =>
-        CastingService.excluirFoto(String(casting.id), id),
+        CastingService.excluirFoto(casting.slug || String(casting.id), String(id)),
       );
 
       await Promise.all(excluirFotosPromises);
@@ -881,7 +881,7 @@ export default function EditarCasting() {
 
       // Excluir vídeos marcados para exclusão
       const excluirVideosPromises = videosParaExcluir.map((id) =>
-        CastingService.excluirVideo(String(casting.id), id),
+        CastingService.excluirVideo(casting.slug || String(casting.id), String(id)),
       );
 
       await Promise.all(excluirVideosPromises);

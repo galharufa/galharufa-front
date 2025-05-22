@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { errorToast } from '../../utils';
 
 interface SearchZipCodeProps {
   cep: string;
@@ -37,7 +38,7 @@ export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) 
           }
         } catch (error) {
           onResult({});
-          alert('Erro ao consultar o CEP.');
+          errorToast('Erro ao consultar o CEP.');
         } finally {
           onLoading(false);
         }
@@ -45,7 +46,7 @@ export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) 
 
       fetchEndereco();
     }
-  }, [cep]);
+  }, [cep, onLoading, onResult]);
 
   return null;
 };

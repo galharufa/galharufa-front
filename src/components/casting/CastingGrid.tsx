@@ -8,12 +8,12 @@ import Link from 'next/link';
 import { useInView } from 'framer-motion';
 
 // Função para gerar uma URL amigável a partir do nome artístico
-const slugify = (text: string | undefined | null): string => {
-  if (!text) return '';
+// const slugify = (text: string | undefined | null): string => {
+//   if (!text) return '';
 
-  // Converter para texto em minúsculas e remover acentos
-  return encodeURIComponent(text);
-};
+//   // Converter para texto em minúsculas e remover acentos
+//   return encodeURIComponent(text);
+// };
 
 import { CastingService, CastingResumido } from '@/services/casting.service';
 
