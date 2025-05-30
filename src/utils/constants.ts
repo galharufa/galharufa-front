@@ -3,7 +3,7 @@ export const etny = [
   { value: 'albina', label: 'Albina' },
   { value: 'amarela', label: 'Asiática / Amarela' },
   { value: 'branca', label: 'Branca / Caucasiana' },
-  { value: 'india', label: 'Indígenas' },
+  { value: 'indigena', label: 'Indígenas' },
   { value: 'negra', label: 'Negra / Preta' },
   { value: 'parda', label: 'Parda' },
 ];
@@ -12,7 +12,7 @@ export const etniaMap: Record<string, string> = {
   albina: 'Albina',
   amarela: 'Asiática / Amarela',
   branca: 'Branca / Caucasiana',
-  india: 'Indígena',
+  indigena: 'Indígena',
   negra: 'Negra / Preta',
   parda: 'Parda',
 };
