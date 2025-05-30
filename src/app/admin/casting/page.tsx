@@ -1,4 +1,5 @@
 /* eslint-disable no-console */
+/* eslint-disable camelcase */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -19,6 +20,7 @@ import {
   Tabs,
   Table,
   ActionIcon,
+  Pagination,
 } from '@mantine/core';
 import { useAuth } from '@/hooks/useAuth';
 import AdminNavbar from '../components/AdminNavbar';
@@ -37,6 +39,9 @@ export default function CastingAdmin() {
 
   const [categorias, setCategorias] = useState<CategoriasCasting[]>([]);
   const [castings, setCastings] = useState<CastingResumido[]>([]);
+  const [paginaAtual, setPaginaAtual] = useState(1);
+  const [totalCastings, setTotalCastings] = useState(0);
+  const itensPorPagina = 20;
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string | null>('categorias');
 
@@ -79,11 +84,16 @@ export default function CastingAdmin() {
         setIsLoading(true);
         const [categoriasResponse, castingsResponse] = await Promise.all([
           CastingService.getCategorias({ ordering: 'nome' }),
-          CastingService.getCastings({ ordering: 'nome' }),
+          CastingService.getCastings({
+            ordering: 'nome_artistico',
+            page_size: itensPorPagina,
+            page: paginaAtual,
+          }),
         ]);
 
         setCategorias(categoriasResponse.results);
         setCastings(castingsResponse.results);
+        setTotalCastings(castingsResponse.count);
       } catch (error) {
         console.error('Erro ao carregar dados de casting:', error);
         errorToast('Erro ao carregar dados de casting');
@@ -95,13 +105,19 @@ export default function CastingAdmin() {
     if (isAuthenticated) {
       carregarDados();
     }
-  }, [isAuthenticated, authLoading]);
+  }, [isAuthenticated, authLoading, paginaAtual]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push('/admin/login');
     }
   }, [isAuthenticated, authLoading, router]);
+
+  // useEffect(() => {
+  //   const searchParams = new URLSearchParams(window.location.search);
+  //   const pagina = searchParams.get('pagina');
+  //   if (pagina) setPaginaAtual(Number(pagina));
+  // }, []);
 
   // Funções para gerenciar categorias
   const handleCriarCategoria = () => {
@@ -200,7 +216,7 @@ export default function CastingAdmin() {
 
   // Navegação para editar casting
   const handleEditarCasting = (id: string) => {
-    router.push(`/admin/casting/castings/editar/${id}`);
+    router.push(`/admin/casting/castings/editar/${id}?pagina=${paginaAtual}`);
   };
 
   // Função para excluir casting
@@ -368,7 +384,7 @@ export default function CastingAdmin() {
                     <thead>
                       <tr>
                         <th>Foto</th>
-                        <th>Nome</th>
+                        <th>Nome Artistico</th>
                         <th>Categoria</th>
                         <th>Status</th>
                         <th style={{ width: 120 }}>Ações</th>
@@ -443,6 +459,15 @@ export default function CastingAdmin() {
                     </tbody>
                   </Table>
                 </Card>
+              )}
+              {totalCastings > itensPorPagina && (
+                <Group position="center" mt="lg" mb="md">
+                  <Pagination
+                    total={Math.ceil(totalCastings / itensPorPagina)}
+                    value={paginaAtual}
+                    onChange={setPaginaAtual}
+                  />
+                </Group>
               )}
             </Tabs.Panel>
           </Tabs>

@@ -5,7 +5,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import {
   Container,
   Title,
@@ -273,6 +273,9 @@ export default function EditarCasting() {
       infoToast('CEP inválido. Use o formato 00000000, sem espaços ou traços');
     }
   };
+
+  const searchParams = useSearchParams();
+  const pagina = searchParams.get('pagina') || '1';
 
   function parseJsonArray(field: any): string[] {
     if (Array.isArray(field)) return field;
@@ -939,6 +942,7 @@ export default function EditarCasting() {
       await Promise.all(uploadVideosPromises.filter(Boolean));
 
       successToast('Casting atualizado com sucesso');
+
       setTimeout(() => {
         router.push('/admin/casting');
       }, 2000); // 1 segundo é suficiente
