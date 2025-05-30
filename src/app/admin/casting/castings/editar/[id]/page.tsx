@@ -274,9 +274,6 @@ export default function EditarCasting() {
     }
   };
 
-  const searchParams = useSearchParams();
-  const pagina = searchParams.get('pagina') || '1';
-
   function parseJsonArray(field: any): string[] {
     if (Array.isArray(field)) return field;
     try {
