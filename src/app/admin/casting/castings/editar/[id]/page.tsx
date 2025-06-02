@@ -148,6 +148,7 @@ export default function EditarCasting() {
       etnia: '',
       foto_principal: null as File | null,
       ativo: true,
+      destaque: false,
       autoriza_imagem_site: true,
 
       // Características Físicas
@@ -385,6 +386,7 @@ export default function EditarCasting() {
           etnia: castingResponse.etnia || '',
           foto_principal: null,
           ativo: castingResponse.ativo ?? true,
+          destaque: castingResponse.destaque ?? true,
           autoriza_imagem_site: castingResponse.autoriza_imagem_site ?? true,
 
           data_nascimento: dataNascimento,
@@ -788,6 +790,7 @@ export default function EditarCasting() {
 
       // Adicionar campos booleanos
       formData.append('ativo', values.ativo ? 'true' : 'false');
+      formData.append('destaque', values.destaque ? 'true' : 'false');
       formData.append(
         'autoriza_imagem_site',
         values.autoriza_imagem_site ? 'true' : 'false',
@@ -1189,6 +1192,13 @@ export default function EditarCasting() {
                   {...form.getInputProps('aceita_figuracao', {
                     type: 'checkbox',
                   })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+
+                <Switch
+                  label="É destaque no site?"
+                  {...form.getInputProps('destaque', { type: 'checkbox' })}
                   mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />

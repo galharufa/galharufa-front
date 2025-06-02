@@ -125,6 +125,7 @@ export default function NovoCasting() {
       etnia: '',
       foto_principal: null as File | null,
       ativo: true,
+      destaque: false,
       autoriza_imagem_site: true,
 
       // Características Físicas
@@ -568,6 +569,7 @@ export default function NovoCasting() {
 
       // Adicionar campos booleanos
       formData.set('ativo', values.ativo ? 'true' : 'false');
+      formData.set('destaque', values.destaque ? 'true' : 'false');
       formData.set(
         'autoriza_imagem_site',
         values.autoriza_imagem_site ? 'true' : 'false',
@@ -1022,6 +1024,12 @@ export default function NovoCasting() {
                   {...form.getInputProps('aceita_figuracao', {
                     type: 'checkbox',
                   })}
+                  mb="md"
+                  ref={undefined} /* Corrigindo o problema de ref no React 19 */
+                />
+                <Switch
+                  label="É destaque no site?"
+                  {...form.getInputProps('destaque', { type: 'checkbox' })}
                   mb="md"
                   ref={undefined} /* Corrigindo o problema de ref no React 19 */
                 />

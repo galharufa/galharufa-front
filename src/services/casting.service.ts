@@ -99,6 +99,7 @@ export interface CastingDetalhado {
   fotos?: Foto[];
   videos?: Video[];
   ativo: boolean;
+  destaque: boolean;
   autoriza_imagem_site?: boolean;
 
   //outras tabelas
