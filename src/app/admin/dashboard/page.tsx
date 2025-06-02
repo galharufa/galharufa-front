@@ -92,10 +92,10 @@ export default function Dashboard() {
         setTotalPosts(posts.count);
 
         // Obter castings por categoria
-        const categoriasMap = new Map<number, Categoria>();
+        const categoriasMap = new Map<string, Categoria>();
         categorias.results.forEach((cat) => categoriasMap.set(cat.id, cat));
 
-        const castingsPorCategoria: Map<number, number> = new Map();
+        const castingsPorCategoria: Map<string, number> = new Map();
 
         // Inicializar todas as categorias com zero
         categorias.results.forEach((cat) => castingsPorCategoria.set(cat.id, 0));
@@ -106,7 +106,7 @@ export default function Dashboard() {
         // Contar castings por categoria
         todosCastings.results.forEach((casting) => {
           // Verificar se categoria existe e obter o primeiro item como ID (se for array)
-          let categoriaId: number | undefined;
+          let categoriaId: string | undefined;
 
           if (
             casting.categoria &&
@@ -114,14 +114,14 @@ export default function Dashboard() {
             casting.categoria.length > 0
           ) {
             // Se for array, pega o primeiro item e converte para número
-            categoriaId = Number(casting.categoria[0]);
+            categoriaId = String(casting.categoria[0]);
           } else if (typeof casting.categoria === 'string') {
             // Se for string simples, converte para número
-            categoriaId = Number(casting.categoria);
+            categoriaId = String(casting.categoria);
           }
 
           // Só adiciona se conseguiu obter um ID válido
-          if (categoriaId && !isNaN(categoriaId) && categoriasMap.has(categoriaId)) {
+          if (categoriaId && categoriasMap.has(categoriaId)) {
             castingsPorCategoria.set(
               categoriaId,
               (castingsPorCategoria.get(categoriaId) || 0) + 1,
@@ -336,7 +336,7 @@ export default function Dashboard() {
           {/* Gráfico de Publicações por Mês */}
           <Card withBorder p="lg" radius="md">
             <Title order={3} mb="lg">
-              Publicações nos Últimos 6 Meses
+              Publicações no blog dos últimos 6 meses
             </Title>
             {isLoading ? (
               <div style={{ display: 'flex', justifyContent: 'center', padding: '2rem' }}>

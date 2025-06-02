@@ -44,16 +44,21 @@ export default function CastingAdmin() {
   const itensPorPagina = 20;
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string | null>('categorias');
+  const [modoEdicaoCategoria, setModoEdicaoCategoria] = useState(false);
+  const [categoriaAtual, setCategoriaAtual] = useState<string | null>(null);
+  const [deleteModalCategoriaOpen, setDeleteModalCategoriaOpen] = useState(false);
+  const [deleteModalCastingOpen, setDeleteModalCastingOpen] = useState(false);
+  const [categoriaToDelete, setCategoriaToDelete] = useState<string | null>(null);
+  const [castingToDelete, setCastingToDelete] = useState<string | null>(null);
+  const [contagemCategorias, setContagemCategorias] = useState<Record<string, number>>(
+    {},
+  );
 
   // Estados para modal de categoria
   const [
     categoriaModalAberto,
     { open: abrirCategoriaModal, close: fecharCategoriaModal },
   ] = useDisclosure(false);
-  const [modoEdicaoCategoria, setModoEdicaoCategoria] = useState(false);
-  const [categoriaAtual, setCategoriaAtual] = useState<number | null>(null);
-  const [deleteModalCategoriaOpen, setDeleteModalCategoriaOpen] = useState(false);
-  const [categoriaToDelete, setCategoriaToDelete] = useState<number | null>(null);
 
   // Formulário de categoria
   const categoriaForm = useForm({
@@ -67,13 +72,6 @@ export default function CastingAdmin() {
         value.trim().length === 0 ? 'A descrição é obrigatória' : null,
     },
   });
-
-  // Função para contar castings por categoria
-  const getCastingsCountByCategoria = (categoriaId: number): number => {
-    return castings.filter((casting) =>
-      casting.categoria?.includes(categoriaId.toString()),
-    ).length;
-  };
 
   // Carregar categorias e talentos
   useEffect(() => {
@@ -105,7 +103,7 @@ export default function CastingAdmin() {
     if (isAuthenticated) {
       carregarDados();
     }
-  }, [isAuthenticated, authLoading, paginaAtual]);
+  }, [isAuthenticated, authLoading, paginaAtual, itensPorPagina]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -113,11 +111,24 @@ export default function CastingAdmin() {
     }
   }, [isAuthenticated, authLoading, router]);
 
-  // useEffect(() => {
-  //   const searchParams = new URLSearchParams(window.location.search);
-  //   const pagina = searchParams.get('pagina');
-  //   if (pagina) setPaginaAtual(Number(pagina));
-  // }, []);
+  useEffect(() => {
+    const carregarContagem = async () => {
+      try {
+        const data = await CastingService.getCountPorCategoria();
+        const map: Record<string, number> = {};
+        data.forEach(({ categoria, count }) => {
+          map[categoria] = count;
+        });
+        setContagemCategorias(map);
+      } catch (error) {
+        console.error('Erro ao carregar contagem de categorias', error);
+      }
+    };
+
+    if (isAuthenticated) {
+      carregarContagem();
+    }
+  }, [isAuthenticated]);
 
   // Funções para gerenciar categorias
   const handleCriarCategoria = () => {
@@ -127,7 +138,7 @@ export default function CastingAdmin() {
     abrirCategoriaModal();
   };
 
-  const handleEditarCategoria = async (id: number) => {
+  const handleEditarCategoria = async (id: string) => {
     try {
       setIsLoading(true);
       const categoria = await CastingService.getCategoria(id);
@@ -148,7 +159,7 @@ export default function CastingAdmin() {
     }
   };
 
-  const handleExcluirCategoria = (id: number) => {
+  const handleExcluirCategoria = (id: string) => {
     setCategoriaToDelete(id);
     setDeleteModalCategoriaOpen(true);
   };
@@ -209,6 +220,10 @@ export default function CastingAdmin() {
     }
   };
 
+  const getCastingsCountByCategoria = (categoriaId: string): number => {
+    return contagemCategorias[categoriaId] ?? 0;
+  };
+
   // Navegação para criar novo casting
   const handleCriarCasting = () => {
     router.push('/admin/casting/castings/novo');
@@ -219,36 +234,32 @@ export default function CastingAdmin() {
     router.push(`/admin/casting/castings/editar/${id}?pagina=${paginaAtual}`);
   };
 
-  // Função para excluir casting
-  const handleExcluirCasting = async (id: string) => {
-    if (
-      !confirm(
-        'Tem certeza que deseja excluir este casting? Esta ação não pode ser desfeita.',
-      )
-    ) {
-      return;
-    }
+  // exclusao casting modal
+  const handleExcluirCasting = (id: string) => {
+    setCastingToDelete(id);
+    setDeleteModalCastingOpen(true);
+  };
+
+  const confirmarExclusaoCasting = async () => {
+    if (!castingToDelete) return;
 
     try {
       setIsLoading(true);
-      await CastingService.excluirCasting(id);
+      await CastingService.excluirCasting(castingToDelete);
 
-      // Atualizar a lista de castings
-      setCastings(castings.filter((casting) => casting.id !== id));
+      // Atualizar a lista de categorias
+      setCastings(castings.filter((cat) => cat.id !== castingToDelete));
 
       successToast('Casting excluído com sucesso');
     } catch (error) {
-      console.error('Erro ao excluir talento:', error);
-      errorToast('Erro ao excluir casting');
+      console.error('Erro ao excluir casting:', error);
+      errorToast('Erro ao excluir casting.');
     } finally {
       setIsLoading(false);
+      setDeleteModalCastingOpen(false);
+      setCastingToDelete(null);
     }
   };
-
-  // // Contagem de castings por categoria
-  // const getCastingsCountByCategoria = (categoriaId: number) => {
-  //   return castings.filter((casting) => casting.categoria === categoriaId).length;
-  // };
 
   if (authLoading) {
     return (
@@ -268,6 +279,9 @@ export default function CastingAdmin() {
   if (!isAuthenticated) {
     return null;
   }
+
+  const totalPaginas = Math.ceil(totalCastings / itensPorPagina);
+  const paginaVisivel = Math.min(Math.max(paginaAtual, 1), totalPaginas || 1);
 
   return (
     <>
@@ -337,33 +351,52 @@ export default function CastingAdmin() {
                   {categorias.map((categoria) => {
                     const count = getCastingsCountByCategoria(categoria.id);
                     return (
-                      <Card key={categoria.id} p="lg" radius="md" withBorder>
-                        <Group position="apart">
-                          <Title order={3}>{categoria.nome}</Title>
-                          <Group spacing={8}>
-                            <ActionIcon
-                              color="blue"
-                              onClick={() => handleEditarCategoria(categoria.id)}
-                            >
-                              <IconEdit size={18} />
-                            </ActionIcon>
-                            <ActionIcon
-                              color="red"
-                              onClick={() => handleExcluirCategoria(categoria.id)}
-                            >
-                              <IconTrash size={18} />
-                            </ActionIcon>
-                          </Group>
-                        </Group>
-                        <Text size="xl" weight={700} mt="md">
+                      <Card
+                        key={categoria.id}
+                        p="lg"
+                        radius="md"
+                        withBorder
+                        h={200} // Altura fixa (pode ajustar)
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          justifyContent: 'space-between',
+                        }}
+                      >
+                        <Title
+                          order={3}
+                          size="h5"
+                          truncate="end"
+                          style={{
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                          }}
+                        >
+                          {categoria.nome}
+                        </Title>
+
+                        <Text size="lg" weight={700} mt="sm">
                           {count}
                         </Text>
-                        <Text size="sm" color="dimmed">
+                        <Text size="sm" weight={500}>
                           castings cadastrados
                         </Text>
-                        <Text mt="md" color="dimmed" size="sm">
-                          {categoria.descricao}
-                        </Text>
+
+                        <Group spacing={4} mt="auto">
+                          <ActionIcon
+                            color="blue"
+                            onClick={() => handleEditarCategoria(categoria.id)}
+                          >
+                            <IconEdit size={16} />
+                          </ActionIcon>
+                          <ActionIcon
+                            color="red"
+                            onClick={() => handleExcluirCategoria(categoria.id)}
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
                       </Card>
                     );
                   })}
@@ -463,9 +496,9 @@ export default function CastingAdmin() {
               {totalCastings > itensPorPagina && (
                 <Group position="center" mt="lg" mb="md">
                   <Pagination
-                    total={Math.ceil(totalCastings / itensPorPagina)}
-                    value={paginaAtual}
-                    onChange={setPaginaAtual}
+                    total={totalPaginas}
+                    value={paginaVisivel}
+                    onChange={(pagina) => setPaginaAtual(pagina)}
                   />
                 </Group>
               )}
@@ -549,6 +582,25 @@ export default function CastingAdmin() {
             Cancelar
           </Button>
           <Button color="red" onClick={confirmarExclusaoCategoria} loading={isLoading}>
+            Excluir
+          </Button>
+        </Group>
+      </Modal>
+      {/* Modal de confirmação de exclusão de casting */}
+      <Modal
+        opened={deleteModalCastingOpen}
+        onClose={() => setDeleteModalCastingOpen(false)}
+        title="Confirmar Exclusão"
+        size="sm"
+      >
+        <Text mb="xl">
+          Tem certeza que deseja excluir este casting? Esta ação não pode ser desfeita.
+        </Text>
+        <Group position="right">
+          <Button variant="outline" onClick={() => setDeleteModalCastingOpen(false)}>
+            Cancelar
+          </Button>
+          <Button color="red" onClick={confirmarExclusaoCasting} loading={isLoading}>
             Excluir
           </Button>
         </Group>

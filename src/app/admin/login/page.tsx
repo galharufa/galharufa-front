@@ -140,8 +140,6 @@ export default function Login() {
                   height={80}
                   priority
                   style={{
-                    width: 'auto',
-                    height: 'auto',
                     maxHeight: '80px',
                     maxWidth: '100%',
                     objectFit: 'contain',

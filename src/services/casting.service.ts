@@ -8,7 +8,7 @@ export interface Funcao {
 }
 
 export interface Categoria {
-  id: number;
+  id: string;
   nome: string;
   descricao: string;
 }
@@ -204,7 +204,7 @@ export const CastingService = {
     }
   },
 
-  async getCategoria(id: number): Promise<Categoria> {
+  async getCategoria(id: string): Promise<Categoria> {
     const response = await api.get<Categoria>(`/api/casting/categorias/${id}/`);
     return response.data;
   },
@@ -214,8 +214,15 @@ export const CastingService = {
     return response.data;
   },
 
+  async getCountPorCategoria(): Promise<
+    { categoria: string; nome_categoria: string; count: number }[]
+  > {
+    const res = await api.get('/api/casting/castings/count-by-categoria/');
+    return res.data;
+  },
+
   async atualizarCategoria(
-    id: number,
+    id: string,
     categoria: Partial<Categoria>,
   ): Promise<Categoria> {
     const response = await api.patch<Categoria>(
@@ -225,7 +232,7 @@ export const CastingService = {
     return response.data;
   },
 
-  async excluirCategoria(id: number): Promise<void> {
+  async excluirCategoria(id: string): Promise<void> {
     await api.delete(`/api/casting/categorias/${id}/`);
   },
 
@@ -298,6 +305,10 @@ export const CastingService = {
     return response.data;
   },
 
+  async excluirCasting(id: string): Promise<void> {
+    await api.delete(`/api/casting/castings/${id}/`);
+  },
+
   // PATCH - Endereço
   async atualizarEndereco(castingId: string, data: Partial<Endereco>): Promise<Endereco> {
     const response = await api.patch<Endereco>(
@@ -341,10 +352,6 @@ export const CastingService = {
       },
     );
     return response.data;
-  },
-
-  async excluirCasting(id: string): Promise<void> {
-    await api.delete(`/api/casting/castings/${id}/`);
   },
 
   // Fotos

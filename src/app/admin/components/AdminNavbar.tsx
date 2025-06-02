@@ -22,6 +22,7 @@ import {
   IconLogout,
   IconSun,
   IconMoon,
+  IconDashboard,
 } from '@tabler/icons-react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -57,6 +58,11 @@ export default function AdminNavbar() {
   }
 
   const menuItems: MenuItem[] = [
+    {
+      icon: IconDashboard,
+      label: 'Dashboard',
+      link: '/admin/dashboard',
+    },
     {
       icon: IconUsers,
       label: 'Casting',

@@ -100,6 +100,7 @@ export default function EditarCasting() {
   const [categorias, setCategorias] = useState<any[]>([]);
   const [casting, setCasting] = useState<CastingDetalhado | null>(null);
   const [loadingCep, setLoadingCep] = useState(false);
+  const [deleteModalCategoriaOpen, setDeleteModalCategoriaOpen] = useState(false);
   const [previewFotoPrincipal, setPreviewFotoPrincipal] = useState<string | null>(null);
 
   // Fotos
