@@ -7,14 +7,6 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useInView } from 'framer-motion';
 
-// Função para gerar uma URL amigável a partir do nome artístico
-// const slugify = (text: string | undefined | null): string => {
-//   if (!text) return '';
-
-//   // Converter para texto em minúsculas e remover acentos
-//   return encodeURIComponent(text);
-// };
-
 import { CastingService, CastingResumido } from '@/services/casting.service';
 
 interface CastingGridProps {
@@ -38,7 +30,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
         const params: {
           ordering: string;
           ativo: boolean;
-          categoria?: number;
+          categoria?: string;
           genero?: string;
         } = {
           ordering: 'nome',
@@ -47,10 +39,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
 
         // Se o filtro não for "todos", filtrar por categoria
         if (filter !== 'todos') {
-          const categoriaId = parseInt(filter);
-          if (!isNaN(categoriaId)) {
-            params.categoria = categoriaId;
-          }
+          params.categoria = filter;
         }
 
         // Se o filtro de gênero não for "todos", adicionar filtro

@@ -238,7 +238,7 @@ export const CastingService = {
 
   // Castings
   async getCastings(params?: {
-    categoria?: number;
+    categoria?: string;
     ativo?: boolean;
     search?: string;
     ordering?: string;
