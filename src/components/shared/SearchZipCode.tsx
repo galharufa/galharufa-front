@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-
 import { useEffect } from 'react';
 import { errorToast } from '../../utils';
 
@@ -38,7 +36,7 @@ export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) 
             onResult({});
             alert('CEP não encontrado.');
           }
-        } catch (error) {
+        } catch {
           onResult({});
           errorToast('Erro ao consultar o CEP.');
         } finally {
@@ -48,7 +46,7 @@ export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) 
 
       fetchEndereco();
     }
-  }, [cep]);
+  }, [cep, onResult, onLoading]);
 
   return null;
 };

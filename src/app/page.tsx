@@ -24,10 +24,10 @@ const ServicesSection = dynamic(() => import('@/components/home/ServicesSection'
   ssr: false,
 });
 
-// const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlights'), {
-//   loading: () => <Loading message="Carregando seção de casting..." />,
-//   ssr: false,
-// });
+const CastingHighlights = dynamic(() => import('@/components/home/CastingHighlights'), {
+  loading: () => <Loading message="Carregando seção de casting..." />,
+  ssr: false,
+});
 
 const Clients = dynamic(() => import('@/components/home/Clients'), {
   loading: () => <Loading message="Carregando parceiros..." />,
@@ -61,6 +61,7 @@ export default function Home() {
         <Hero />
         <AboutSection />
         <ServicesSection />
+        <CastingHighlights />
         <Clients />
         <ContactSection />
         <Analytics />
