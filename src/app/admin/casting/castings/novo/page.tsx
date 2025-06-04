@@ -28,6 +28,18 @@ import { SearchZipCode } from '@/components/shared/SearchZipCode';
 import { etny, nationality, estados, corOlhos, habilidadesData } from '@/utils/index';
 import { compressImage } from '@/utils/imageCompression';
 import { isAxiosError } from 'axios';
+import { MaskedInput } from '@/components/shared/MaskedInput';
+import {
+  maskCPF,
+  maskCNPJ,
+  maskPhone,
+  maskCEP,
+  maskHeight,
+  maskWeight,
+  maskRG,
+  validateEmail,
+  maskBankNumbers,
+} from '@/utils/inputMasks';
 import {
   Container,
   Title,
@@ -198,14 +210,53 @@ export default function NovoCasting() {
       pix_chave: '',
     },
     validate: {
-      //‼️‼️‼️‼️‼️‼️
-      // nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
-      // categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
-      // altura: (value) => (!value ? 'A altura é obrigatória' : null),
-      // peso: (value) => (!value ? 'O peso é obrigatório' : null),
-      // biografia: (value) => (!value ? 'A biografia é obrigatória' : null),
-      // experiencia: (value) => (!value ? 'A experiência é obrigatória' : null),
-      // foto_principal: (value) => (!value ? 'A foto principal é obrigatória' : null),
+      // Validações básicas
+      nome: (value) => (value.trim().length === 0 ? 'O nome é obrigatório' : null),
+      categoria: (value) => (!value ? 'A categoria é obrigatória' : null),
+      altura: (value) => {
+        if (!value) return 'A altura é obrigatória';
+        const numValue = parseFloat(value.replace(',', '.'));
+        if (isNaN(numValue) || numValue < 0.5 || numValue > 2.5) return 'Altura inválida';
+        return null;
+      },
+      peso: (value) => {
+        if (!value) return 'O peso é obrigatório';
+        const numValue = parseInt(value);
+        if (isNaN(numValue) || numValue < 20 || numValue > 200) return 'Peso inválido';
+        return null;
+      },
+      biografia: (value) => (!value ? 'A biografia é obrigatória' : null),
+
+      // Validações para documentos
+      CPF: (value) => {
+        if (value && value.replace(/\D/g, '').length !== 11) return 'CPF inválido';
+        return null;
+      },
+      CNPJ: (value) => {
+        if (
+          value &&
+          form.values.possui_nota_propria &&
+          value.replace(/\D/g, '').length !== 14
+        )
+          return 'CNPJ inválido';
+        return null;
+      },
+
+      // Validações para contato
+      email: (value) => {
+        if (value && !validateEmail(value)) return 'E-mail inválido';
+        return null;
+      },
+      celular_whatsapp: (value) => {
+        if (value && value.replace(/\D/g, '').length < 10) return 'Telefone inválido';
+        return null;
+      },
+
+      // Validações para endereço
+      cep: (value) => {
+        if (value && value.replace(/\D/g, '').length !== 8) return 'CEP inválido';
+        return null;
+      },
     },
   });
 
@@ -234,12 +285,14 @@ export default function NovoCasting() {
   //Limpa / adiciona mascara ao campo de CEP para api conseguir calcular
   const handleCepBlur = (event: React.FocusEvent<HTMLInputElement>) => {
     let valor = event.target.value;
+    // O MaskedInput já vai aplicar a máscara, só precisamos verificar o comprimento
     valor = valor.replace(/\D/g, '');
 
     if (valor.length === 8) {
-      form.setFieldValue('cep', valor.replace(/(\d{5})(\d{3})/, '$1-$2'));
-    } else {
-      alert('CEP inválido. Use o formato 00000-000.');
+      // O CEP já está formatado pelo MaskedInput
+      // Não precisa fazer nada aqui
+    } else if (valor.length > 0) {
+      form.setFieldError('cep', 'CEP inválido. Use o formato 00000-000.');
     }
   };
 
@@ -1055,24 +1108,19 @@ export default function NovoCasting() {
                     }}
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="Altura (em metros)"
                     placeholder="Ex: 1.75"
-                    min={0.5}
-                    max={2.5}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                    step={0.01}
+                    mask={maskHeight}
                     {...form.getInputProps('altura')}
                     required
                   />
-                  <TextInput
+                  <MaskedInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
-                    min={20}
-                    max={200}
+                    mask={maskWeight}
                     required
                     {...form.getInputProps('peso')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1164,6 +1212,7 @@ export default function NovoCasting() {
                         onChange={(event) =>
                           toggleIdioma(value, event.currentTarget.checked)
                         }
+                        ref={undefined} /* Corrigindo o problema de ref no React 19 */
                       />
 
                       {idiomasSelecionados[value] && value !== 'outros' && (
@@ -1178,6 +1227,7 @@ export default function NovoCasting() {
                             }))
                           }
                           withinPortal
+                          ref={undefined} /* Corrigindo o problema de ref no React 19 */
                         />
                       )}
 
@@ -1188,6 +1238,7 @@ export default function NovoCasting() {
                           onChange={(event) =>
                             setIdiomasOutros(event.currentTarget.value)
                           }
+                          ref={undefined} /* Corrigindo o problema de ref no React 19 */
                         />
                       )}
                     </Group>
@@ -1358,36 +1409,36 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="RG"
                     placeholder="Número do RG"
                     icon={<IconId size={14} />}
+                    mask={maskRG}
                     {...form.getInputProps('RG')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="CPF"
-                    placeholder="Número do CPF"
+                    placeholder="000.000.000-00"
                     icon={<IconId size={14} />}
+                    mask={maskCPF}
                     {...form.getInputProps('CPF')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
-                  <TextInput
+                  <MaskedInput
                     label="PIS"
                     placeholder="Número do PIS"
                     icon={<IconId size={14} />}
+                    mask={(value) => maskBankNumbers(value, 15)}
                     {...form.getInputProps('PIS')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
                 <SimpleGrid cols={3} mb="md">
-                  <TextInput
+                  <MaskedInput
                     label="CNH"
                     placeholder="Número da CNH"
+                    mask={(value) => maskBankNumbers(value, 11)}
                     {...form.getInputProps('CNH')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <MultiSelect
                     label="Categorias"
@@ -1406,6 +1457,7 @@ export default function NovoCasting() {
                     clearable
                     {...form.getInputProps('habilitacao_categorias')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <DateInput
@@ -1469,12 +1521,12 @@ export default function NovoCasting() {
 
                 {form.values.possui_nota_propria && (
                   <SimpleGrid cols={3} mb="md">
-                    <TextInput
+                    <MaskedInput
                       label="CNPJ"
-                      placeholder="Número do CNPJ"
+                      placeholder="00.000.000/0001-00"
                       icon={<IconCreditCard size={14} />}
+                      mask={maskCNPJ}
                       {...form.getInputProps('CNPJ')}
-                      ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     />
 
                     <TextInput
@@ -1612,16 +1664,23 @@ export default function NovoCasting() {
                   <TextInput
                     icon={<IconMail size={16} />}
                     label="E-mail"
-                    placeholder="E-mail de contato"
+                    placeholder="nome@exemplo.com"
                     type="email"
                     {...form.getInputProps('email')}
                     mb="md"
+                    ref={undefined}
+                    onBlur={(e) => {
+                      if (e.target.value && !validateEmail(e.target.value)) {
+                        form.setFieldError('email', 'Email inválido');
+                      }
+                    }}
                   />
 
-                  <TextInput
+                  <MaskedInput
                     icon={<IconBrandWhatsapp size={16} />}
                     label="Celular/Whatsapp"
-                    placeholder="(00) 0000-0000"
+                    placeholder="(00) 00000-0000"
+                    mask={maskPhone}
                     {...form.getInputProps('celular_whatsapp')}
                     mb="md"
                   />
@@ -1631,6 +1690,7 @@ export default function NovoCasting() {
                     icon={<IconLink size={16} />}
                     {...form.getInputProps('website')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1663,12 +1723,12 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="Telefone de Emergência"
-                    placeholder="Número de telefone com DDD"
+                    placeholder="(00) 00000-0000"
                     icon={<IconPhone size={14} />}
+                    mask={maskPhone}
                     {...form.getInputProps('contato_emergencia_telefone')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
               </Card>
@@ -1684,22 +1744,42 @@ export default function NovoCasting() {
                   cep={form.values.cep}
                   onLoading={setLoadingCep}
                   onResult={(endereco) => {
-                    if (endereco.logradouro)
-                      form.setFieldValue('logradouro', endereco.logradouro);
-                    if (endereco.bairro) form.setFieldValue('bairro', endereco.bairro);
-                    if (endereco.cidade) form.setFieldValue('cidade', endereco.cidade);
-                    if (endereco.estado) form.setFieldValue('estado', endereco.estado);
+                    // Atualizar os campos apenas se houver valores válidos e diferentes
+                    const updates: Record<string, string> = {};
+
+                    if (
+                      endereco.logradouro &&
+                      form.values.logradouro !== endereco.logradouro
+                    )
+                      updates.logradouro = endereco.logradouro;
+
+                    if (endereco.bairro && form.values.bairro !== endereco.bairro)
+                      updates.bairro = endereco.bairro;
+
+                    if (endereco.cidade && form.values.cidade !== endereco.cidade)
+                      updates.cidade = endereco.cidade;
+
+                    if (endereco.estado && form.values.estado !== endereco.estado)
+                      updates.estado = endereco.estado;
+
+                    // Se tiver atualizações a fazer, faz todas de uma vez
+                    if (Object.keys(updates).length > 0) {
+                      form.setValues((current) => ({
+                        ...current,
+                        ...updates,
+                      }));
+                    }
                   }}
                 />
 
                 <SimpleGrid cols={2} mb="md">
-                  <TextInput
+                  <MaskedInput
                     label="CEP"
-                    placeholder="Formato: 00000-000"
+                    placeholder="00000-000"
                     icon={loadingCep ? <Loader size={14} /> : <IconMap size={14} />}
                     onBlur={handleCepBlur}
+                    mask={maskCEP}
                     {...form.getInputProps('cep')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <TextInput
@@ -1771,18 +1851,18 @@ export default function NovoCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="Agência"
                     placeholder="Número da agência"
+                    mask={(value) => maskBankNumbers(value, 10)}
                     {...form.getInputProps('agencia')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="Conta"
                     placeholder="Número da conta com dígito"
+                    mask={(value) => maskBankNumbers(value, 15)}
                     {...form.getInputProps('conta')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 

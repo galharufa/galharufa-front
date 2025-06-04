@@ -49,6 +49,9 @@ import {
 } from '@/services';
 import 'react-toastify/dist/ReactToastify.css';
 import { warningToast, successToast, infoToast, errorToast } from '@/utils';
+import { MaskedInput } from '@/components/shared/MaskedInput';
+import { maskHeight, maskWeight, maskPhone, maskCEP } from '@/utils/inputMasks';
+import { useOptimizedCSSLoad } from '@/utils/optimizeCSS';
 import VideoPreview from '@/components/shared/VideoPreview';
 import ImagePreview from '@/components/shared/ImagePreview';
 import { compressImage } from '@/utils/imageCompression';
@@ -286,6 +289,9 @@ export default function EditarCasting() {
   }
 
   const dadosCarregados = useRef(false);
+
+  // Otimização do carregamento de CSS para evitar warnings
+  useOptimizedCSSLoad();
 
   // Carregar dados iniciais (categorias, funções, etc.)
   useEffect(() => {
@@ -1224,23 +1230,18 @@ export default function EditarCasting() {
                     }}
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="Altura (em metros)"
                     placeholder="Ex: 1.75"
-                    min={0.5}
-                    max={2.5}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
-                    step={0.01}
+                    mask={maskHeight}
                     required
                     {...form.getInputProps('altura')}
                   />
-                  <TextInput
+                  <MaskedInput
                     label="Peso (em kg)"
                     placeholder="Ex: 70"
-                    min={20}
-                    max={200}
+                    mask={maskWeight}
                     {...form.getInputProps('peso')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
 
@@ -1673,6 +1674,7 @@ export default function EditarCasting() {
                     clearable
                     {...form.getInputProps('habilitacao_categorias')}
                     mb="md"
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
                   <DateInput
@@ -1680,6 +1682,7 @@ export default function EditarCasting() {
                     placeholder="Selecione a data"
                     valueFormat="DD/MM/YYYY"
                     {...form.getInputProps('habilitacao_validade')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                     mb="md"
                     popoverProps={{
                       zIndex: 9999, // Aumentando o z-index para o calendário aparecer acima de outros elementos
@@ -1884,13 +1887,13 @@ export default function EditarCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     icon={<IconBrandWhatsapp size={16} />}
                     label="Celular/Whatsapp"
-                    placeholder="(00) 0000-0000"
+                    placeholder="(00) 00000-0000"
+                    mask={maskPhone}
                     {...form.getInputProps('celular_whatsapp')}
                     mb="md"
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <TextInput
                     label="Website"
@@ -1931,12 +1934,12 @@ export default function EditarCasting() {
                     ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
 
-                  <TextInput
+                  <MaskedInput
                     label="Telefone de Emergência"
-                    placeholder="Número de telefone com DDD"
+                    placeholder="(00) 00000-0000"
                     icon={<IconPhone size={14} />}
+                    mask={maskPhone}
                     {...form.getInputProps('contato_emergencia_telefone')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
               </Card>
@@ -1951,23 +1954,49 @@ export default function EditarCasting() {
                 <SearchZipCode
                   cep={form.values.cep}
                   onLoading={setLoadingCep}
-                  onResult={(endereco) => {
-                    if (endereco.logradouro)
-                      form.setFieldValue('logradouro', endereco.logradouro);
-                    if (endereco.bairro) form.setFieldValue('bairro', endereco.bairro);
-                    if (endereco.cidade) form.setFieldValue('cidade', endereco.cidade);
-                    if (endereco.estado) form.setFieldValue('estado', endereco.estado);
+                  onResult={(endereco: {
+                    logradouro?: string;
+                    bairro?: string;
+                    cidade?: string;
+                    estado?: string;
+                    ibge?: string;
+                  }) => {
+                    const atualizacoes: Partial<typeof form.values> = {};
+
+                    if (
+                      endereco.logradouro &&
+                      endereco.logradouro !== form.values.logradouro
+                    ) {
+                      atualizacoes.logradouro = endereco.logradouro;
+                    }
+
+                    if (endereco.bairro && endereco.bairro !== form.values.bairro) {
+                      atualizacoes.bairro = endereco.bairro;
+                    }
+
+                    if (endereco.cidade && endereco.cidade !== form.values.cidade) {
+                      atualizacoes.cidade = endereco.cidade;
+                    }
+
+                    if (endereco.estado && endereco.estado !== form.values.estado) {
+                      atualizacoes.estado = endereco.estado;
+                    }
+
+                    // Só atualiza se houver mudanças
+                    if (Object.keys(atualizacoes).length > 0) {
+                      form.setValues({ ...form.values, ...atualizacoes });
+                    }
                   }}
                 />
 
                 <SimpleGrid cols={2} spacing="md" mb="md">
-                  <TextInput
+                  <MaskedInput
                     label="CEP"
-                    placeholder="Formato: 00000-000"
+                    placeholder="00000-000"
+                    mask={maskCEP}
                     icon={loadingCep ? <Loader size={14} /> : <IconMap size={14} />}
                     onBlur={handleCepBlur}
                     {...form.getInputProps('cep')}
-                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <TextInput
                     label="Endereço"
@@ -1993,6 +2022,7 @@ export default function EditarCasting() {
                     label="Bairro"
                     placeholder="Bairro"
                     {...form.getInputProps('bairro')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                 </SimpleGrid>
                 <SimpleGrid cols={3} spacing="md" mb="md">
@@ -2000,6 +2030,7 @@ export default function EditarCasting() {
                     label="Cidade"
                     placeholder="Nome da cidade"
                     {...form.getInputProps('cidade')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <Select
                     label="Estado"
@@ -2007,6 +2038,7 @@ export default function EditarCasting() {
                     data={estados}
                     searchable
                     {...form.getInputProps('estado')}
+                    ref={undefined} /* Corrigindo o problema de ref no React 19 */
                   />
                   <TextInput
                     label="País"

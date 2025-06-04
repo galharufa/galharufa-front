@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { errorToast } from '../../utils';
 
 interface SearchZipCodeProps {
@@ -14,10 +14,17 @@ interface SearchZipCodeProps {
 }
 
 export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) => {
+  // Usar uma ref para controlar qual CEP já foi buscado
+  const lastCepRef = useRef<string>('');
+
   useEffect(() => {
     const cepLimpo = cep.replace(/\D/g, '');
 
-    if (cepLimpo.length === 8) {
+    // Se o CEP já foi buscado anteriormente, não busca novamente
+    if (cepLimpo.length === 8 && lastCepRef.current !== cepLimpo) {
+      // Armazena o CEP atual para evitar buscas repetidas
+      lastCepRef.current = cepLimpo;
+
       const fetchEndereco = async () => {
         onLoading(true);
         try {
@@ -34,7 +41,7 @@ export const SearchZipCode = ({ cep, onResult, onLoading }: SearchZipCodeProps) 
             });
           } else {
             onResult({});
-            alert('CEP não encontrado.');
+            errorToast('CEP não encontrado.');
           }
         } catch {
           onResult({});
