@@ -1,7 +1,14 @@
 /* eslint-disable camelcase */
 'use client';
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useCallback,
+  ReactNode,
+} from 'react';
 import { useRouter } from 'next/navigation';
 import { AuthService } from '@/services/auth.service';
 
@@ -37,14 +44,48 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
 
+  // Função para fazer logout automático quando o token expirar
+  const handleTokenExpiration = useCallback(() => {
+    AuthService.logout();
+    setUser(null);
+    router.push('/admin/login');
+  }, [router]);
+
+  // Verificação periódica do token de acesso
+  useEffect(() => {
+    // Não verificar se o usuário não estiver logado
+    if (!user) return;
+
+    // Verificar expiração imediatamente
+    if (AuthService.isAccessTokenExpired()) {
+      handleTokenExpiration();
+      return;
+    }
+
+    // Intervalo de verificação a cada 10 segundos
+    const intervalId = setInterval(() => {
+      if (AuthService.isAccessTokenExpired()) {
+        handleTokenExpiration();
+      }
+    }, 10000); // 10 segundos
+
+    return () => clearInterval(intervalId);
+  }, [user, router, handleTokenExpiration]);
+
   useEffect(() => {
     // Verificar se o usuário está autenticado ao carregar a página
     const checkAuth = async () => {
       try {
         const storedUser = AuthService.getStoredUser();
 
+        // Verificar se o token está expirado antes de definir o usuário
         if (storedUser) {
-          setUser(storedUser);
+          if (AuthService.isAccessTokenExpired()) {
+            // Se o token estiver expirado, limpar dados
+            AuthService.logout();
+          } else {
+            setUser(storedUser);
+          }
         }
       } catch {
         // Tratar erro silenciosamente
@@ -54,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     checkAuth();
-  }, []);
+  }, [router]);
 
   const login = async (credentials: LoginCredentials) => {
     setIsLoading(true);

@@ -124,6 +124,20 @@ export const AuthService = {
     }
   },
 
+  isAccessTokenExpired(): boolean {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return true;
+
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const exp = payload.exp * 1000;
+
+      return Date.now() >= exp; // Token expirado se o tempo atual for maior ou igual ao tempo de expiração
+    } catch {
+      return true; // Em caso de erro na verificação, considerar como expirado por segurança
+    }
+  },
+
   async refreshAccessToken(): Promise<string> {
     const refresh =
       localStorage.getItem('refreshToken') || sessionStorage.getItem('refreshToken');
