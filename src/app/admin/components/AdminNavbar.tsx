@@ -75,7 +75,7 @@ export default function AdminNavbar() {
     },
     {
       icon: IconNews,
-      label: 'Blog',
+      label: 'Bureau Cultural',
       link: '/admin/blog',
     },
   ];

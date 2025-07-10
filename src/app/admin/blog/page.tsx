@@ -267,7 +267,7 @@ export default function BlogAdmin() {
       <AdminNavbar />
       <Container size="lg" py="xl">
         <Group position="apart" mb="xl">
-          <Title order={2}>Gerenciamento do Blog</Title>
+          <Title order={2}>Gerenciamento do Bureau Cultural</Title>
           <Button
             onClick={handleCriarPost}
             styles={{
@@ -404,6 +404,7 @@ export default function BlogAdmin() {
             data={tags.map((tag) => ({ value: tag.id.toString(), label: tag.nome }))}
             {...form.getInputProps('tags')}
             mb="md"
+            required
             ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 
@@ -423,6 +424,7 @@ export default function BlogAdmin() {
             icon={<IconUpload size={14} />}
             {...form.getInputProps('imagem_destaque')}
             mb="md"
+            required
             ref={undefined} /* Corrigindo o problema de ref no React 19 */
           />
 

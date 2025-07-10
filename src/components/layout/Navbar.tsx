@@ -54,7 +54,7 @@ const Navbar = () => {
     { href: '/sobre', label: 'Sobre Nós' },
     { href: '/servicos', label: 'Serviços' },
     { href: '/casting', label: 'Casting' },
-    { href: '/blog', label: 'Blog' },
+    { href: '/blog', label: 'Bureau Cultural' },
     { href: '/contato', label: 'Contato' },
   ];
 

@@ -28,7 +28,7 @@ const BlogHero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          Blog
+          Bureau Cultural
         </motion.h1>
       </div>
     </div>
