@@ -1,17 +1,17 @@
 'use client';
 
-import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
+import Link from 'next/link';
+import { useRef } from 'react';
 import {
-  FaPhone,
-  FaEnvelope,
   FaClock,
-  FaInstagram,
+  FaEnvelope,
   FaFacebook,
+  FaInstagram,
   FaLinkedin,
+  FaPhone,
   FaWhatsapp,
 } from 'react-icons/fa';
-import Link from 'next/link';
 import './contact-hover.css';
 
 const ContactInfo = () => {
@@ -27,7 +27,7 @@ const ContactInfo = () => {
     {
       icon: <FaEnvelope className="h-6 w-6" />,
       title: 'E-mail',
-      details: ['atendimento@agenciagalharufa.com.br'],
+      details: ['atendimento@agenciaagenciagalharufa.com.br'],
     },
     {
       icon: <FaClock className="h-6 w-6" />,
@@ -123,7 +123,11 @@ const ContactInfo = () => {
               </h3>
               <div className="text-gray-600 dark:text-gray-300 text-center">
                 {item.details.map((detail, i) => (
-                  <p key={i} className="mb-1">
+                  <p
+                    key={i}
+                    className="mb-1 text-sm sm:text-base overflow-hidden text-ellipsis whitespace-nowrap max-w-full mx-auto"
+                    title={detail}
+                  >
                     {detail}
                   </p>
                 ))}
@@ -187,7 +191,7 @@ const ContactInfo = () => {
                 Falar pelo WhatsApp
               </a>
               <a
-                href="mailto:atendimento@galharufa.com.br"
+                href="mailto:atendimento@agenciagalharufa.com.br"
                 className="contact-hover-link px-6 py-3 bg-gray-500 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300"
               >
                 <FaEnvelope className="h-5 w-5" />
@@ -230,7 +234,7 @@ const ContactInfo = () => {
               Muito obrigada!
             </p>
             <a
-              href="mailto:atendimento@galharufa.com.br"
+              href="mailto:atendimento@agenciagalharufa.com.br"
               className="contact-hover-link px-6 py-3 bg-gray-500 text-white font-medium rounded-md inline-flex items-center justify-center gap-2 hover:bg-gray-700 transition-all duration-300"
             >
               <FaEnvelope className="h-5 w-5" />
