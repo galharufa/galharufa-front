@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
 import { BlogService, PostResumido } from '@/services/blog.service';
+import { AnimatePresence, motion, useInView, type Variants } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 
 interface BlogCardsProps {
   filter: string;
@@ -64,7 +64,7 @@ const BlogCards = ({ filter }: BlogCardsProps) => {
   }, [isInView, posts.length, displayCount]);
 
   // Animação para card
-  const cardVariants = {
+  const cardVariants : Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,

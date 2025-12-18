@@ -2,12 +2,12 @@
 /* eslint-disable camelcase */
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { ServicoResumido, ServicosService } from '@/services';
+import { AnimatePresence, motion, useInView, type Variants } from 'framer-motion';
+import parse from 'html-react-parser';
 import Image from 'next/image';
 import Link from 'next/link';
-import { ServicosService, ServicoResumido } from '@/services';
-import parse from 'html-react-parser';
+import { useEffect, useRef, useState } from 'react';
 
 const ServicesList = () => {
   const ref = useRef(null);
@@ -53,7 +53,7 @@ const ServicesList = () => {
   }, [isInView, servicos.length, displayCount]);
 
   // Animação para card
-  const cardVariants = {
+  const cardVariants : Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,

@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import Image from 'next/image';
+import { motion, useInView, type Variants } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import Image from 'next/image';
+import { useRef } from 'react';
 
 const OurStory = () => {
   const ref = useRef(null);
@@ -22,12 +22,15 @@ const OurStory = () => {
     },
   };
 
-  const itemVariants = {
-    hidden: { y: 20, opacity: 0 },
+  const itemVariants: Variants = {
+    hidden: { y: 40, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] },
+      transition: {
+        duration: 0.7,
+        ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
+      },
     },
   };
 

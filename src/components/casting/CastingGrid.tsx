@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 'use client';
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-import { CastingService, CastingResumido } from '@/services/casting.service';
 import Pagination from '@/components/shared/Pagination';
+import { CastingResumido, CastingService } from '@/services/casting.service';
 
 interface CastingGridProps {
   filter: string;
@@ -162,7 +162,7 @@ const CastingGrid = ({ filter, generoFilter }: CastingGridProps) => {
   };
 
   // Animação para card
-  const cardVariants = {
+  const cardVariants: Variants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({
       opacity: 1,

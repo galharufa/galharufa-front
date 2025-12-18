@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import Link from 'next/link';
-import Image from 'next/image';
+import { motion, useInView, type Variants } from 'framer-motion';
 import { useTheme } from 'next-themes';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRef } from 'react';
 
 const AboutSection = () => {
   const ref = useRef(null);
@@ -12,7 +12,7 @@ const AboutSection = () => {
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === 'dark';
 
-  const containerVariants = {
+  const containerVariants: Variants =  {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -23,7 +23,7 @@ const AboutSection = () => {
     },
   };
 
-  const itemVariants = {
+  const itemVariants : Variants =  {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,

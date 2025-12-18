@@ -1,10 +1,10 @@
 'use client';
 
-import { useRef, useState, useEffect } from 'react';
+import { CastingService, type CastingResumido } from '@/services';
+import { motion, useInView, type Variants } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
-import { motion, useInView } from 'framer-motion';
-import { CastingService, type CastingResumido } from '@/services';
+import { useEffect, useRef, useState } from 'react';
 
 // Função para otimização de CSS implementada diretamente no componente
 const useOptimizedCSSLoad = (): void => {
@@ -20,7 +20,7 @@ const useOptimizedCSSLoad = (): void => {
 };
 
 // Variantes de animação para os cards
-const cardVariants = {
+const cardVariants: Variants = {
   hidden: { opacity: 0, y: 50 },
   visible: (i: number) => ({
     opacity: 1,
