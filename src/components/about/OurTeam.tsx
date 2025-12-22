@@ -1,9 +1,9 @@
 'use client';
 
-import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 import Image from 'next/image';
-import { FaLinkedin, FaInstagram, FaEnvelope } from 'react-icons/fa';
+import { useRef } from 'react';
+import { FaEnvelope, FaInstagram, FaLinkedin } from 'react-icons/fa';
 
 const getInitials = (name: string) => {
   return name
@@ -94,13 +94,25 @@ const teamMembers = [
     backgroundImage: '/images/BackgroundTeamMembers.jpg',
     image: '',
     social: {
-      linkedin: '',
-      instagram: '',
+      linkedin: 'https://www.linkedin.com/in/pamellagaiguer/',
+      instagram: 'https://instagram.com/pam_gaiguer',
       email: 'pamella@galharufa.com.br',
     },
   },
-  {
+    {
     id: 8,
+    name: 'Rafael Marinho',
+    role: 'Senior Developer/Devops',
+    backgroundImage: '/images/BackgroundTeamMembers.jpg',
+    image: '',
+    social: {
+      linkedin: '',
+      instagram: '',
+      email: 'rafa@galharufa.com.br',
+    },
+  },
+  {
+    id: 9,
     name: 'Tom Gomes',
     role: 'Fiscal de Set',
     backgroundImage: '/images/BackgroundTeamMembers.jpg',
@@ -112,7 +124,7 @@ const teamMembers = [
     },
   },
   {
-    id: 9,
+    id: 10,
     name: 'Leo Zaccur',
     role: 'Diretor de Arte',
     backgroundImage: '/images/BackgroundTeamMembers.jpg',

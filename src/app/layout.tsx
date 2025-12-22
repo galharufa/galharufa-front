@@ -1,20 +1,6 @@
-import './globals.css';
-import { Montserrat } from 'next/font/google';
 import ClientLayout from '@/components/layout/ClientLayout';
-
-interface MetadataBase {
-  title?:
-    | string
-    | {
-        template: string;
-        default: string;
-      };
-  description?: string;
-  icons?: Record<string, unknown>;
-  metadataBase?: {
-    url?: string;
-  };
-}
+import { Montserrat } from 'next/font/google';
+import './globals.css';
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -22,7 +8,7 @@ const montserrat = Montserrat({
   variable: '--font-montserrat',
 });
 
-export const metadata: MetadataBase = {
+export const metadata= {
   title: {
     template: '%s | Agência Galharufa',
     default: 'Agência Galharufa',
@@ -32,9 +18,7 @@ export const metadata: MetadataBase = {
   icons: {
     icon: '/favicon.ico',
   },
-  metadataBase: {
-    url: 'https://www.agenciagalharufa.com.br',
-  },
+  metadataBase: new URL('https://www.agenciagalharufa.com.br'),
 };
 
 export default function RootLayout({
